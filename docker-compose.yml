@@ -1,0 +1,53 @@
+
+services:
+
+  # Database
+  db:
+    image: postgres:15
+    container_name: 01blog-db
+    environment:
+      POSTGRES_USER: 01blog
+      POSTGRES_PASSWORD: 01blogpass
+      POSTGRES_DB: 01blogdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Backend
+  backend:
+    build: ./01-Blog-backend
+    container_name: 01blog-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/01blogdb
+      SPRING_DATASOURCE_USERNAME: 01blog
+      SPRING_DATASOURCE_PASSWORD: 01blogpass
+    volumes:
+      - backend-uploads:/app/uploads
+    networks:
+      - 01blog-network
+
+  # Frontend
+  frontend:
+    build: ./01-Blog-frontend
+    container_name: 01blog-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - 01blog-network
+
+# Volumes for persistence
+volumes:
+  pgdata:
+  backend-uploads:
+
+# Shared network
+networks:
+  01blog-network:
+    driver: bridge
