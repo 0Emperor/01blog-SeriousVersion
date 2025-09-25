@@ -20,7 +20,6 @@ public class UserService {
 
 
     public User createUser(User user) {
-        System.out.println("someone called the apiiii?");
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {

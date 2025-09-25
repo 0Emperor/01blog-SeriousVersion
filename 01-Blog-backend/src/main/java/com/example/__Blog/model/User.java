@@ -48,8 +48,8 @@ public class User {
         return username;
     }
 
-    public Boolean getRole() {
-        return role;
+    public String getRole() {
+        return role?"ADMIN":"beta";
     }
 
     public void setRole(Boolean role) {
