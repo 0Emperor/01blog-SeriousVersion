@@ -1,0 +1,24 @@
+// src/styles/_variables.scss
+
+// Colors
+$primary: #4F46E5;
+$accent: #6366F1;
+$warn: #EF4444;
+
+$background: #F9FAFB;
+$surface: #FFFFFF;
+$text-primary: #111827;
+$text-secondary: #6B7280;
+$border: #E5E7EB;
+
+// Spacing
+$spacing-unit: 4px;
+$space-xs: $spacing-unit;
+$space-sm: $spacing-unit * 2;
+$space-md: $spacing-unit * 4;
+$space-lg: $spacing-unit * 8;
+
+// Typography
+$font-family: 'Inter', sans-serif;
+$heading-font-weight: 600;
+$body-font-weight: 400;

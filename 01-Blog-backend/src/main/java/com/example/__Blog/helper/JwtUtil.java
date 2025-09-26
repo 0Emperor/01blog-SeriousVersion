@@ -18,7 +18,7 @@ public class JwtUtil {
             .setSubject(userDetails.getUsername())
             .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
             .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
             .compact();
     }

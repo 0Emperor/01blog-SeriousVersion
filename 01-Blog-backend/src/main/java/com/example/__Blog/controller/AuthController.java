@@ -39,9 +39,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("/login")
+    @GetMapping("/ooooyy")
     public String ooooyy() {
-        return ":ewf";
+          return "ooooyy";
     }
 
     @Autowired
