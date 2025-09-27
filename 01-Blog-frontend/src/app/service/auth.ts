@@ -5,8 +5,8 @@ import { inject, Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class Auth {
-  static baseApi = "/auth"
-  static accessApi = "/access"
+  static baseApi = "http://localhost:8080/auth"
+  static accessApi = "http://localhost:8080/access"
   static adminApi = Auth.accessApi + "/admin"
   static loginApi = Auth.baseApi + "/login"
   static registerApi = Auth.baseApi + "/register"
@@ -18,6 +18,7 @@ export class Auth {
     return this.http.post(Auth.registerApi, { username: name, password: password });
   }
   checkAuth() {
+    console.log(localStorage.getItem("jwt"))
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem("jwt")}`
@@ -25,10 +26,12 @@ export class Auth {
     return this.http.get<boolean>(Auth.accessApi, { headers })
   }
   checkAdmin() {
+
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem("jwt")}`
     );
-    return this.http.get<boolean>(Auth.accessApi, { headers })
+    this.http.get("http://localhost:8080/api/users/us", { headers }).subscribe({ next: (d) => { console.log(d) } })
+    return this.http.get<boolean>(Auth.adminApi, { headers })
   }
 }

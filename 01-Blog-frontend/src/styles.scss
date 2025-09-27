@@ -1,6 +1,6 @@
 // src/styles/styles.scss
 
-@import 'variables';
+@use 'variables' as *;
 
 // Apply global styles
 body {

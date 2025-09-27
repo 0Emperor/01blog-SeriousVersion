@@ -13,15 +13,25 @@ public class WebConfig implements WebMvcConfigurer {
 
     // @Override
     // public void addInterceptors(InterceptorRegistry registry) {
-    //     registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/users/register")
-    //             .excludePathPatterns("/api/users/login");
+    // registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/users/register")
+    // .excludePathPatterns("/api/users/login");
     // }
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")  
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+                registry.addMapping("/access/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+                registry.addMapping("/auth/**")
                         .allowedOrigins("http://localhost:4200")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

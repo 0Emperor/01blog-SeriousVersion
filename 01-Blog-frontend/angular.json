@@ -67,9 +67,6 @@
               "buildTarget": "01-Blog-frontend:build:development"
             }
           },
-          "options": {
-            "proxyConfig": "proxy.conf.json"
-          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -91,9 +88,9 @@
               }
             ],
             "styles": [
-              "src/styles/_variables.scss",
-              "src/styles/theme.scss",
-              "src/styles/styles.scss"
+              "src/_variables.scss",
+              "src/theme.scss",
+              "src/styles.scss"
             ]
           }
         }

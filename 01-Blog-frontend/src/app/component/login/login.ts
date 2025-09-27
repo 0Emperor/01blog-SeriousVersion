@@ -3,22 +3,33 @@ import { Auth } from '../../service/auth';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 
+// Import FormsModule and Material modules
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-login',
-  imports: [],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrls: ['./login.scss'],
+  standalone: true, // <-- important for per-component imports
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ]
 })
 export class Login {
   constructor(private router: Router) { }
   auth = inject(Auth)
   username = signal("")
   password = signal("")
+
   login = () => {
     this.auth.login(this.username(), this.password())
-      .pipe(catchError((e) => {
-        throw e
-      }))
+      .pipe(catchError((e) => { throw e }))
       .subscribe((e: any) => {
         window.localStorage.setItem("jwt", e["jwt"]);
         this.router.navigate(['/']);
