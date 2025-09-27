@@ -1,0 +1,74 @@
+
+$primary: #4F46E5;
+$accent: #6366F1;
+$warn: #EF4444;
+
+$background: #F9FAFB;
+$surface: #FFFFFF;
+$text-primary: #111827;
+$text-secondary: #6B7280;
+$border: #E5E7EB;
+
+$spacing-unit: 4px;
+$space-xs: $spacing-unit;
+$space-sm: $spacing-unit * 2;
+$space-md: $spacing-unit * 4;
+$space-lg: $spacing-unit * 8;
+
+$font-family: 'Inter', sans-serif;
+$heading-font-weight: 600;
+$body-font-weight: 400;
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: $background;
+  }
+  
+  .register-card {
+    background-color: $surface;
+    padding: $space-lg;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  
+    h2 {
+      margin-bottom: $space-md;
+      color: $text-primary;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: $space-md;
+  
+      .full-width {
+        width: 100%;
+      }
+  
+      button {
+        font-weight: 600;
+      }
+    }
+  
+    .signup-link {
+      margin-top: $space-md;
+      font-size: 0.9rem;
+      color: $text-secondary;
+  
+      a {
+        color: $primary;
+        text-decoration: none;
+        font-weight: 500;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  

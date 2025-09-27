@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Auth } from '../../service/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { catchError } from 'rxjs';
 
 // Import FormsModule and Material modules
@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    RouterLink,
     MatButtonModule
   ]
 })
