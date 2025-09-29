@@ -14,11 +14,13 @@ export class AdminGuard implements CanActivate {
     try {
       let isAdmin = await firstValueFrom(this.auth.checkAdmin());
       if (!isAdmin) {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
         return false;
       }
       return true;
     } catch (e) {
+      this.router.navigate(['/']);
+
       return false;
     }
   }

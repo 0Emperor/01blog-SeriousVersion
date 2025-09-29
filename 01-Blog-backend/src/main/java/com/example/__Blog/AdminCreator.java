@@ -21,12 +21,10 @@ public class AdminCreator implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (args.length > 0 && "createAdmin".equals(args[0])) {
             Scanner scanner = new Scanner(System.in);
-
             System.out.print("Enter admin username: ");
             String username = scanner.nextLine();
             System.out.print("Enter admin password: ");
             String password = scanner.nextLine();
-
             User user = admineService.createAdmin(username, password);
             if (user == null) {
                 System.out.println("failed to create admine");

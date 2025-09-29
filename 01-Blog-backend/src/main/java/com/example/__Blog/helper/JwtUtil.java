@@ -17,12 +17,10 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "ItFV3kvE/LTlYqA+xf6FJ6tJoldct9jUuznOjqVMNxl5Y43z2bmr/xMIY+WPZDqnG6mzUnTQba/Qf8ito/MQ8A==";
 
-    // Extract username
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract any claim
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -37,7 +35,6 @@ public class JwtUtil {
                    .parseClaimsJws(token)
                    .getBody();
     }
-    // Check if token is expired
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
@@ -46,18 +43,16 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // ✅ Validate token
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    // Generate token (example)
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) 
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }

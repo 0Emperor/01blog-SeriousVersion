@@ -33,7 +33,7 @@ export class Login {
       .pipe(catchError((e) => { throw e }))
       .subscribe((e: any) => {
         window.localStorage.setItem("jwt", e["jwt"]);
-        this.router.navigate(['/']);
+        this.router.navigate(['/admin']);
       })
   }
 }
