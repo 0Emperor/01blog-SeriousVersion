@@ -28,12 +28,12 @@ public class WebConfig implements WebMvcConfigurer {
                         .allowCredentials(true);
                 registry.addMapping("/access/**")
                         .allowedOrigins("http://localhost:4200")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedMethods("GET")
                         .allowedHeaders("*")
                         .allowCredentials(true);
                 registry.addMapping("/auth/**")
                         .allowedOrigins("http://localhost:4200")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

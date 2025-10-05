@@ -19,7 +19,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // author
+    private User user;
 
     private String description;
     private String mediaUrl;
@@ -27,6 +27,18 @@ public class Post {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getDescription() {

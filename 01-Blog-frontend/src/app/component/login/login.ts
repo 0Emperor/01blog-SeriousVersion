@@ -27,7 +27,6 @@ export class Login {
   auth = inject(Auth)
   username = signal("")
   password = signal("")
-
   login = () => {
     this.auth.login(this.username(), this.password())
       .pipe(catchError((e) => { throw e }))

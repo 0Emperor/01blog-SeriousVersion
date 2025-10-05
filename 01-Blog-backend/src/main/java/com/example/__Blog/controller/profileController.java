@@ -1,32 +1,85 @@
 package com.example.__Blog.controller;
 
-// import java.util.ArrayList;
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.__Blog.dto.userResponse;
+import com.example.__Blog.dto.PostResponse;
+import com.example.__Blog.helper.CustomUserDetails;
+import com.example.__Blog.model.Post;
+import com.example.__Blog.service.PostService;
 
 @RestController
 @RequestMapping("/api/profile")
 public class profileController {
+    private final PostService postService;
+
+    profileController(PostService postService) {
+        this.postService = postService;
+    }
+
     @GetMapping("/{name}")
-    public userResponse getOthersProfiles(@PathVariable String name) {
-        return new userResponse();
+    public String getOthersProfiles(@PathVariable String name) {
+        return name;
     }
 
     @GetMapping("")
-    public userResponse getProfile() {
-        return new userResponse();
+    public Map<String, String> getProfile(@AuthenticationPrincipal CustomUserDetails jwt) {
+        Map<String, String> m = new HashMap<>();
+        m.put("name", jwt.getId().toString());
+        return m;
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponse>> GetOwnPosts(
+            @AuthenticationPrincipal CustomUserDetails jwt,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<Post> postsPage = postService.getByUser(pageable, jwt.getId());
+
+        List<PostResponse> dtos = postsPage.stream()
+                .map(PostResponse::mapToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/posts/{name}")
+    public ResponseEntity<List<PostResponse>> GetOthersPosts(
+            @PathVariable String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<Post> postsPage = postService.getByUser(pageable, name);
+
+        List<PostResponse> dtos = postsPage.stream()
+                .map(PostResponse::mapToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
     }
 
     // @GetMapping("/discover")
     // public List<userResponse> getAllPeople() {
-    //     List l = new ArrayList<>();
-    //     l.add(new userResponse());
-    //     return l;
+    // List l = new ArrayList<>();
+    // l.add(new userResponse());
+    // return l;
     // }
 }

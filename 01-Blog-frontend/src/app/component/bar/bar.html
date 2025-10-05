@@ -1,0 +1,35 @@
+<div class="container">
+<div class="user-profile">
+    <div class="avatar">
+      <img [src]="userProfile.avatar" [alt]="userProfile.name">
+    </div>
+    <div class="user-info">
+      <div class="name">{{ userProfile.name }}</div>
+      <div class="username">{{ userProfile.username }}</div>
+    </div>
+  </div>
+
+  <nav class="nav-items">
+
+    <button
+      *ngFor="let item of navItems()"
+      class="nav-item"
+      [class.active]="isActive(item.id)"
+      (click)="setActiveItem(item.id)"
+    >
+      <span class="material-icons">{{ item.icon }}</span>
+      <span class="label">{{ item.label }}</span>
+    </button>
+  </nav>
+<div class="buttons">
+    <button class="create-post" (click)="onCreatePost()">
+    <span class="material-icons">add</span>
+    Create Post
+  </button>
+  <button class="logout" (click)="onCreatePost()">
+    <span class="material-icons">logout</span>
+    Log Out
+  </button>
+</div>
+</div>
+  

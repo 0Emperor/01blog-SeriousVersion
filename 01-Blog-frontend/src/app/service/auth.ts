@@ -18,7 +18,6 @@ export class Auth {
     return this.http.post(Auth.registerApi, { username: name, password: password });
   }
   checkAuth() {
-    console.log(localStorage.getItem("jwt"))
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem("jwt")}`
@@ -26,12 +25,10 @@ export class Auth {
     return this.http.get<boolean>(Auth.accessApi, { headers })
   }
   checkAdmin() {
-
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem("jwt")}`
     );
-    this.http.get("http://localhost:8080/api/users/us", { headers }).subscribe({ next: (d) => { console.log(d) } })
     return this.http.get<boolean>(Auth.adminApi, { headers })
   }
 }

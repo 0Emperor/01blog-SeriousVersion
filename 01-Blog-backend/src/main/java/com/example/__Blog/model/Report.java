@@ -16,10 +16,9 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @ManyToOne
-    @JoinColumn(name = "reported_user_id")
-    private User reportedUser;
+    @JoinColumn(name = "reported_id")
+    private Post reportedPost;
 
     @ManyToOne
     @JoinColumn(name = "reported_by_id")
@@ -42,8 +41,8 @@ public class Report {
         return reportedBy;
     }
 
-    public User getReportedUser() {
-        return reportedUser;
+    public Post getReportedPostreportedPost() {
+        return reportedPost;
     }
 
     public void setResolved(boolean resolved) {

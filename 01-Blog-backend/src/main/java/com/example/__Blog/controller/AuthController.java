@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.helper.JwtUtil;
 import com.example.__Blog.model.User;
 import com.example.__Blog.service.CustomUserDetailsService;
@@ -54,7 +55,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
             }
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
             String jwt = jwtUtil.generateToken(userDetails);
 
             Map<String, Object> res = new HashMap<>();
@@ -76,7 +77,7 @@ public class AuthController {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String jwt = jwtUtil.generateToken(userDetails);
 
         Map<String, String> response = new HashMap<>();

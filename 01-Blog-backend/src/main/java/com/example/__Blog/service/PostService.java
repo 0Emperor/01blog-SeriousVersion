@@ -1,0 +1,45 @@
+package com.example.__Blog.service;
+
+import com.example.__Blog.model.Post;
+import com.example.__Blog.repository.PostRepository;
+import com.example.__Blog.specification.PostSpecifications;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class PostService {
+
+    private final PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
+
+    public Post save(Post post) {
+        post.setCreatedAt(Date.valueOf(LocalDate.now()));
+        return postRepository.save(post);
+    }
+
+    public List<Post> getAll() {
+        return postRepository.findAll();
+    }
+    public Page<Post> getAll(PageRequest pageable) {
+        return postRepository.findAll(pageable);
+    }
+    public Page<Post> getByUser(PageRequest pageable,UUID id) {
+        return postRepository.findAll(PostSpecifications.byUserId(id),pageable);
+    }
+    public Page<Post> getByUser(PageRequest pageable,String name) {
+        return postRepository.findAll(PostSpecifications.byUserName(name),pageable);
+    }
+    public Post getById(Integer id) {
+        return postRepository.findById(id).orElse(null);
+    }
+}

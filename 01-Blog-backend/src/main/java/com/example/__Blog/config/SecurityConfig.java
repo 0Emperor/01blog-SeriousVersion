@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.__Blog.helper.JwtAuthFilter;
 
 @Configuration
-@EnableMethodSecurity // enables @PreAuthorize
+@EnableMethodSecurity 
 public class SecurityConfig {
 
     @Autowired
