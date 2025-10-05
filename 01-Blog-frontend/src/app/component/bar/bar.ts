@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink, } from '@angular/router';
 import { Auth } from '../../service/auth';
 
 
@@ -13,7 +13,7 @@ interface NavItem {
 @Component({
   selector: 'app-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './bar.html',
   styleUrls: ['./bar.scss']
 })
@@ -44,11 +44,11 @@ export class Bar {
   }
   ngOnInit() {
     this.auth.checkAdmin().subscribe({
-      next: () => {this.navItems.update((l) => [...l, { id: 'admin', icon: 'manage_accounts', label: 'Admin panel' }])},
+      next: () => { this.navItems.update((l) => [...l, { id: 'admin', icon: 'manage_accounts', label: 'Admin panel' }]) },
     })
   }
-  onCreatePost(): void {
-    // Handle create post action
-    console.log('Create post clicked');
+  logout() {
+    localStorage.clear()
+     this.router.navigate(["login"]) 
   }
 }
