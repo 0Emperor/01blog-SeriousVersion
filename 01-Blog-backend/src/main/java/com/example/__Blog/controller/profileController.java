@@ -21,15 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.__Blog.dto.PostResponse;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Post;
+import com.example.__Blog.model.User;
 import com.example.__Blog.service.PostService;
+import com.example.__Blog.service.UserService;
 
 @RestController
 @RequestMapping("/api/profile")
 public class profileController {
     private final PostService postService;
+    private final UserService userService;
 
-    profileController(PostService postService) {
+    profileController(PostService postService, UserService userService) {
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping("/{name}")
@@ -42,6 +46,18 @@ public class profileController {
         Map<String, String> m = new HashMap<>();
         m.put("name", jwt.getId().toString());
         return m;
+    }
+
+    @GetMapping("/curent")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(@AuthenticationPrincipal CustomUserDetails cu) {
+        Map<String, Object> res = new HashMap<>();
+        User user = userService.getUser(cu.getUsername());
+        res.put("username", user.getUsername());
+        res.put("role", user.getRole());
+        res.put("avatarUrl", user.getProfile());
+        res.put("bio", user.getBio());
+        res.put("created_at", user.getCreated_at());
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/posts")

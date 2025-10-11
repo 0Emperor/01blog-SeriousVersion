@@ -10,6 +10,7 @@ import com.example.__Blog.helper.CustomUserDetails;
 @RestController
 @RequestMapping("/access")
 public class AccessContronller {
+    // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public boolean isLogged() {
         return true;
@@ -17,6 +18,8 @@ public class AccessContronller {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
     public boolean isAdmin(@AuthenticationPrincipal CustomUserDetails cu) {
+        System.out.println("ohhh");
+        System.out.println(cu.getAuthorities().toString());
         return true;
     }
 }

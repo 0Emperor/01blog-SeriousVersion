@@ -1,0 +1,340 @@
+/* Define Variables for easier theming (Dark Mode) */
+$primary-color: #00a8ff; /* A bright, soft blue highlight */
+$background-dark: #1f1f1f;
+$panel-bg: #2d2d2d;
+$text-light: #f0f0f0;
+$border-dark: #444444;
+$error-color: #ff6b6b;
+$button-dark: #444444;
+
+.create-post-container {
+  display: flex;
+  flex-direction: column; 
+  min-height: 100vh; /* Ensure full page height for scrolling content */
+  margin: 0;
+  padding: 0;
+  background-color: $background-dark;
+  font-family: 'Inter', sans-serif;
+  color: $text-light;
+}
+
+/* -------------------------------------- */
+/* DESKTOP STYLES (Split-View)            */
+/* -------------------------------------- */
+@media (min-width: 768px) {
+  .create-post-container {
+    flex-direction: row; 
+    height: 95vh; /* Fixed height for split-view */
+    max-width: 1400px;
+    margin: 2vh auto;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .editor-panel, .preview-panel {
+    flex: 1; 
+    height: 90%;
+    border-radius: 12px;
+    overflow-y: scroll;
+    /* Hide mobile elements on desktop */
+    margin-bottom: 0;
+  }
+  
+  /* Remove the action footer entirely on desktop */
+  .action-footer {
+    display: none;
+  }
+}
+
+/* -------------------------------------- */
+/* PANEL BASE STYLES                      */
+/* -------------------------------------- */
+.editor-panel, .preview-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: $panel-bg;
+  border: 1px solid $border-dark;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px; /* Space between stacked panels on mobile */
+  /* This ensures panels scroll content on mobile */
+  height: auto; 
+  min-height: 400px; 
+  overflow: hidden; 
+}
+.preview-panel {
+    padding-bottom: 50px; /* Add extra padding for sticky footer on mobile */
+}
+@media (min-width: 768px) {
+    .preview-panel {
+        padding-bottom: 15px; /* Reset padding on desktop */
+    }
+}
+
+
+/* -------------------------------------- */
+/* INPUT & TEXTAREA STYLES                */
+/* -------------------------------------- */
+.title-input {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: none;
+  border-bottom: 2px solid $border-dark;
+  background-color: transparent;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  color: $text-light;
+  outline: none;
+  transition: border-bottom-color 0.2s;
+  
+  &::placeholder {
+      color: lighten($border-dark, 10%);
+  }
+  
+  &:focus {
+    border-bottom-color: $primary-color;
+  }
+}
+
+.markdown-editor {
+  flex-grow: 1; 
+  border: 1px solid $border-dark;
+  background-color: #252525;
+  padding: 10px;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 6px;
+  resize: none;
+  outline: none;
+  color: $text-light;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 1px $primary-color;
+  }
+}
+
+/* -------------------------------------- */
+/* CONTROL BAR & BUTTON STYLES            */
+/* -------------------------------------- */
+.control-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid $border-dark;
+  margin-bottom: 10px;
+}
+
+.control-bar button {
+  padding: 8px 12px;
+  border: 1px solid $button-dark;
+  background-color: $button-dark;
+  color: $text-light;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: $background-dark;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* -------------------------------------- */
+/* PREVIEW STYLES (Markdown Render Target)*/
+/* -------------------------------------- */
+.preview-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding-bottom: 10px;
+  border-bottom: 2px solid $border-dark;
+  margin-bottom: 15px;
+}
+
+.preview-content {
+  flex-grow: 1;
+  line-height: 1.6;
+  overflow: scroll;
+  /* Styles for rendered markdown content */
+  h1, h2, h3 { color: $primary-color; margin-top: 1.5em; }
+  p { margin-bottom: 1em; }
+  a { color: $primary-color; text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: $primary-color; }
+  strong { color: lighten($primary-color, 15%); }
+  em { font-style: italic; }
+  
+  /* Placeholder style when empty */
+  &:empty:before {
+    content: "Start typing to see your Markdown preview here...";
+    color: $border-dark;
+    font-style: italic;
+  }
+}
+
+/* -------------------------------------- */
+/* MEDIA GALLERY STYLES                   */
+/* -------------------------------------- */
+.media-preview-gallery {
+  overflow: scroll;
+  height: 12%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-top: 15px;
+  border-top: 1px solid $border-dark;
+  margin-top: 15px;
+}
+
+.media-preview-item {
+  position: relative;
+  width: 150px;
+  height: 100px;
+  border: 1px solid $border-dark;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.media-preview-item img,
+.media-preview-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(45, 45, 45, 0.9); /* Dark overlay */
+  color: $primary-color;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  font-size: 0.9rem;
+}
+
+.remove-media-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: $error-color;
+  color: $text-light;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 10;
+  
+  &:hover {
+    background-color: darken($error-color, 10%);
+  }
+}
+
+.file-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 5px;
+    background-color: #3a3a3a;
+    text-align: center;
+    color: $primary-color;
+}
+
+
+/* -------------------------------------- */
+/* ACTION FOOTER (Sticky for Submission)  */
+/* -------------------------------------- */
+.action-footer {
+  display: flex;
+  justify-content: flex-end; /* Only one button now */
+  padding: 10px;
+  background-color: $panel-bg;
+  border-top: 1px solid $border-dark;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submit-post-btn {
+  /* On mobile, take up a large portion of the footer */
+  flex: 1;
+  max-width: 400px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  background-color: $primary-color;
+  color: $background-dark;
+  
+  &:hover:not(:disabled) {
+    background-color: lighten($primary-color, 5%);
+    box-shadow: 0 4px 8px rgba(0, 168, 255, 0.4);
+  }
+  
+  &:disabled {
+    background-color: lighten($primary-color, 20%);
+    cursor: not-allowed;
+  }
+}
+
+/* Desktop: Action footer moves inside the editor panel's bottom corner */
+@media (min-width: 768px) {
+    .action-footer {
+        display: none; /* Hidden on desktop */
+    }
+
+    /* Move the button to the bottom of the editor panel for desktop layout */
+    .editor-panel {
+        position: relative;
+        padding-bottom: 80px; /* Space for the desktop button container */
+    }
+
+    .desktop-submit-container {
+        display: flex;
+        justify-content: flex-end;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px;
+        background-color: $panel-bg;
+        border-top: 1px solid $border-dark;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+    
+    .desktop-submit-container .submit-post-btn {
+        flex: 0 0 auto;
+        max-width: none;
+        width: 150px;
+    }
+}

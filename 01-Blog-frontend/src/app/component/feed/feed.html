@@ -1,1 +1,41 @@
-<p>feed works! {{api}}</p>
+<router-outlet>
+  <div class="post-feed">
+
+    @for (post of posts; track post.postId) {
+    <div class="post-card" [routerLink]="['/home', post.postId]">
+
+      @if (post.user) {
+      <app-user-header></app-user-header>
+      }
+
+      <div class="caption-text">
+        <p>{{ post.description | truncate }}</p>
+      </div>
+
+      @if (post.mediaUrl) {
+      <div class="post-media">
+        <img [src]="'http://localhost:8080/api/files/' + post.mediaUrl" alt="Post media" class="media-content">
+      </div>
+      }
+
+      <div class="post-actions">
+        <span class="timestamp">{{ post.createdAt | date: 'short' }}</span>
+      </div>
+
+    </div>
+    }
+
+    @if (loading && !finished) {
+    <div class="loading-indicator">
+      <div class="spinner"></div>
+      <p>Loading more posts...</p>
+    </div>
+    }
+
+    @if (finished && posts.length > 0) {
+    <div class="finished-indicator">
+      <p>You've reached the end of the feed!</p>
+    </div>
+    }
+
+  </div>

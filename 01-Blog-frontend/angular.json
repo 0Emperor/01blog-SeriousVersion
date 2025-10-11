@@ -90,6 +90,7 @@
             "styles": [
               "src/_variables.scss",
               "src/theme.scss",
+              "node_modules/highlight.js/styles/github.css",
               "src/styles.scss"
             ]
           }

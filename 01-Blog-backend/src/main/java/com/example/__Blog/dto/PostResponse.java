@@ -7,21 +7,25 @@ import com.example.__Blog.model.Post;
 public class PostResponse {
     private String postId;
     private String description;
-    private String mediaUrl;
+    private String title;
     private Date createdAt;
     private UserSummary user;
-
-    public PostResponse(String postId, String description, String mediaUrl, Date createdAt, UserSummary user) {
+    private boolean liked=false;
+    public PostResponse(String postId, String description, String title, Date createdAt, UserSummary user) {
         this.postId = postId;
         this.description = description;
-        this.mediaUrl = mediaUrl;
+        this.title = title;
         this.createdAt = createdAt;
         this.user = user;
     }
+public void setLiked(boolean liked) {
+    this.liked = liked;
+}
 
+public boolean getLiked() { return liked; }
     public String getPostId() { return postId; }
     public String getDescription() { return description; }
-    public String getMediaUrl() { return mediaUrl; }
+    public String getTitle() { return title; }
     public Date getCreatedAt() { return createdAt; }
     public UserSummary getUser() { return user; }
     public static PostResponse mapToDto(Post post) {
@@ -36,7 +40,7 @@ public class PostResponse {
         return new PostResponse(
                 post.getId().toString(),
                 post.getDescription(),
-                post.getMediaUrl(),
+                post.getTitle(),
                 post.getCreatedAt(),
                 userSummary
         );

@@ -24,6 +24,17 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+public void setPost(Post post) {
+    this.post = post;
+}
+public void setUser(User user) {
+    this.user = user;
+}public Post getPost() {
+    return post;
+}
+public Integer getId() {
+    return id;
+}
 
     private Date createdAt;
     public Date getCreatedAt() {

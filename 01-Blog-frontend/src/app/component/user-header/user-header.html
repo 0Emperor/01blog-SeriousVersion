@@ -1,0 +1,24 @@
+<div class="user-header">
+    @if(user!=null){ <a [routerLink]="['/user', user.username]" class="profile-link">
+
+        <div class="avatar-container">
+            @if (user.profile) {
+            <img [src]="'http://localhost:8080/api/files/' + user.profile" alt="{{ user.username }}'s profile picture"
+                class="profile-img">
+            } @else {
+            <div class="initials-avatar" [style.background-color]="avatarBackgroundColor">
+                {{ userInitial }}
+            </div>
+            }
+        </div>
+
+        <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <span class="handle">@{{ user.username }}</span>
+
+            @if (user.role === 'ADMIN') {
+            <span class="role-tag">⭐ ADMIN</span>
+            }
+        </div>
+    </a>}
+</div>

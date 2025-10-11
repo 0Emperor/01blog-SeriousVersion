@@ -7,10 +7,9 @@ import { inject, Injectable } from '@angular/core';
 export class ProfileS {
   http = inject(HttpClient);
   getName() { 
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${localStorage.getItem("jwt")}`
-    );
-    return this.http.get<any>("http://localhost:8080/api/profile",{headers})
+    return this.http.get<any>("http://localhost:8080/api/profile")
+  }
+  getCurentUser(){
+   return this.http.get<any>("http://localhost:8080/api/profile/curent")
   }
 }

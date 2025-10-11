@@ -1,6 +1,9 @@
 <div class="home-container">
-    <app-bar class="sidebar"></app-bar>
+    <app-bar class="sidebar" [ngClass]="{'open': isSidebarOpen}"></app-bar>
     <div class="container">
+        <button class="menu-toggle-btn" (click)="toggleSidebar()">
+            ☰
+        </button>
         <router-outlet></router-outlet>
     </div>
 </div>

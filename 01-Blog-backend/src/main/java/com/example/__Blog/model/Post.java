@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "posts")
@@ -20,10 +22,20 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    @NotBlank(message = "Post description cannot be empty.")
+    @Size(min = 15, max = 4000, message = "Description must be between 15 and 4000 characters.")
     private String description;
-    private String mediaUrl;
+    private String title;
     private Date createdAt;
+    private String[] media;
+
+    public String[] getMedia() {
+        return media;
+    }
+
+    public void setMedia(String[] media) {
+        this.media = media;
+    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -49,15 +61,15 @@ public class Post {
         return user;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
+    public String getTitle() {
+        return title;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

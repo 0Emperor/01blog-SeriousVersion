@@ -1,0 +1,132 @@
+// --- Global Color Variables (Defined for Context) ---
+$primary: #7f13ec;
+$background-dark: #191022;
+$text-light: #4c4851;
+$text-dark: #b7b1be;
+$surface-light: #ffffff;
+$surface-dark: #231a2f;
+$muted-light: #a199ab;
+$muted-dark: #71697d;
+
+$border-radius-lg: 1rem;
+$border-radius-sm: 0.5rem;
+
+
+.post-feed {
+    // Inherit global theme variables from the body/main container
+    --text-color: #{$text-light};
+    --surface-color: #{$surface-light};
+    --muted-color: #{$muted-light};
+    
+    padding: 1.5rem 0; // Vertical padding for the feed itself
+    display: grid;
+    gap: 2rem; // Space between cards
+    
+    @media (prefers-color-scheme: dark) {
+        --text-color: #{$text-dark};
+        --surface-color: #{$surface-dark};
+        --muted-color: #{$muted-dark};
+    }
+}
+
+.post-card {
+    background-color: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(var(--muted-color), 0.1);
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    // Dark Mode Refinements
+    @media (prefers-color-scheme: dark) {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        border-color: darken($surface-dark, 5%);
+    }
+}
+
+// --- User Info Styling ---
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+
+    .details {
+        display: flex;
+        flex-direction: column;
+
+        .name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .handle {
+            font-size: 0.8rem;
+            color: var(--muted-color);
+        }
+    }
+}
+
+// --- Caption Styling ---
+.caption-text {
+    p {
+        color: var(--text-color);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        // Allows long words to break rather than causing horizontal overflow
+        word-wrap: break-word; 
+    }
+}
+
+// --- Media Styling (Image/Video) ---
+.post-media {
+    margin-top: 1rem;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+    
+    .media-content {
+        display: block; // Removes space below image
+        width: 100%;
+        // Constrain height and crop nicely (e.g., for a fixed aspect ratio)
+        max-height: 400px; 
+        object-fit: cover; 
+    }
+}
+
+// --- Loading & Finished Indicators ---
+.loading-indicator,
+.finished-indicator {
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 1rem;
+    color: var(--muted-color);
+    font-weight: 500;
+    
+    // Simple pulse effect for loading indicator
+    .spinner {
+        border: 4px solid rgba(var(--muted-color), 0.3);
+        border-top: 4px solid $primary;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0.5rem auto;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

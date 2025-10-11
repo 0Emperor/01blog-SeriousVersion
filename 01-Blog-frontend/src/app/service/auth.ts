@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 @Injectable({
@@ -18,17 +18,9 @@ export class Auth {
     return this.http.post(Auth.registerApi, { username: name, password: password });
   }
   checkAuth() {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${localStorage.getItem("jwt")}`
-    );
-    return this.http.get<boolean>(Auth.accessApi, { headers })
+    return this.http.get<boolean>(Auth.accessApi)
   }
   checkAdmin() {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${localStorage.getItem("jwt")}`
-    );
-    return this.http.get<boolean>(Auth.adminApi, { headers })
+    return this.http.get<boolean>(Auth.adminApi)
   }
 }

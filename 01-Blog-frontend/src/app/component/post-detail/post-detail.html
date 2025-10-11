@@ -1,0 +1,47 @@
+<div class="post-detail-backdrop" (click)="closeDetail()">
+    <div class="post-detail-content" (click)="$event.stopPropagation()">
+        
+        @if (loading) {
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading post details...</p>
+            </div>
+        } 
+        
+        @else if (post) {
+            <button class="close-btn" (click)="closeDetail()">&times;</button>
+
+            @if (post.user) {
+                <app-user-header></app-user-header>
+            }
+
+            @if (post.mediaUrl) {
+                <div class="media-container">
+                    <img [src]="'http://localhost:8080/api/files/' + post.mediaUrl" 
+                         alt="Post media" 
+                         class="media-content">
+                </div>
+            }
+
+            <div class="caption">
+                <p>{{ post.description }}</p>
+            </div>
+
+            <div class="metadata">
+                <span class="date">{{ post.createdAt | date: 'medium' }}</span> 
+            </div>
+            
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <p class="muted">Comments section coming soon...</p>
+            </div>
+        } 
+        
+        @else {
+            <div class="error-state">
+                <p>Could not find this post. It may have been deleted.</p>
+                <button class="back-btn" (click)="closeDetail()">Go Back</button>
+            </div>
+        }
+    </div>
+</div>

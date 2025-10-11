@@ -10,10 +10,16 @@ $muted-light: #a199ab;
 $muted-dark: #71697d;
 $font-family: 'Spline Sans', sans-serif;
 
+$sidebar-width: 250px;
+$mobile-breakpoint: 768px; /* Breakpoint for switching layouts */
+
 .home-container {
-  display: flex;
-  min-height: 100%;
   font-family: $font-family;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden; /* Main container doesn't scroll */
+  
+  /* Theme application */
   background-color: $background-light;
   color: $text-light;
   transition: background-color 0.3s, color 0.3s;
@@ -23,50 +29,104 @@ $font-family: 'Spline Sans', sans-serif;
     color: $text-dark;
   }
 
+  /* ---------------------------------------------------- */
+  /* 1. DESKTOP (Grid Layout: Sidebar | Content) */
+  /* ---------------------------------------------------- */
+  @media (min-width: $mobile-breakpoint) {
+    display: grid;
+    /* Create the fixed sidebar (250px) and the flexible content (1fr) */
+    grid-template-columns: $sidebar-width 1fr; 
+  }
+
+
   .sidebar {
-    height: 100vh;
-    flex: 0 0 250px;
     background-color: $surface-light;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s;
     display: flex;
     flex-direction: column;
+    z-index: 10;
+    transition: transform 0.3s ease-in-out; /* For mobile slide effect */
+
     @media (prefers-color-scheme: dark) {
       background-color: $surface-dark;
       border-color: rgba(255, 255, 255, 0.1);
     }
 
-    /* 🟣 Turn into top bar on small screens */
-    // @media (max-width: 768px) {
-    //   flex: none;
-    //   width: 100%;
-    //   flex-direction: row;
-    //   align-items: center;
-    //   justify-content: space-around;
-    //   border-right: none;
-    //   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    //   position: sticky;
-    //   top: 0;
-    //   z-index: 10;
-    //   padding: 0.5rem 0;
-    //   background-color: $surface-light;
+    /* Desktop Styles (Grid Placement) */
+    @media (min-width: $mobile-breakpoint) {
+      grid-column: 1 / 2;
+      height: 100vh; /* Fill the viewport height */
+      position: sticky; 
+      top: 0;
+      /* Ensure transform is reset for desktop visibility */
+      transform: translateX(0); 
+    }
 
-    //   @media (prefers-color-scheme: dark) {
-    //     background-color: $surface-dark;
-    //     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    //   }
-    // }
+    /* Mobile Styles (Fixed and Hidden) */
+    @media (max-width: $mobile-breakpoint) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: $sidebar-width;
+      height: 100%;
+      transform: translateX(-100%); /* Hidden by default */
+      z-index: 1000; /* Must be high to cover the content */
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5); 
+      border-right: none;
+    }
+  }
+  
+  /* Mobile State: Toggled Open (controlled by TS) */
+  .sidebar.open {
+    transform: translateX(0) !important;
   }
 
   .container {
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    /* Base styles (Applies to both) */
+    width: 100%;
+    overflow-y: scroll; 
+    min-height: 100vh;
+    
+    /* Desktop Styles */
+    @media (min-width: $mobile-breakpoint) {
+      grid-column: 2 / 3;
+      padding: 2rem;
+    }
 
-    @media (max-width: 768px) {
-      padding: 1rem;
+    /* Mobile Styles */
+    @media (max-width: $mobile-breakpoint) {
+      /* Mobile layout is simple stacking, content starts at the top */
+      padding: 1rem; 
+      /* No padding-top needed since we are not using a fixed header */
+    }
+  }
+
+  /* ---------------------------------------------------- */
+  /* 3. Mobile Menu Toggle Button Placeholder */
+  /* ---------------------------------------------------- */
+  /* NOTE: You must add a <button> element (with class 'menu-toggle-btn') 
+     to your HTML inside the .container or main content area.
+  */
+  .menu-toggle-btn {
+    display: none; /* Hidden on desktop */
+    
+    @media (max-width: $mobile-breakpoint) {
+      display: block; 
+      position: fixed;
+      z-index: 1000000;
+      top: 1rem;
+      right: 1rem;
+      z-index: 50; /* Above content, below sidebar */
+      padding: 0.5rem;
+      background-color: $surface-light;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: $surface-dark;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
     }
   }
 }

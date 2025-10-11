@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, } from '@angular/router';
 import { Auth } from '../../service/auth';
+import { User } from '../../dto/dto';
+import { UserHeaderComponent } from "../user-header/user-header";
 
 
 interface NavItem {
@@ -13,7 +15,7 @@ interface NavItem {
 @Component({
   selector: 'app-bar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, UserHeaderComponent],
   templateUrl: './bar.html',
   styleUrls: ['./bar.scss']
 })
@@ -28,11 +30,14 @@ export class Bar {
     { id: 'profile', icon: 'person', label: 'Profile' },
   ]);
 
-  userProfile = {
-    name: 'Sophia',
-    username: '@sophia.art',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia'
+  userProfile:User = {
+    username: 'Sophia',
+    profile: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia',
+    role:"ADMIN",
+    bio:"hello",
+    id:"id"
   };
+
 
   setActiveItem(itemId: string): void {
     this.activeItem = itemId;
@@ -45,6 +50,7 @@ export class Bar {
   ngOnInit() {
     this.auth.checkAdmin().subscribe({
       next: () => { this.navItems.update((l) => [...l, { id: 'admin', icon: 'manage_accounts', label: 'Admin panel' }]) },
+   
     })
   }
   logout() {
