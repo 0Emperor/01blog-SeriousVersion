@@ -1,6 +1,7 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,7 +29,7 @@ public class User {
     @JsonIgnore
     private String password_hash;
     @CreationTimestamp
-    private Date created_at;
+    private Timestamp created_at;
 
     public String getProfile() {
         return profile;
@@ -46,11 +47,11 @@ public class User {
         this.bio = bio;
     }
 
-    public Date getCreated_at() {
+    public Timestamp getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
 

@@ -16,7 +16,7 @@ export interface User {
  * Corresponds to your Java PostResponse.
  */
 export interface Post {
-    id:string;
+    postId:string;
     title: string;
     description: string;
     mediaUrl: string[];
@@ -24,4 +24,6 @@ export interface Post {
     user: User;
     totalLikes: number | 0;
     totalComments: number | 0;
+    isLiked:boolean;
+    isOwn:boolean;
 }

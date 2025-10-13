@@ -1,6 +1,6 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,13 +25,13 @@ public class Subscription {
     @JoinColumn(name = "subscribed_to_id")
     private User subscribedTo;
 
-    private Date createdAt;
+    private Timestamp createdAt;
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

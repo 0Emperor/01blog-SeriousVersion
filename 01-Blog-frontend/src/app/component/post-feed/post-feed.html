@@ -1,0 +1,36 @@
+<div class="post-card" [routerLink]="['/home', post.postId]">
+
+    <!-- User Header -->
+    <app-user-header [userr]="post.user"></app-user-header>
+
+    <!-- Post Title -->
+    <h3 class="post-title">{{ post.title }}</h3>
+
+    <!-- Optional: Post Content Summary/Media -->
+
+    <div class="post-actions">
+
+        <div class="left-actions">
+            <div class="like-info">
+                <button class="like-button" (click)="$event.stopPropagation(); ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="like-icon" [class.liked]="post.isLiked"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+                        <path
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-.318-.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </button>
+                <span class="like-count" [class.liked]="post.isLiked">{{ post.totalLikes }} Likes</span>
+            </div>
+
+            @if(post.isOwn){
+            <button class="edit-button" (click)="$event.stopPropagation(); ">
+                Edit Post
+            </button>
+            }
+
+        </div>
+
+        <span class="timestamp">{{ post.createdAt | date: 'short' }}</span>
+    </div>
+
+</div>

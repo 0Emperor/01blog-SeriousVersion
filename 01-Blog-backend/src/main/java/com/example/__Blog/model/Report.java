@@ -1,6 +1,6 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,11 +25,11 @@ public class Report {
     private User reportedBy;
 
     private String reason;
-    private Date createdAt;
+    private Timestamp createdAt;
 
     private boolean resolved; // handled by admin
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 

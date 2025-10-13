@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserStore } from '../../service/user';
+import { User } from '../../dto/dto';
 
 @Component({
   selector: 'app-user-header',
@@ -15,9 +16,13 @@ export class UserHeaderComponent implements OnInit {
   // The User object passed from the parent component (e.g., Feed or Post Detail)
   constructor(private userS:UserStore){}
   // Properties for the Initials Avatar logic
+  @Input() userr?:User;
   userInitial: string = '';
   avatarBackgroundColor: string = '#ccc'; // Default fallback color
 get user(){
+  if (this.userr) {
+    return this.userr
+  }
 return this.userS.user();
 }
   // A list of colors for unique initial avatars

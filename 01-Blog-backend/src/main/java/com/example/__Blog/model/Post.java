@@ -1,6 +1,6 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +26,7 @@ public class Post {
     @Size(min = 15, max = 4000, message = "Description must be between 15 and 4000 characters.")
     private String description;
     private String title;
-    private Date createdAt;
+    private Timestamp createdAt;
     private String[] media;
 
     public String[] getMedia() {
@@ -37,11 +37,11 @@ public class Post {
         this.media = media;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

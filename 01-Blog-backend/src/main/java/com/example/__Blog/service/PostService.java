@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class PostService {
     }
 
     public Post save(Post post) {
-        post.setCreatedAt(Date.valueOf(LocalDate.now()));
+        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return postRepository.save(post);
     }
 
@@ -33,7 +34,7 @@ public class PostService {
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
-        post.setCreatedAt(Date.valueOf(LocalDate.now()));
+        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         post.setUser(user);
         return post;
     }

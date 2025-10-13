@@ -1,0 +1,127 @@
+// Define a primary color for accents
+$like-color: #ef4444; // Red
+$edit-color: #ff9800; // Orange for edit action
+$primary: #7f13ec;
+$background-light: #f7f6f8;
+$background-dark: #191022;
+$text-light: #4c4851;
+$text-dark: #7c7488;
+$surface-light: #ffffff;
+$surface-dark: #231a2f;
+$muted-light: #a199ab;
+$muted-dark: #b7b1be;
+$font-family: 'Spline Sans', sans-serif;
+.post-card {
+    // Defines the card container
+    background-color: $surface-light;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 10px $background-dark;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer; /* Makes the entire card feel clickable for navigation */
+    @media (prefers-color-scheme: dark) {
+        background-color: $surface-dark;
+        box-shadow: $background-light;
+    }
+    &:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.post-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    color:$text-light;
+    margin-bottom: 15px;
+    /* Ensure the title doesn't affect the card's hover state */
+    transition: color 0.2s;
+    @media (prefers-color-scheme: dark) {
+    color:$text-dark;
+    }
+    .post-card:hover & {
+        color: $primary; 
+    }
+}
+
+/* --- POST ACTIONS (FOOTER) --- */
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.left-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.like-info {
+    display: flex;
+    align-items: center;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 0.5rem;
+    display: flex; /* Centers the SVG */
+}
+
+.like-icon {
+    width: 24px;
+    height: 24px;
+    stroke: #999;
+    transition: stroke 0.2s, fill 0.2s;
+
+    &:hover {
+        stroke: $like-color;
+    }
+    
+    &.liked {
+        fill: $like-color;
+        stroke: $like-color;
+    }
+}
+
+.like-count {
+    font-weight: 500;
+    color: #666;
+    &.liked {
+        color: $like-color;
+    }
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #999;
+}
+
+/* --- EDIT BUTTON STYLES --- */
+
+.edit-button {
+    background-color: transparent;
+    border: 1px solid $primary;
+    color: $primary;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+        background-color: $primary;
+        color: white;
+    }
+}

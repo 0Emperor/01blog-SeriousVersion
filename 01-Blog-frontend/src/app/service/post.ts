@@ -65,6 +65,7 @@ export class PostService {
 
     // Build the query string using Spring's parameters: 'page' and 'size'
     const url = `${POSTS_FEED_API}?page=${springPage}&size=${limit}`;
+console.log(url);
 
     // Expecting the Map<String, Object> response { posts: [...], hasNext: boolean }
     return this.http.get<any>(url);

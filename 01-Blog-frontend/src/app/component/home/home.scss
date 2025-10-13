@@ -46,7 +46,6 @@ $mobile-breakpoint: 768px; /* Breakpoint for switching layouts */
     flex-direction: column;
     z-index: 10;
     transition: transform 0.3s ease-in-out; /* For mobile slide effect */
-
     @media (prefers-color-scheme: dark) {
       background-color: $surface-dark;
       border-color: rgba(255, 255, 255, 0.1);
@@ -56,7 +55,7 @@ $mobile-breakpoint: 768px; /* Breakpoint for switching layouts */
     @media (min-width: $mobile-breakpoint) {
       grid-column: 1 / 2;
       height: 100vh; /* Fill the viewport height */
-      position: sticky; 
+      position:fixed; 
       top: 0;
       /* Ensure transform is reset for desktop visibility */
       transform: translateX(0); 
@@ -83,7 +82,6 @@ $mobile-breakpoint: 768px; /* Breakpoint for switching layouts */
 
   .container {
     /* Base styles (Applies to both) */
-    width: 100%;
     overflow-y: scroll; 
     min-height: 100vh;
     

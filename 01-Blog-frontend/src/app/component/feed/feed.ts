@@ -2,15 +2,15 @@ import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // For *ngIf, *ngFor
 import { BehaviorSubject, scan, switchMap, tap, filter } from 'rxjs';
 import { PostService } from '../../service/post';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { Post, User } from '../../dto/dto';
-import { UserHeaderComponent } from '../user-header/user-header';
-import { TruncatePipe } from '../../pipe/truncate-pipe';
+import { Post } from '../../dto/dto';
+
+import { PostFeed } from "../post-feed/post-feed";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet,UserHeaderComponent,TruncatePipe],
+  imports: [CommonModule, RouterOutlet, PostFeed],
   templateUrl: './feed.html', 
   styleUrl: './feed.scss'     
 })
@@ -45,13 +45,7 @@ export class Feed implements OnInit {
       // 3. Accumulate data: scan combines results from previous pages (acc) with new results (currentChunk)
       scan((acc: Post[], currentChunk: any) => {
         // Use the 'posts' key from the backend Map response
-        const newPosts: Post[] = currentChunk.posts.map((post: any) => ({
-          postId: post.postId,
-          description: post.description,
-          mediaUrl: post.mediaUrl, // <-- USE URL DIRECTLY FROM SERVER
-          createdAt: post.createdAt,
-          user: post.user           // <-- USER IS A NESTED OBJECT
-        }));
+        const newPosts: Post[] = currentChunk.posts.map((post: any) => (post));
 
         // Use the 'hasNext' key from the backend Map response to reliably stop loading
         if (!currentChunk.hasNext) { 
@@ -62,7 +56,9 @@ export class Feed implements OnInit {
         return [...acc, ...newPosts]; // Accumulate all posts
       }, []) // Initial accumulator value is an empty array
     ).subscribe(allPosts => {
-      this.posts = allPosts; // Update the component property bound to the template
+      this.posts = allPosts; 
+      console.log(this.posts);
+      // Update the component property bound to the template
     });
   }
 

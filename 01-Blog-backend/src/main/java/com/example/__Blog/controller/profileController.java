@@ -70,7 +70,7 @@ public class profileController {
         Page<Post> postsPage = postService.getByUser(pageable, jwt.getId());
 
         List<PostResponse> dtos = postsPage.stream()
-                .map(PostResponse::mapToDto)
+                .map(i -> PostResponse.mapToDto(i, jwt.getId()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
@@ -78,6 +78,7 @@ public class profileController {
 
     @GetMapping("/posts/{name}")
     public ResponseEntity<List<PostResponse>> GetOthersPosts(
+            @AuthenticationPrincipal CustomUserDetails jwt,
             @PathVariable String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -86,7 +87,7 @@ public class profileController {
         Page<Post> postsPage = postService.getByUser(pageable, name);
 
         List<PostResponse> dtos = postsPage.stream()
-                .map(PostResponse::mapToDto)
+                .map(i -> PostResponse.mapToDto(i, jwt.getId()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);

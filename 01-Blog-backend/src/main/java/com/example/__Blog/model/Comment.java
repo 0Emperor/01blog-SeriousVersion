@@ -1,6 +1,6 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,9 +26,9 @@ public class Comment {
     private User user;
 
     private String text;
-    private Date createdAt;
+    private Timestamp createdAt;
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 

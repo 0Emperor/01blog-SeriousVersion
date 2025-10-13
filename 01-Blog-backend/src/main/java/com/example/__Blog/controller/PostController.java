@@ -37,12 +37,11 @@ public class PostController {
     public ResponseEntity<PostResponse> createPost(
             @AuthenticationPrincipal CustomUserDetails jwt,
             @RequestBody Post pos) {
-System.out.println("hi");
         User user = userService.getUser(jwt.getUsername());
-        Post post = postService.createPost(pos.getDescription(), pos.getTitle(), user,pos.getMedia());
+        Post post = postService.createPost(pos.getDescription(), pos.getTitle(), user, pos.getMedia());
         Post savedPost = postService.save(post);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.mapToDto(savedPost));
+        return ResponseEntity.status(HttpStatus.CREATED).body(PostResponse.mapToDto(savedPost, jwt.getId()));
     }
 
     @GetMapping
@@ -50,10 +49,11 @@ System.out.println("hi");
             @AuthenticationPrincipal CustomUserDetails jwt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        System.out.println("hello");
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> postsPage = postService.getAllFromFollowed(jwt.getId(), pageable);
         List<PostResponse> dtos = postsPage.stream()
-                .map(PostResponse::mapToDto)
+                .map(i -> PostResponse.mapToDto(i, jwt.getId()))
                 .collect(Collectors.toList());
         Map<String, Object> r = new HashMap<>();
         r.put("posts", dtos);
@@ -62,9 +62,11 @@ System.out.println("hi");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable Integer id) {
+    public ResponseEntity<PostResponse> getPostById(@AuthenticationPrincipal CustomUserDetails jwt,
+            @PathVariable Integer id) {
         Post post = postService.getById(id);
-        return (post != null) ? ResponseEntity.ok(PostResponse.mapToDto(post)) : ResponseEntity.notFound().build();
+        return (post != null) ? ResponseEntity.ok(PostResponse.mapToDto(post, jwt.getId()))
+                : ResponseEntity.notFound().build();
     }
 
 }

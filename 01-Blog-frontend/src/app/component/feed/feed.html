@@ -2,27 +2,7 @@
   <div class="post-feed">
 
     @for (post of posts; track post.postId) {
-    <div class="post-card" [routerLink]="['/home', post.postId]">
-
-      @if (post.user) {
-      <app-user-header></app-user-header>
-      }
-
-      <div class="caption-text">
-        <p>{{ post.description | truncate }}</p>
-      </div>
-
-      @if (post.mediaUrl) {
-      <div class="post-media">
-        <img [src]="'http://localhost:8080/api/files/' + post.mediaUrl" alt="Post media" class="media-content">
-      </div>
-      }
-
-      <div class="post-actions">
-        <span class="timestamp">{{ post.createdAt | date: 'short' }}</span>
-      </div>
-
-    </div>
+    <app-post-feed [post]="post"></app-post-feed>
     }
 
     @if (loading && !finished) {

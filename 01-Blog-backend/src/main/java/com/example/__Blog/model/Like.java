@@ -1,6 +1,6 @@
 package com.example.__Blog.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,22 +24,29 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-public void setPost(Post post) {
-    this.post = post;
-}
-public void setUser(User user) {
-    this.user = user;
-}public Post getPost() {
-    return post;
-}
-public Integer getId() {
-    return id;
-}
 
-    private Date createdAt;
-    public Date getCreatedAt() {
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    private Timestamp createdAt;
+
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
+
     public User getUser() {
         return user;
     }
