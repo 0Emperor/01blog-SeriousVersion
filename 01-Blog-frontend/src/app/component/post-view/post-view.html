@@ -1,0 +1,15 @@
+<div class="container">
+    @if (post!=null){
+    <div class="Header">
+        <app-user-header [userr]="post.user"></app-user-header>
+        <div class="time">{{post.createdAt|timeAgo}}</div>
+    </div>
+    <div class="preview">
+        <h1>{{post.title}}</h1>
+        <div class="content">
+            <markdown [data]="post.description" class="text"></markdown>
+        </div>
+        <app-comment-area></app-comment-area>
+    </div>
+    }
+</div>

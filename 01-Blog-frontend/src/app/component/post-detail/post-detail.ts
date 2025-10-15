@@ -25,7 +25,7 @@ export class PostDetailComponent implements OnInit {
   
   private route = inject(ActivatedRoute);
   private postService = inject(PostService);
-  private router = inject(Router); // ⬅️ NEW: Inject Router
+  private router = inject(Router); 
   post: Post | undefined;
   loading: boolean = true;
   /**
@@ -36,17 +36,13 @@ export class PostDetailComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
   ngOnInit() {
-    // Read the 'id' parameter from the URL using ActivatedRoute
     this.route.paramMap.pipe(
       tap(() => this.loading = true),
-      // switchMap to call the API with the ID
       switchMap(params => {
         const postId = params.get('id');
         if (postId) {
-          // 💥 Assuming you have a getPostById API method (we'll add it next)
           return this.postService.getPostById(postId);
         }
-        // Return an observable that emits nothing if no ID is present
         return new Promise(() => {}); 
       })
     ).subscribe({
@@ -57,7 +53,6 @@ export class PostDetailComponent implements OnInit {
       error: (err) => {
         console.error("Failed to load post details:", err);
         this.loading = false;
-        // Optionally redirect to 404 page
       }
     });
   }

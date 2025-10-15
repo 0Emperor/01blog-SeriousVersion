@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +21,7 @@ import com.example.__Blog.dto.PostResponse;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.User;
+import com.example.__Blog.service.LikeService;
 import com.example.__Blog.service.PostService;
 import com.example.__Blog.service.UserService;
 
@@ -30,12 +30,13 @@ import com.example.__Blog.service.UserService;
 public class profileController {
     private final PostService postService;
     private final UserService userService;
+    private final LikeService likeService;
 
-    profileController(PostService postService, UserService userService) {
+    profileController(PostService postService, UserService userService,LikeService likeService) {
         this.postService = postService;
         this.userService = userService;
+        this.likeService=likeService;
     }
-
     @GetMapping("/{name}")
     public String getOthersProfiles(@PathVariable String name) {
         return name;
@@ -54,7 +55,7 @@ public class profileController {
         User user = userService.getUser(cu.getUsername());
         res.put("username", user.getUsername());
         res.put("role", user.getRole());
-        res.put("avatarUrl", user.getProfile());
+        res.put("profile", user.getProfile());
         res.put("bio", user.getBio());
         res.put("created_at", user.getCreated_at());
         return ResponseEntity.ok().body(res);
@@ -70,8 +71,8 @@ public class profileController {
         Page<Post> postsPage = postService.getByUser(pageable, jwt.getId());
 
         List<PostResponse> dtos = postsPage.stream()
-                .map(i -> PostResponse.mapToDto(i, jwt.getId()))
-                .collect(Collectors.toList());
+        .map(i -> PostResponse.mapToDto(i, jwt.getId(),likeService.getLikeCount(i.getId()),100,likeService.didUserLikePost(jwt.getId(), i.getId())))
+        .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
@@ -87,16 +88,10 @@ public class profileController {
         Page<Post> postsPage = postService.getByUser(pageable, name);
 
         List<PostResponse> dtos = postsPage.stream()
-                .map(i -> PostResponse.mapToDto(i, jwt.getId()))
-                .collect(Collectors.toList());
+        .map(i -> PostResponse.mapToDto(i, jwt.getId(),likeService.getLikeCount(i.getId()),100,likeService.didUserLikePost(jwt.getId(), i.getId())))
+        .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
 
-    // @GetMapping("/discover")
-    // public List<userResponse> getAllPeople() {
-    // List l = new ArrayList<>();
-    // l.add(new userResponse());
-    // return l;
-    // }
 }

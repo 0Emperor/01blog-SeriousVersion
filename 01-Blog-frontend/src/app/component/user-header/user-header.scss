@@ -1,16 +1,15 @@
-$text-dark: #b7b1be;
-$primary: #7f13ec;
+@use '../../../variables' as *;
 
 .user-header {
     display: flex;
     align-items: center;
-    padding: 0.5rem 0; /* Keep it compact */
+    padding: 0.5rem ; 
     
     .profile-link {
         display: flex;
         align-items: center;
         text-decoration: none;
-        color: inherit; /* Inherit color or use a default text color */
+        color: inherit; 
         cursor: pointer;
         
         &:hover .username {
@@ -25,7 +24,7 @@ $primary: #7f13ec;
         border-radius: 50%;
         overflow: hidden;
         margin-right: 0.75rem;
-        border: 2px solid $primary; /* Small primary border for emphasis */
+        border: 2px solid $primary;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 
         .profile-img {

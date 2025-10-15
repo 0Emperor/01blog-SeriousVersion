@@ -1,68 +1,68 @@
 <div class="create-post-container">
 
     <!-- Editor Panel -->
-    <div class="editor-panel">
-        <input type="text" [(ngModel)]="title" placeholder="Writer title here" class="title-input" maxlength="255" />
+    <div class="compose-main">
+        <div class="editor-panel">
+            <input type="text" [(ngModel)]="title" placeholder="Writer title here" class="title-input"
+                maxlength="255" />
 
-        <!-- Markdown Control Bar -->
-        <div class="control-bar">
-            <!-- Buttons for B (Bold), I (Italic), and L (Link) -->
-            <button (click)="formatText('b')" title="Bold (Ctrl+B)">B</button>
-            <button (click)="formatText('i')" title="Italic (Ctrl+I)">I</button>
-            <button (click)="formatText('l')" title="Link (Ctrl+K)">L</button>
+            <!-- Markdown Control Bar -->
+            <div class="control-bar">
+                <!-- Buttons for B (Bold), I (Italic), and L (Link) -->
+                <button (click)="formatText('b')" title="Bold (Ctrl+B)">B</button>
+                <button (click)="formatText('i')" title="Italic (Ctrl+I)">I</button>
+                <button (click)="formatText('l')" title="Link (Ctrl+K)">L</button>
 
-            <!-- File Upload Input (Hidden) -->
-            <input type="file" #fileInput multiple (change)="handleFileInput($event)" style="display: none;">
+                <!-- File Upload Input (Hidden) -->
+                <input type="file" #fileInput multiple (change)="handleFileInput($event)" style="display: none;">
 
-            <!-- Visible Button to Trigger the Hidden Input (Now calling triggerFileInput) -->
-            <button (click)="triggerFileInput()" title="Add Media (Photos/Videos)">
-                AD | Photos ({{ mediaPreviews.length }})
-            </button>
-        </div>
+                <!-- Visible Button to Trigger the Hidden Input (Now calling triggerFileInput) -->
+                <button (click)="triggerFileInput()" title="Add Media (Photos/Videos)">
+                    AD | Photos ({{ mediaPreviews.length }})
+                </button>
+            </div>
 
-        <!-- Markdown Text Area -->
-        <textarea #editorArea [(ngModel)]="description" placeholder="write the description here..."
-            class="markdown-editor" rows="15">
+            <!-- Markdown Text Area -->
+            <textarea #editorArea [(ngModel)]="description" placeholder="write the description here..."
+                class="markdown-editor" rows="15">
       </textarea>
-    </div>
-
-    <!-- Preview Panel -->
-    <div class="preview-panel" [ngClass]="{'hidden-mobile': !isPreviewVisible}">
-        <markdown [data]=" title || 'preview the title here' " class="preview-title"></markdown>
-
-        <div class="preview-content">
-            <!-- In a real app, you would use ngx-markdown here to render: 
-        <markdown [data]="description"></markdown> -->
-            <markdown [data]="description" class="text-preview">{{ description || 'preview the description here...' }}</markdown>
         </div>
 
-        <!-- Media Preview Gallery -->
-        <div class="media-preview-gallery">
-            <div *ngFor="let media of mediaPreviews; let i = index" class="media-preview-item">
-                <!-- Display localUrl while serverUrl is pending ('uploading...') -->
-                <img [src]="media.serverUrl === 'uploading...' ? media.localUrl : media.serverUrl"
-                    [alt]="media.serverFileName || 'Uploading...'" *ngIf="media.type === 'image'" (click)="addMediaLink(i)">
+        <!-- Preview Panel -->
+        <div class="preview-panel" [ngClass]="{'hidden-mobile': !isPreviewVisible}">
+            <h3 class="preview-title">{{title||"preview title here"}}</h3>
 
-                <video [src]="media.serverUrl === 'uploading...' ? media.localUrl : media.serverUrl"
-                    *ngIf="media.type === 'video'" controls></video>
+            <div class="preview-content">
+                <!-- In a real app, you would use ngx-markdown here to render: 
+        <markdown [data]="description"></markdown> -->
+                <markdown [data]="description" class="text-preview">{{ description || 'preview the description here...'
+                    }}</markdown>
+            </div>
 
-                <div *ngIf="media.type === 'other'" class="file-placeholder">
-                    File: {{ media.serverFileName || 'Uploading...' }}
-                </div>
+            <!-- Media Preview Gallery -->
+            <div class="media-preview-gallery">
+                <div *ngFor="let media of mediaPreviews; let i = index" class="media-preview-item">
+                    <!-- Display localUrl while serverUrl is pending ('uploading...') -->
+                    <img [src]="media.serverUrl === 'uploading...' ? media.localUrl : media.serverUrl"
+                        [alt]="media.serverFileName || 'Uploading...'" *ngIf="media.type === 'image'"
+                        (click)="addMediaLink(i)">
 
-                <div class="upload-status" *ngIf="media.serverUrl === 'uploading...'">
-                    Uploading...
+                    <video [src]="media.serverUrl === 'uploading...' ? media.localUrl : media.serverUrl"
+                        *ngIf="media.type === 'video'" controls></video>
+
+                    <div *ngIf="media.type === 'other'" class="file-placeholder">
+                        File: {{ media.serverFileName || 'Uploading...' }}
+                    </div>
+
+                    <div class="upload-status" *ngIf="media.serverUrl === 'uploading...'">
+                        Uploading...
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Mobile Toggles and Submission Button -->
     <div class="action-footer">
-        <button class="toggle-preview-btn" (click)="togglePreview()">
-            {{ isPreviewVisible ? 'Show Editor' : 'Show Preview' }}
-        </button>
-
         <button class="submit-post-btn" (click)="onSubmit()"
             [disabled]="(!title || !description || isPosting||isMediaUploading )">
             {{ isPosting ? 'Publishing...' : 'Publish Post' }}

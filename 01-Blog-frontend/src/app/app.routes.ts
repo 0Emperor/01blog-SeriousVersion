@@ -8,10 +8,19 @@ import { Profile } from './component/profile/profile';
 import { Home } from './component/home/home';
 import { Feed } from './component/feed/feed';
 import { PostCompose } from './component/post-compose/post-compose';
-import { PostDetailComponent } from './component/post-detail/post-detail';
+import { PostView } from './component/post-view/post-view';
 
 export const routes: Routes = [
-    { path: "", component: Home, canActivate: [AuthGuard], children: [{ path: "home", component: Feed, children: [{ path: ":id", component: PostDetailComponent }] }, { path: "create", component: PostCompose }, { path: "admin", component: AdminPanel, canActivate: [AdminGuard] }, { path: "profile", component: Profile, canActivate: [AuthGuard] }] },
     { path: "register", component: Register },
     { path: "login", component: Login },
+    {
+        path: "", component: Home, canActivate: [AuthGuard], children: [{ path: "home", component: Feed },
+        { path: "admin", component: AdminPanel, canActivate: [AdminGuard] },
+        { path: "profile", component: Profile },
+        { path: "create", component: PostCompose },
+        { path: ":id", component: PostView },
+        ]
+    },
+
+
 ];

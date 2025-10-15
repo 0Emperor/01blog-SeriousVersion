@@ -24,7 +24,7 @@ public class LikeService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-    public Integer getLikeCount(Integer pId){
+    public  Integer getLikeCount(Integer pId){
         return likeRepository.countByPostId(pId);
     }
     @Transactional
@@ -38,7 +38,9 @@ public class LikeService {
             likeRepository.save(like);
         }
     }
-
+public boolean didUserLikePost(UUID userId, Integer postId){
+    return likeRepository.existsByUserIdAndPostId(userId, postId) ;
+}
     @Transactional
     public void unlikePost(UUID userId, Integer postId) {
         likeRepository.deleteByUserIdAndPostId(userId, postId);

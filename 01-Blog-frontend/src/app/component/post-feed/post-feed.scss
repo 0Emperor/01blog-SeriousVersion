@@ -19,8 +19,7 @@ $font-family: 'Spline Sans', sans-serif;
     box-shadow: 0 1px 10px $background-dark;
     margin-bottom: 20px;
     transition: box-shadow 0.3s ease-in-out;
-    max-width: 600px;
-    width: 100%;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer; /* Makes the entire card feel clickable for navigation */
@@ -75,7 +74,7 @@ $font-family: 'Spline Sans', sans-serif;
     cursor: pointer;
     padding: 0;
     margin-right: 0.5rem;
-    display: flex; /* Centers the SVG */
+    display: flex;
 }
 
 .like-icon {

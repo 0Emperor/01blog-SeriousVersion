@@ -27,3 +27,10 @@ export interface Post {
     isLiked:boolean;
     isOwn:boolean;
 }
+export interface Comment{
+    id: string;
+    post:Post;
+    user: User;
+    createdAt: Date;
+    content:string
+}

@@ -1,4 +1,4 @@
-<div class="post-card" [routerLink]="['/home', post.postId]">
+<div class="post-card" (click)="navigate()">
 
     <!-- User Header -->
     <app-user-header [userr]="post.user"></app-user-header>
@@ -9,17 +9,15 @@
     <!-- Optional: Post Content Summary/Media -->
 
     <div class="post-actions">
-
         <div class="left-actions">
             <div class="like-info">
-                <button class="like-button" (click)="$event.stopPropagation(); ">
+                <button class="like-button" (click)="$event.stopPropagation(); likeClicked() ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="like-icon" [class.liked]="post.isLiked"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
-                        <path
-                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-.318-.318a4.5 4.5 0 00-6.364 0z" />
+                        <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" />
                     </svg>
                 </button>
-                <span class="like-count" [class.liked]="post.isLiked">{{ post.totalLikes }} Likes</span>
+                <span class="like-count" [class.liked]="post.isLiked">{{ post.totalLikes| count}}</span>
             </div>
 
             @if(post.isOwn){

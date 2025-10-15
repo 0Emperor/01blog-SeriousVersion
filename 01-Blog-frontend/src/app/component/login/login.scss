@@ -1,14 +1,4 @@
-/* Colors & Fonts */
-$primary: #7f13ec;
-$background-light: #f7f6f8;
-$background-dark: #191022;
-$text-light: #4c4851;
-$text-dark: #b7b1be;
-$surface-light: #ffffff;
-$surface-dark: #231a2f;
-$muted-light: #a199ab;
-$muted-dark: #71697d;
-$font-family: 'Spline Sans', sans-serif;
+@use '../../../variables' as *;
 
 /* Container */
 .login-container {
@@ -133,7 +123,7 @@ $font-family: 'Spline Sans', sans-serif;
     transition: all 0.3s;
 
     &:hover {
-      background-color: lighten($primary, 10%);
+      background-color: $primary-light;
       transform: scale(1.05);
     }
   }

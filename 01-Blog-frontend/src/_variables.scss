@@ -1,22 +1,84 @@
-// Colors
-$primary: #4F46E5;
-$accent: #6366F1;
-$warn: #EF4444;
-
-$background: #F9FAFB;
-$surface: #FFFFFF;
-$text-primary: #111827;
-$text-secondary: #6B7280;
-$border: #E5E7EB;
-
-// Spacing
-$spacing-unit: 4px;
-$space-xs: $spacing-unit;
-$space-sm: $spacing-unit * 2;
-$space-md: $spacing-unit * 4;
-$space-lg: $spacing-unit * 8;
-
+// =======================
 // Typography
-$font-family: 'Inter', sans-serif;
+// =======================
+$font-family: 'Spline Sans', sans-serif;
 $heading-font-weight: 600;
 $body-font-weight: 400;
+
+// =======================
+// Colors
+// =======================
+
+/* Primary */
+$primary: #7f13ec;
+
+/* Backgrounds */
+$background-light: #f7f6f8;
+$background-dark: #191022;
+$panel-bg-light: #ffffff;
+$panel-bg-dark: #231a2f;
+
+/* Text */
+$text-light: #4c4851;
+$text-dark: #b7b1be;
+
+/* Muted */
+$muted-light: #a199ab;
+$muted-dark: #71697d;
+
+/* surface */
+$surface-light: #ffffff; 
+$surface-dark: #231a2f;
+
+/* Borders */
+$border: #E5E7EB;
+$border-light: #a199ab;
+$border-dark: #444444;
+
+/* Buttons */
+$button-bg-light: #7f13ec;
+$button-text-light: #ffffff;
+$button-bg-dark: #444444;
+$button-text-dark: #f0f0f0;
+
+/* Errors */
+$error-light: #ff6b6b;
+$error-dark: #ff6b6b;
+
+/* File placeholders */
+$file-placeholder-bg-light: #e0e0e0;
+$file-placeholder-bg-dark: #3a3a3a;
+
+// =======================
+// Spacing
+// =======================
+$spacing-unit: 0.25rem; 
+$space-xs: $spacing-unit;          
+$space-sm: $spacing-unit * 2;     
+$space-md: $spacing-unit * 4;      
+$space-lg: $spacing-unit * 8;      
+
+// =======================
+// Borders & Radius
+// =======================
+$border-radius-sm: 0.03125rem * 8; 
+$border-radius-lg: 1rem;
+
+// =======================
+// Layout
+// =======================
+$sidebar-width: 15.625rem; 
+
+// =======================
+// Breakpoints
+// =======================
+$mobile-breakpoint: 48rem; 
+
+
+
+
+///something
+@use "sass:color";
+
+$primary-dark: color.adjust($primary, $lightness: -10%);
+$primary-light: color.adjust($primary, $lightness: 10%);

@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-login',
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
-  standalone: true, // <-- important for per-component imports
+  standalone: true, 
   imports: [
     FormsModule,
     MatFormFieldModule,
@@ -32,7 +32,7 @@ export class Login {
       .pipe(catchError((e) => { throw e }))
       .subscribe((e: any) => {
         window.localStorage.setItem("jwt", e["jwt"]);
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/home']);
       })
   }
 }

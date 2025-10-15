@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PostCard } from './post-card';
+import { CommentArea } from './comment-area';
 
-describe('PostCard', () => {
-  let component: PostCard;
-  let fixture: ComponentFixture<PostCard>;
+describe('CommentArea', () => {
+  let component: CommentArea;
+  let fixture: ComponentFixture<CommentArea>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PostCard]
+      imports: [CommentArea]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PostCard);
+    fixture = TestBed.createComponent(CommentArea);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,31 +1,56 @@
 @use 'variables' as *;
+@import "highlight.js/styles/github.css";
+@media (prefers-color-scheme: dark) {
+  pre code.hljs {
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+}
+
 body {
   font-family: $font-family;
-  background-color: $background;
-  color: $text-primary;
+  background-color: $background-light;
+
+  color: $text-light;
+  @media (prefers-color-scheme: dark){
+    color: $text-dark;
+    background-color: $background-dark;
+  
+  }
   margin: 0;
   padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: $heading-font-weight;
-  color: $text-primary;
+  color: $text-light;
+  @media (prefers-color-scheme: dark){
+    color: $text-dark;
+  }
 }
 
 p, span, li {
   font-weight: $body-font-weight;
-  color: $text-secondary;
+  color: $muted-light;
+  @media (prefers-color-scheme: dark){
+    color: $muted-dark;
+  }
 }
 
 button {
   font-family: $font-family;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   padding: $space-sm $space-md;
 }
 
 .card {
-  background-color: $surface;
+  background-color: $surface-light;
+  @media (prefers-color-scheme: dark){
+    background-color: $surface-dark;
+    border: 1px solid $border-dark;
+
+  }
   padding: $space-md;
-  border: 1px solid $border;
+  border: 1px solid $border-light;
   border-radius: 8px;
 }

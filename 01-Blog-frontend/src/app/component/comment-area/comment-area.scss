@@ -1,0 +1,39 @@
+@use '../../../variables' as *;
+.container {
+    // 1. Ensures the container takes up the full width available
+  overflow: hidden;
+    // 2. Styling for the list of comments (app-comment-card)
+    // This creates vertical space between individual comment cards.
+    app-comment-card {
+      display: block; // Ensures margin works correctly
+      margin-bottom: $space-md; // Use 1rem space between comments
+  
+      &:last-of-type {
+        margin-bottom: $space-lg; // Add more space before the 'Add Comment' input
+      }
+    }
+  
+    // 3. Styling for the comment input (app-comment-add)
+    app-comment-add {
+      display: block; // Ensures the component uses full width
+      
+      // --- Dark Mode Override for Input Area Border ---
+      // Since this area visually looks like a separate panel in the wireframe, 
+      // we can add a subtle border for separation if needed, but given the 
+      // parent component already has a top border (post-view.component.scss), 
+      // we'll focus on internal padding/margin.
+    }
+  }
+  
+  // ===========================================
+  // DARK MODE STYLES: @media (prefers-color-scheme: dark)
+  // We mostly rely on the cards and input component to handle their own dark mode colors, 
+  // but we include the block for completeness.
+  // ===========================================
+  @media (prefers-color-scheme: dark) {
+    .container {
+      // No specific changes needed here, as spacing remains the same 
+      // and color changes are delegated to the child components.
+    }
+  }
+  

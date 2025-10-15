@@ -1,0 +1,12 @@
+<div class="container">
+    @if(comments&&comments.length!=0)
+    {
+        @for(comment of comments;track comment.id){
+    <app-comment-card [comment]="comment"></app-comment-card>
+    }
+    }@else{
+<h3>no comments yet</h3>
+    }
+    
+    <app-comment-add></app-comment-add>
+</div>

@@ -12,7 +12,7 @@ import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.service.LikeService;
 
 @RestController
-@RequestMapping("/like")
+@RequestMapping("/api/like")
 public class LikeController {
     private final LikeService likeService;
 
@@ -23,13 +23,13 @@ public class LikeController {
     @PostMapping("/{postId}")
     public ResponseEntity<?> likePost(@PathVariable Integer postId, @AuthenticationPrincipal CustomUserDetails jwt) {
         likeService.likePost(jwt.getId(), postId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(true);
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> unlikePost(@PathVariable Integer postId, @AuthenticationPrincipal CustomUserDetails jwt) {
         likeService.unlikePost(jwt.getId(), postId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(false);
     }
 
 }

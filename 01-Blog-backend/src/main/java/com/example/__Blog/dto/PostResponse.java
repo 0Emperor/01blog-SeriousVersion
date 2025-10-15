@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.example.__Blog.model.Post;
+import com.example.__Blog.service.LikeService;
 
 public class PostResponse {
     private String postId;
@@ -11,17 +12,16 @@ public class PostResponse {
     private String title;
     private Timestamp createdAt;
     private UserSummary user;
-    private boolean liked = false;
-    private Integer likeCount = 0;
+    private boolean isLiked = true;
+    private Integer totalLikes = 0;
     private boolean isOwn;
     private Integer commentsCount;
-
     public Integer getCommentsCount() {
         return commentsCount;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
+    public Integer gettotalLikes() {
+        return totalLikes;
     }
 
     public boolean getIsOwn() {
@@ -29,23 +29,24 @@ public class PostResponse {
     }
 
     public PostResponse(String postId, String description, String title, Timestamp createdAt, UserSummary user,
-            Integer likeCount, Integer commentCount, UUID id) {
+            Integer totalLikes, Integer commentCount, UUID id, Boolean isLiked) {
         this.isOwn = (UUID.fromString(user.getId()).equals(id));
         this.commentsCount = commentCount;
-        this.likeCount = likeCount;
+        this.totalLikes = totalLikes;
         this.postId = postId;
         this.description = description;
         this.title = title;
         this.createdAt = createdAt;
         this.user = user;
+        this.isLiked = isLiked;
     }
 
-    public void setLiked(boolean liked) {
-        this.liked = liked;
+    public void setLiked(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 
-    public boolean getLiked() {
-        return liked;
+    public boolean getisLiked() {
+        return isLiked;
     }
 
     public String getPostId() {
@@ -68,7 +69,7 @@ public class PostResponse {
         return user;
     }
 
-    public static PostResponse mapToDto(Post post,UUID id) {
+    public static PostResponse mapToDto(Post post, UUID id,Integer tLikes,Integer Tcomments,boolean isLiked) {
         PostResponse.UserSummary userSummary = new PostResponse.UserSummary(
                 post.getUser().getId().toString(),
                 post.getUser().getUsername(),
@@ -82,8 +83,7 @@ public class PostResponse {
                 post.getTitle(),
                 post.getCreatedAt(),
                 userSummary,
-                0,0,id
-                );
+                tLikes,Tcomments ,id, isLiked);
     }
 
     public static class UserSummary {

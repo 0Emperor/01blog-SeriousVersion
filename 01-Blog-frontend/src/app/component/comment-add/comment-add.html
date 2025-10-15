@@ -1,0 +1,29 @@
+<div class="comment-add-container">
+    <div class="avatar-container">
+        @if (userS.getUser&& userS.getUser.profile) {
+        <img [src]="'http://localhost:8080/api/files/' + userS.getUser.profile" alt="{{ userS.getUser.username }}'s profile picture"
+            class="profile-img">
+        } @else {
+        <div class="initials-avatar" [style.background-color]="avatarBackgroundColor">
+            {{ userInitial }}
+        </div>
+        }
+    </div>
+
+
+    <div class="input-wrapper">
+        <input 
+            type="text" 
+            placeholder="comment..." 
+            class="comment-input"
+            [value]="commentText()"
+            (input)="commentText.set($event.target.value)"
+            (keydown.enter)="submitComment()"
+        />
+        <button (click)="openEmojiPicker()" class="emoji-btn" aria-label="Open emoji picker">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor">
+                <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88A88.1 88.1 0 0 1 128 216ZM92 108a12 12 0 1 1-12-12A12 12 0 0 1 92 108Zm72 0a12 12 0 1 1-12-12A12 12 0 0 1 164 108Zm-36 64a44 44 0 0 1-44-44h-8a52 52 0 0 0 104 0h-8a44 44 0 0 1-44 44Z"></path>
+            </svg>
+        </button>
+    </div>
+</div>

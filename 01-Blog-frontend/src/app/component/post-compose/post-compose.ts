@@ -217,7 +217,7 @@ export class PostCompose {
     this.mediaPreviews = [];
 
     // Navigate back to the home page or feed
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   /**

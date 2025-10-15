@@ -19,7 +19,7 @@ export class PostService {
    * @param postId The ID of the post to fetch.
    * @returns An Observable of the single Post object.
    */
- getPostById(postId: string): Observable<any> {
+ getPostById(postId: string|undefined): Observable<any> {
   // 💥 ASSUMING your backend has an endpoint like GET /api/posts/{postId}
   const url = `${POST_API}/${postId}`;
   return this.http.get<any>(url);
