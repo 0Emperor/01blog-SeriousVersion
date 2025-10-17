@@ -32,7 +32,7 @@ export class Register {
       }))
       .subscribe((e: any) => {
         window.localStorage.setItem("jwt", e["jwt"]);
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       })
   }
 }
