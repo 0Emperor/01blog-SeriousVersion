@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.__Blog.dto.PostResponse;
+import com.example.__Blog.dto.Postdto;
+import com.example.__Blog.dto.Userdto;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.User;
+import com.example.__Blog.service.CommentService;
 import com.example.__Blog.service.LikeService;
 import com.example.__Blog.service.PostService;
 import com.example.__Blog.service.UserService;
@@ -29,14 +31,18 @@ import com.example.__Blog.service.UserService;
 @RequestMapping("/api/profile")
 public class profileController {
     private final PostService postService;
+    private final CommentService commentService;
     private final UserService userService;
     private final LikeService likeService;
 
-    profileController(PostService postService, UserService userService,LikeService likeService) {
+    profileController(PostService postService, CommentService commentService, UserService userService,
+            LikeService likeService) {
         this.postService = postService;
         this.userService = userService;
-        this.likeService=likeService;
+        this.likeService = likeService;
+        this.commentService = commentService;
     }
+
     @GetMapping("/{name}")
     public String getOthersProfiles(@PathVariable String name) {
         return name;
@@ -50,19 +56,13 @@ public class profileController {
     }
 
     @GetMapping("/curent")
-    public ResponseEntity<Map<String, Object>> getCurrentUser(@AuthenticationPrincipal CustomUserDetails cu) {
-        Map<String, Object> res = new HashMap<>();
+    public ResponseEntity<Userdto> getCurrentUser(@AuthenticationPrincipal CustomUserDetails cu) {
         User user = userService.getUser(cu.getUsername());
-        res.put("username", user.getUsername());
-        res.put("role", user.getRole());
-        res.put("profile", user.getProfile());
-        res.put("bio", user.getBio());
-        res.put("created_at", user.getCreated_at());
-        return ResponseEntity.ok().body(res);
+        return ResponseEntity.ok().body(Userdto.from(user));
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponse>> GetOwnPosts(
+    public ResponseEntity<List<Postdto>> GetOwnPosts(
             @AuthenticationPrincipal CustomUserDetails jwt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -70,15 +70,16 @@ public class profileController {
 
         Page<Post> postsPage = postService.getByUser(pageable, jwt.getId());
 
-        List<PostResponse> dtos = postsPage.stream()
-        .map(i -> PostResponse.mapToDto(i, jwt.getId(),likeService.getLikeCount(i.getId()),100,likeService.didUserLikePost(jwt.getId(), i.getId())))
-        .collect(Collectors.toList());
+        List<Postdto> dtos = postsPage.stream()
+                .map(i -> Postdto.from(i, jwt.getId(), likeService.getLikeCount(i.getId()), commentService.CountComment(i.getId()),
+                        likeService.didUserLikePost(jwt.getId(), i.getId())))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/posts/{name}")
-    public ResponseEntity<List<PostResponse>> GetOthersPosts(
+    public ResponseEntity<List<Postdto>> GetOthersPosts(
             @AuthenticationPrincipal CustomUserDetails jwt,
             @PathVariable String name,
             @RequestParam(defaultValue = "0") int page,
@@ -87,9 +88,10 @@ public class profileController {
 
         Page<Post> postsPage = postService.getByUser(pageable, name);
 
-        List<PostResponse> dtos = postsPage.stream()
-        .map(i -> PostResponse.mapToDto(i, jwt.getId(),likeService.getLikeCount(i.getId()),100,likeService.didUserLikePost(jwt.getId(), i.getId())))
-        .collect(Collectors.toList());
+        List<Postdto> dtos = postsPage.stream()
+                .map(i -> Postdto.from(i, jwt.getId(), likeService.getLikeCount(i.getId()), commentService.CountComment(i.getId()),
+                        likeService.didUserLikePost(jwt.getId(), i.getId())))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }

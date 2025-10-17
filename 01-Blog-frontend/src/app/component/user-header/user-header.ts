@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserStore } from '../../service/user';
@@ -11,14 +11,13 @@ import { User } from '../../dto/dto';
   templateUrl: './user-header.html',
   styleUrl: './user-header.scss'
 })
-export class UserHeaderComponent implements OnInit {
+export class UserHeaderComponent  {
 
   // The User object passed from the parent component (e.g., Feed or Post Detail)
   constructor(private userS: UserStore) { }
   // Properties for the Initials Avatar logic
   @Input() userr?: User;
-  userInitial: string = '';
-  avatarBackgroundColor: string = '#ccc'; // Default fallback color
+ // Default fallback color
   get user() {
     if (this.userr) {
       return this.userr
@@ -31,25 +30,18 @@ export class UserHeaderComponent implements OnInit {
     '#ff5722', '#607d8b'
   ];
 
-  ngOnInit() {
-    console.log("hi",)
-    if (this.user && !this.user.profile) {
-      this.userInitial = this.getInitial(this.user.username);
-      this.avatarBackgroundColor = this.getBackgroundColor(this.user.username);
-    }
-  }
 
   /**
    * Extracts the first letter of the username for the avatar placeholder.
    */
-  private getInitial(username: string): string {
+  protected getInitial(username: string): string {
     return username.charAt(0).toUpperCase();
   }
 
   /**
    * Selects a consistent background color based on the username string (simple hash).
    */
-  private getBackgroundColor(username: string): string {
+  protected getBackgroundColor(username: string): string {
     let hash = 0;
     for (let i = 0; i < username.length; i++) {
       // Simple non-cryptographic hash function

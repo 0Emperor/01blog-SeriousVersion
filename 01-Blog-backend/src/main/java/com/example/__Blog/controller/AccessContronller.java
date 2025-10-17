@@ -10,7 +10,6 @@ import com.example.__Blog.helper.CustomUserDetails;
 @RestController
 @RequestMapping("/access")
 public class AccessContronller {
-    // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public boolean isLogged() {
         return true;

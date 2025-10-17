@@ -9,7 +9,7 @@
         <div class="content">
             <markdown [data]="post.description" class="text"></markdown>
         </div>
-        <app-comment-area></app-comment-area>
+        <app-comment-area [pid]="post.postId"></app-comment-area>
     </div>
     }
 </div>

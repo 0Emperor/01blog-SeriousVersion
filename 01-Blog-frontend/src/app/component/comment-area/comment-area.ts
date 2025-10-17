@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommentAdd } from "../comment-add/comment-add";
 import { CommentCard } from '../comment-card/comment-card';
 import { Comment, Post, User } from '../../dto/dto';
+import { CommentShare } from '../../service/comment-share';
 
 @Component({
   selector: 'app-comment-area',
@@ -10,7 +11,16 @@ import { Comment, Post, User } from '../../dto/dto';
   styleUrl: './comment-area.scss'
 })
 export class CommentArea {
-  user: User = {
+  @Input() pid!:string
+  commentReceive= inject(CommentShare)
+  ngOnInit() {
+  this.commentReceive.currentComment.subscribe(cmt=>{
+    if (cmt==null) {
+      return;
+    }
+    this.comments = [cmt,...this.comments]
+  })  
+  }  user: User = {
     id: "u123",
     username: "techExplorer",
     role: "beta",

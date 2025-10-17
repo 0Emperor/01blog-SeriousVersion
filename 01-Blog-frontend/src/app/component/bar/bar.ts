@@ -30,15 +30,6 @@ export class Bar {
     { id: 'profile', icon: 'person', label: 'Profile' },
   ]);
 
-  userProfile:User = {
-    username: 'Sophia',
-    profile: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia',
-    role:"ADMIN",
-    bio:"hello",
-    id:"id"
-  };
-
-
   setActiveItem(itemId: string): void {
     this.activeItem = itemId;
     this.router.navigate([itemId]);

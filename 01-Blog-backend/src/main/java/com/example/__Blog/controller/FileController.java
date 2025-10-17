@@ -28,13 +28,11 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity<String> staticFile(@RequestParam("file") MultipartFile file) throws IOException {
-        System.out.println("awyaaah");
         String fileName = UUID.randomUUID() + "";// + "_" + file.getOriginalFilename();
         Path filePath = Paths.get(staticDir + fileName);
         Files.createDirectories(filePath.getParent());
 
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        System.out.println("created");
         return ResponseEntity.ok(fileName);
     }
 
@@ -48,7 +46,7 @@ public class FileController {
         }
         String contentType = Files.probeContentType(filePath);
         if (contentType == null || !contentType.startsWith("image/")) {
-            contentType = "image/jpeg"; // fallback
+            contentType = "image/jpeg"; 
         }
 
         return ResponseEntity.ok()

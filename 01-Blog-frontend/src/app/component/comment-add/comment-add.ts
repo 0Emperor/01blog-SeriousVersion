@@ -1,5 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { UserStore } from '../../service/user';
+import { CommentS } from '../../service/comment';
+import { CommentShare } from '../../service/comment-share';
 
 @Component({
   selector: 'app-comment-add',
@@ -10,11 +12,19 @@ import { UserStore } from '../../service/user';
 export class CommentAdd {
   commentText = signal('');
   userS = inject(UserStore)
+  commentService = inject(CommentS)
+  cmmentPublish = inject(CommentShare)
+  @Input() pId!: string;
   submitComment() {
-    
+
     if (this.commentText().trim()) {
-      console.log('Comment submitted:', this.commentText());
-      // EMIT or SERVICE CALL here
+      this.commentService.addComment(this.commentText(), this.pId).subscribe({
+        next: (d) => {
+          console.log(d);
+          
+          this.cmmentPublish.changeMessage(d);
+        }
+      })
       this.commentText.set('');
     }
   }
@@ -30,19 +40,16 @@ export class CommentAdd {
     '#2196f3', '#00bcd4', '#009688', '#4caf50', '#ff9800',
     '#ff5722', '#607d8b'
   ];
-     /**
-   * Extracts the first letter of the username for the avatar placeholder.
-   */
+  /**
+* Extracts the first letter of the username for the avatar placeholder.
+*/
 
-     ngOnInit() {
-      console.log(this.userS?.getUser?.profile)
-      console.log(this.userS?.getUser);
-      
-      if (this.userS.getUser && !this.userS.getUser.profile) {
-        this.userInitial = this.getInitial(this.userS.getUser.username);
-        this.avatarBackgroundColor = this.getBackgroundColor(this.userS.getUser.username);
-      }
+  ngOnInit() {
+    if (this.userS.getUser && !this.userS.getUser.profile) {
+      this.userInitial = this.getInitial(this.userS.getUser.username);
+      this.avatarBackgroundColor = this.getBackgroundColor(this.userS.getUser.username);
     }
+  }
   private getInitial(username: string): string {
     return username.charAt(0).toUpperCase();
   }
@@ -59,4 +66,5 @@ export class CommentAdd {
     // Map the hash to an index in the color array
     const index = Math.abs(hash) % this.colors.length;
     return this.colors[index];
-}}
+  }
+}
