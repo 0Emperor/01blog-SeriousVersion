@@ -29,10 +29,18 @@ export class CommentAdd {
     }
   }
 
-  openEmojiPicker() {
-    console.log('Opening emoji picker...');
-    // TOGGLE EMOJI PICKER UI here
-  }
+  emojiPickerVisible = false;
+
+openEmojiPicker() {
+  this.emojiPickerVisible = !this.emojiPickerVisible;
+  console.log('Emoji picker is now:', this.emojiPickerVisible ? 'open' : 'closed');
+}
+
+addEmoji(emoji: string) {
+  this.commentText.set((this.commentText() || '') + emoji);
+  this.emojiPickerVisible = false; // optionally close after picking
+}
+
   userInitial: string = '';
   avatarBackgroundColor: string = '#ccc'; // Default fallback color
   private colors = [

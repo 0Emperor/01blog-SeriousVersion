@@ -10,22 +10,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.__Blog.dto.Commentdto;
-import com.example.__Blog.dto.Postdto;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Comment;
-import com.example.__Blog.model.Post;
 import com.example.__Blog.service.CommentService;
-
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -46,6 +44,20 @@ public class CommentControler {
                         cUserDetails.getId()));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteComment(@AuthenticationPrincipal CustomUserDetails cUserDetails,
+            @PathVariable Integer id) {
+        commentService.deleteComment(id, cUserDetails.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateComment(@AuthenticationPrincipal CustomUserDetails cUserDetails,
+            @PathVariable Integer id,
+            @RequestBody String nContent) {
+        return ResponseEntity.ok().body(Commentdto.from(commentService.updaComment(nContent, id, cUserDetails.getId()),cUserDetails.getId()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getComments(
             @AuthenticationPrincipal CustomUserDetails jwt,
@@ -60,8 +72,6 @@ public class CommentControler {
         Map<String, Object> r = new HashMap<>();
         r.put("comment", dtos);
         r.put("hasNext", comments.hasNext());
-        System.out.println(dtos.size());
-
         return ResponseEntity.ok().body(r);
     }
 }

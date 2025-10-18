@@ -48,7 +48,8 @@
             margin-bottom: $space-lg;
             line-height: 1.6;
             margin-left: 0.5rem;
-
+            overflow-wrap: break-word;
+            white-space: normal;
             .text {
                 color: $text-light;
                 font-weight: $body-font-weight;

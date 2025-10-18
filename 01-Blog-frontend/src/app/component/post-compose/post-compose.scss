@@ -15,7 +15,7 @@
   color: $text-light;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: hidden;
   width: 100%;
 
   @media (prefers-color-scheme: dark) {
@@ -57,7 +57,6 @@
   margin-bottom: 1rem;
   height: 100%;
   min-height: 400px;
-  overflow: hidden;
   background-color: $panel-bg-light;
   border: 1px solid $border-light;
 
@@ -75,7 +74,6 @@
 
 .preview-panel {
   padding-bottom: 50px;
-
   @media (min-width: 768px) {
     padding-bottom: 15px;
   }

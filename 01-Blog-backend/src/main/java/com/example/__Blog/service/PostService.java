@@ -5,6 +5,7 @@ import com.example.__Blog.model.User;
 import com.example.__Blog.repository.PostRepository;
 import com.example.__Blog.specification.PostSpecifications;
 
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,8 @@ public class PostService {
     }
 
     public Post getById(Integer id) {
-        return postRepository.findById(id).orElse(null);
+        return postRepository.findById(id).orElseThrow(
+           ()->  new  ResourceNotFoundException("post not found")
+        );
     }
 }

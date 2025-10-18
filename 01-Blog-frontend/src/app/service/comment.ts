@@ -15,6 +15,13 @@ export class CommentS {
       pid: id
     });
   }
+  editComment(id: string, content: string) {
+    return this.http.put<void>(`${this.api}/${id}`, content);
+  }
+  
+  deleteComment(id: string) { 
+    return this.http.delete<void>(`${this.api}/${id}`);
+  }
   getCommentsPerPost(page: number, limit: number = 10, id: string): Observable<any> {
     const springPage = page - 1;
     const url = `${this.api}/${id}?page=${springPage}&size=${limit}`;

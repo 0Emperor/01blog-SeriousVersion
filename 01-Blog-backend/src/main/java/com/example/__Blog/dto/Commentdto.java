@@ -19,6 +19,6 @@ public record Commentdto(
                 cmt.getText(),
                 Userdto.from(cmt.getUser()),
                 cmt.getCreatedAt(),
-                cmt.getUser().getId() == id);
+                cmt.getUser().getId().equals(id));
     }
 }

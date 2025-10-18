@@ -75,5 +75,15 @@ export class CommentArea implements OnInit, OnDestroy {
     this.loadPage()
     }
   }
-
+  onEdit(comment: Comment, newText: string) {
+    this.commentSvc.editComment(comment.id, newText).subscribe(() => {
+      comment.content = newText; // optimistic update
+    });
+  }
+  
+  onDelete(comment: Comment) {
+    this.commentSvc.deleteComment(comment.id).subscribe(() => {
+      this.comments = this.comments.filter(c => c.id !== comment.id);
+    });
+  }
 }

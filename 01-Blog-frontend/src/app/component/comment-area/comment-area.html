@@ -2,7 +2,9 @@
     @if(comments&&comments.length!=0)
     {
     @for(comment of comments;track comment.id){
-    <app-comment-card [comment]="comment"></app-comment-card>
+    <app-comment-card [comment]="comment"
+     (edited)="onEdit(comment, $event)"
+        (deleted)="onDelete(comment)"></app-comment-card>
     }
     }@else{
     <h3>no comments yet</h3>

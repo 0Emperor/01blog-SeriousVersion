@@ -33,4 +33,5 @@ export interface Comment{
     user: User;
     createdAt: Date;
     content:string
+    isOwn:boolean;
 }

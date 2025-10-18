@@ -1,61 +1,103 @@
 @use '../../../variables' as *;
+
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm; // Small gap between the header and the content area
+  font-family: $font-family;
+  overflow: hidden;
+  // Ensures the card stands out slightly
+  // We don't need a heavy background since the main post container already has one,
+  // but we ensure text colors are correct.
+
+  .Header {
     display: flex;
-    flex-direction: column;
-    gap: $space-sm; // Small gap between the header and the content area
-    font-family: $font-family;
-    overflow: scroll;
-    // Ensures the card stands out slightly
-    // We don't need a heavy background since the main post container already has one,
-    // but we ensure text colors are correct.
-  
-    .Header {
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-md;
+
+    .actions {
       display: flex;
       align-items: center;
-      justify-content: flex-start; // Keep user info and time close together
-      gap: $space-md;
-  
-      // Delegate user info styling to the child component
-      app-user-header {
-        flex-shrink: 0; // Prevent the user header from shrinking
+      justify-content: space-between;
+      gap: $space-md; 
+      button{
+        gap: $space-md;
+        background-color: transparent;
+        border: 1px solid $primary;
+        color: $primary;
+        font-size: 0.85em;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+        &:hover {
+          background-color: $primary;
+          color: white;
+        }
       }
-      
+      .delete ,.cancel {
+        border-color:  $error-dark;
+        color: $error-dark;
+        &:hover {
+          background-color: $error-dark;
+        }
+      }
+    }
+
+    // Delegate user info styling to the child component
+    app-user-header {
+      flex-shrink: 0; // Prevent the user header from shrinking
+    }
+
+    .infos {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
       .time {
         color: $muted-light;
         font-size: 0.85rem;
         flex-shrink: 0;
       }
     }
-  
-    .content {
-      // This style block creates the distinct, rounded rectangle for the comment body
-      background-color: $background-light;
-      color: $text-light;
-      padding: $space-md;
-      border-radius: $border-radius-lg;
-      line-height: 1.5;
-      font-size: 0.95rem;
-      font-weight: $body-font-weight;
-  
-      // Use a lighter shadow to differentiate it from the main post container
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
+
   }
-  
-  
-  // --- DARK MODE STYLES ---
-  @media (prefers-color-scheme: dark) {
-    .container {
-      .Header {
+
+  .content {
+    // This style block creates the distinct, rounded rectangle for the comment body
+    background-color: $background-light;
+    color: $text-light;
+    padding: $space-md;
+    border-radius: $border-radius-lg;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    font-weight: $body-font-weight;
+    overflow-wrap: break-word;
+    white-space: normal;
+    // Use a lighter shadow to differentiate it from the main post container
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+}
+
+
+// --- DARK MODE STYLES ---
+@media (prefers-color-scheme: dark) {
+  .container {
+    .Header {
+      .infos {
         .time {
           color: $muted-dark; // Muted dark color for time
         }
       }
-      
-      .content {
-        background-color: $panel-bg-dark; // Use a darker background that stands out from the main container background ($background-dark)
-        color: $text-dark;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); // Darker shadow
-      }
+
+    }
+
+    .content {
+      background-color: $panel-bg-dark; // Use a darker background that stands out from the main container background ($background-dark)
+      color: $text-dark;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); // Darker shadow
     }
   }
+}

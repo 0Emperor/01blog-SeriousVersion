@@ -1,7 +1,57 @@
 <div class="container">
     <div class="Header">
-        <app-user-header [userr]="comment.user"></app-user-header>
-        <div class="time">{{comment.createdAt|timeAgo}}</div>
+        <div class="infos">
+            <app-user-header [userr]="comment.user"></app-user-header>
+            <div class="time">{{ comment.createdAt | timeAgo }}</div>
+        </div>
+        @if(comment.isOwn){
+        <div class="actions">
+
+            @if(!editing){
+            <button (click)="startEdit()" class="edit">Edit</button>
+
+            }@else {
+            <button (click)="saveEdit()" class="save">Save</button>
+            <button (click)="cancelEdit()" class="cancel">Cancel</button>
+            }
+
+            <button (click)="deleted.emit()" class="delete">Delete</button>
+        </div>
+        }
     </div>
-    <div class="content">{{comment.content}}</div>
+
+    <div class="content">
+        @if(!editing){
+        <span>{{ comment.content }}</span>
+
+        }@else{
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    placeholder="comment..." 
+                    class="comment-input"
+                    [value]="comment.content"
+                    
+                    (keydown.enter)="saveEdit()"
+                />
+                <div class="emoji-wrapper">
+                    <button (click)="openEmojiPicker()" class="emoji-btn" aria-label="Open emoji picker"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor"> <path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88A88.1 88.1 0 0 1 128 216ZM92 108a12 12 0 1 1-12-12A12 12 0 0 1 92 108Zm72 0a12 12 0 1 1-12-12A12 12 0 0 1 164 108Zm-36 64a44 44 0 0 1-44-44h-8a52 52 0 0 0 104 0h-8a44 44 0 0 1-44 44Z"></path> </svg> </button>
+                  
+                    <div class="emoji-picker" [class.visible]="emojiPickerVisible">
+                      <span (click)="addEmoji('😀')">😀</span>
+                      <span (click)="addEmoji('😂')">😂</span>
+                      <span (click)="addEmoji('😍')">😍</span>
+                      <span (click)="addEmoji('😎')">😎</span>
+                      <span (click)="addEmoji('🤔')">🤔</span>
+                      <span (click)="addEmoji('😭')">😭</span>
+                    </div>
+                  </div>
+                
+               
+            </div>
+        }
+    </div>
+
+
+
 </div>

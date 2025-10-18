@@ -2,6 +2,7 @@ package com.example.__Blog.service;
 
 import java.util.UUID;
 
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.__Blog.model.Like;
@@ -24,23 +25,29 @@ public class LikeService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-    public  Integer getLikeCount(Integer pId){
+
+    public Integer getLikeCount(Integer pId) {
         return likeRepository.countByPostId(pId);
     }
+
     @Transactional
     public void likePost(UUID userId, Integer postId) {
-        User user = userRepository.findById(userId).orElse(null);
-        Post post = postRepository.findById(postId).orElse(null);
-        if (!likeRepository.existsByUserIdAndPostId(userId, postId) && user != null && post != null) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("no such user"));
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException("post not found"));
+        if (!likeRepository.existsByUserIdAndPostId(userId, postId)) {
             Like like = new Like();
             like.setUser(user);
             like.setPost(post);
             likeRepository.save(like);
         }
     }
-public boolean didUserLikePost(UUID userId, Integer postId){
-    return likeRepository.existsByUserIdAndPostId(userId, postId) ;
-}
+
+    public boolean didUserLikePost(UUID userId, Integer postId) {
+        return likeRepository.existsByUserIdAndPostId(userId, postId);
+    }
+
     @Transactional
     public void unlikePost(UUID userId, Integer postId) {
         likeRepository.deleteByUserIdAndPostId(userId, postId);
