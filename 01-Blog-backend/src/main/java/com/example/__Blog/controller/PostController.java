@@ -56,7 +56,6 @@ public class PostController {
             @AuthenticationPrincipal CustomUserDetails jwt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        System.out.println("hello");
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> postsPage = postService.getAllFromFollowed(jwt.getId(), pageable);
         List<Postdto> dtos = postsPage.stream()

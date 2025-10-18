@@ -1,16 +1,15 @@
 import { Component, OnInit, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; // For *ngIf, *ngFor
+import { CommonModule } from '@angular/common'; 
 import { BehaviorSubject, scan, switchMap, tap, filter } from 'rxjs';
 import { PostService } from '../../service/post';
 import { Post } from '../../dto/dto';
 
 import { PostFeed } from "../post-feed/post-feed";
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, PostFeed],
+  imports: [CommonModule, PostFeed],
   templateUrl: './feed.html', 
   styleUrl: './feed.scss'     
 })

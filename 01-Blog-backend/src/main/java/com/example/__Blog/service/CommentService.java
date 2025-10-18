@@ -3,7 +3,9 @@ package com.example.__Blog.service;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.__Blog.model.Comment;
@@ -28,6 +30,10 @@ public class CommentService {
 
     public Integer CountComment(Integer pid) {
         return commentRepository.countByPostId(pid);
+    }
+
+    public Page<Comment> getCommentsPerPost(Integer id, PageRequest page) {
+        return commentRepository.findAllByPostId(id, page);
     }
 
     public Comment AddComment(String content, Integer pId, UUID uID) {

@@ -1,20 +1,24 @@
-  <div class="post-feed">
+<div class="post-feed">
 
-    @for (post of posts; track post.postId) {
-    <app-post-feed [post]="post"></app-post-feed>
-    }
+  @for (post of posts; track post.postId) {
+  <app-post-feed [post]="post"></app-post-feed>
+  }
 
-    @if (loading && !finished) {
-    <div class="loading-indicator">
-      <div class="spinner"></div>
-      <p>Loading more posts...</p>
-    </div>
-    }
-
-    @if (finished && posts.length > 0) {
-    <div class="finished-indicator">
-      <p>You've reached the end of the feed!</p>
-    </div>
-    }
-
+  @if (loading && !finished) {
+  <div class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Loading more posts...</p>
   </div>
+  }
+
+  @if (finished && posts.length > 0) {
+  <div class="finished-indicator">
+    <p>You've reached the end of the feed!</p>
+  </div>
+  }
+  @if (posts.length==0){
+  <div class="finished-indicator">
+    <p>No posts yet!</p>
+  </div>
+  }
+</div>

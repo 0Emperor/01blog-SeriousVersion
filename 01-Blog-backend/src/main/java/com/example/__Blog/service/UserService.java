@@ -23,7 +23,6 @@ public class UserService {
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }

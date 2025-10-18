@@ -4,7 +4,7 @@
   font-family: $font-family;
   min-height: 100vh;
   width: 100%;
-  overflow: hidden; /* Main container doesn't scroll */
+  overflow: hidden; 
   
   background-color: $background-light;
   color: $text-light;
@@ -15,12 +15,8 @@
     color: $text-dark;
   }
 
-  /* ---------------------------------------------------- */
-  /* 1. DESKTOP (Grid Layout: Sidebar | Content) */
-  /* ---------------------------------------------------- */
   @media (min-width: $mobile-breakpoint) {
     display: grid;
-    /* Create the fixed sidebar (250px) and the flexible content (1fr) */
     grid-template-columns: $sidebar-width 1fr; 
   }
 
@@ -31,13 +27,12 @@
     display: flex;
     flex-direction: column;
     z-index: 10;
-    transition: transform 0.3s ease-in-out; /* For mobile slide effect */
+    transition: transform 0.3s ease-in-out; 
     @media (prefers-color-scheme: dark) {
       background-color: $surface-dark;
       border-color: rgba(255, 255, 255, 0.1);
     }
 
-    /* Desktop Styles (Grid Placement) */
     @media (min-width: $mobile-breakpoint) {
       grid-column: 1 / 2;
       height: 100vh; /* Fill the viewport height */
@@ -74,7 +69,7 @@
     /* Desktop Styles */
     @media (min-width: $mobile-breakpoint) {
       grid-column: 2 / 3;
-      padding: 2rem;
+      padding-right: 2rem;
     }
 
     /* Mobile Styles */

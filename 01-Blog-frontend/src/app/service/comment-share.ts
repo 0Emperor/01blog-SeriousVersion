@@ -9,7 +9,7 @@ export class CommentShare {
   private comment = new BehaviorSubject<Comment|null>(null); // or any type
   currentComment = this.comment.asObservable();
 
-  changeMessage(comment: Comment) {
+  changeMessage(comment: Comment|null) {
     this.comment.next(comment);
   }
 }
