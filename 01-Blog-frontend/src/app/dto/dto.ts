@@ -26,6 +26,7 @@ export interface Post {
     totalComments: number | 0;
     isLiked:boolean;
     isOwn:boolean;
+    hidden:boolean;
 }
 export interface Comment{
     id: string;

@@ -15,37 +15,6 @@
     align-items: center;
     justify-content: space-between;
     gap: $space-md;
-
-    .actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: $space-md; 
-      button{
-        gap: $space-md;
-        background-color: transparent;
-        border: 1px solid $primary;
-        color: $primary;
-        font-size: 0.85em;
-        font-weight: 600;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
-        &:hover {
-          background-color: $primary;
-          color: white;
-        }
-      }
-      .delete ,.cancel {
-        border-color:  $error-dark;
-        color: $error-dark;
-        &:hover {
-          background-color: $error-dark;
-        }
-      }
-    }
-
     // Delegate user info styling to the child component
     app-user-header {
       flex-shrink: 0; // Prevent the user header from shrinking
@@ -82,8 +51,112 @@
 }
 
 
+.emoji-wrapper {
+  position: relative;
+  /* so the picker can be positioned relative to the button */
+  display: inline-block;
+}
+
+.emoji-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.emoji-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: $space-xs;
+  color: $primary;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: 120%;
+  /* places above the button */
+  right: 0;
+  /* align end of picker to button */
+  transform: translateY(4px);
+  /* small offset for animation */
+  background: $background-light;
+  border: 1px solid $border-light;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: row;
+  /* horizontal */
+  gap: $space-sm;
+  white-space: nowrap;
+  /* stay on one line */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+}
+
+.emoji-picker.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.emoji-picker span {
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.1s ease;
+}
+
+.emoji-picker span:hover {
+  transform: scale(1.2);
+}
+
+.input-wrapper {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  background-color: $panel-bg-light;
+  border: 1px solid $border;
+  border-radius: $border-radius-lg;
+  padding: $space-sm $space-md;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.comment-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: $text-light;
+  font-size: 0.95rem;
+  font-weight: $body-font-weight;
+
+  &::placeholder {
+    color: $muted-light;
+  }
+}
+
 // --- DARK MODE STYLES ---
 @media (prefers-color-scheme: dark) {
+  .comment-input {
+    color: $text-dark;
+
+    &::placeholder {
+      color: $muted-dark;
+    }
+  }
+
+  .emoji-picker {
+    background: $background-dark;
+    border: 1px solid $border-dark;
+  }
+
   .container {
     .Header {
       .infos {
@@ -92,6 +165,12 @@
         }
       }
 
+    }
+
+    .input-wrapper {
+      background-color: $panel-bg-dark;
+      border-color: $border-dark;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     .content {

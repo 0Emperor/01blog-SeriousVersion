@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HttpEventType, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // Needed for [(ngModel)]
 import { CommonModule } from '@angular/common'; // Needed for *ngIf
@@ -6,8 +6,8 @@ import { PostService } from '../../service/post';
 import { Router } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 interface MediaPreview {
-  localUrl: string; 
-  serverUrl: string; 
+  localUrl: string;
+  serverUrl: string;
   serverFileName: string;
   type: 'image' | 'video' | 'other';
 }
@@ -29,9 +29,9 @@ export class PostCompose {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   // Data Properties
-  title: string = '';
-  description: string = ''; // Markdown content
-
+  @Input() title: string = '';
+  @Input() description: string = ''; // Markdown content
+  @Input() edit: boolean = false;
   // Media Management
   mediaFilenames: string[] = [];
   mediaPreviews: MediaPreview[] = [];
@@ -238,15 +238,9 @@ export class PostCompose {
     this.isPosting = true;
     this.postSuccess = null;
 
-    // The final body now sends the list of file names, not FormData
-    const postBody = {
-      title: this.title,
-      description: this.description,
-      mediaFilenames: this.mediaFilenames // Sending the list of names
-    };
-
     // The service call is now expected to accept a JSON body
-    this.postService.createPost(this.description,this.title,this.mediaFilenames).subscribe({
+ if (!this.edit) {
+  this.postService.createPost(this.description, this.title, this.mediaFilenames).subscribe({
       next: (event: any) => {
         if (event.type === HttpEventType.Response) {
           this.isPosting = false;
@@ -262,5 +256,23 @@ export class PostCompose {
         console.error('Failed to create post. Please check the network tab.');
       }
     });
+ }else{
+  this.postService.editPost(this.description, this.title, this.mediaFilenames).subscribe({
+    next: (event: any) => {
+      if (event.type === HttpEventType.Response) {
+        this.isPosting = false;
+        this.postSuccess = true;
+        console.log('Post created successfully!');
+        this.cancelPost();
+      }
+    },
+    error: (err: any) => {
+      console.error('Post creation failed:', err);
+      this.isPosting = false;
+      this.postSuccess = false;
+      console.error('Failed to create post. Please check the network tab.');
+    }
+  });
+ }
   }
 }

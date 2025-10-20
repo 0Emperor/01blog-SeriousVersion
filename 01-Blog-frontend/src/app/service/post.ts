@@ -14,43 +14,46 @@ const BASE_FILE_SERVER_URL = `${BASE_URL}/files`; // Assuming a /media/ endpoint
 export class PostService {
 
   private http = inject(HttpClient);
- /**
-   * Fetches a single post by its unique ID.
-   * @param postId The ID of the post to fetch.
-   * @returns An Observable of the single Post object.
-   */
- getPostById(postId: string|undefined): Observable<any> {
-  // 💥 ASSUMING your backend has an endpoint like GET /api/posts/{postId}
-  const url = `${POST_API}/${postId}`;
-  return this.http.get<any>(url);
-}
+  /**
+    * Fetches a single post by its unique ID.
+    * @param postId The ID of the post to fetch.
+    * @returns An Observable of the single Post object.
+    */
+  getPostById(postId: string | undefined): Observable<any> {
+    // 💥 ASSUMING your backend has an endpoint like GET /api/posts/{postId}
+    const url = `${POST_API}/${postId}`;
+    return this.http.get<any>(url);
+  }
+  editPost(caption: string, title: string, media: string[]): Observable<HttpEvent<any>> {
+    const req = new HttpRequest('PUT', POST_API, { description: caption, title: title, media: media });
+    return this.http.request(req);
+  }
   // --- 1. POST CREATION METHOD (File Upload) ---
-
+  delete(pId: string|undefined) {
+    return this.http.delete(`${POST_API}/${pId}`)
+  }
+  hide(pId: string|undefined) {
+    return this.http.patch(`${POST_API}/hide/${pId}`,{})
+  }
+  unHide(pId: string|undefined) {
+    return this.http.patch(`${POST_API}/unhide/${pId}`,{})
+  }
   /**
    * Sends a new post (caption and file) to the server using FormData.
    */
-  createPost(caption: string, title:string,media:string[]): Observable<HttpEvent<any>> {
-    const formData: FormData = new FormData();
-
-    formData.append('description', caption);
-    // if (file) {
-    //   formData.append('media', file, file.name);
-
-    // }
-
-    const req = new HttpRequest('POST', POST_API, {description:caption,title:title,media:media});
-
+  createPost(caption: string, title: string, media: string[]): Observable<HttpEvent<any>> {
+    const req = new HttpRequest('POST', POST_API, { description: caption, title: title, media: media });
     return this.http.request(req);
   }
-  uploadFile(form:FormData):Observable<HttpEvent<any>> {
-  const req = new HttpRequest('POST', BASE_FILE_SERVER_URL, form, {
-    reportProgress: true,
-    responseType: 'text'
-  });
-  console.log(BASE_FILE_SERVER_URL)
-  return this.http.request(req);
+  uploadFile(form: FormData): Observable<HttpEvent<any>> {
+    const req = new HttpRequest('POST', BASE_FILE_SERVER_URL, form, {
+      reportProgress: true,
+      responseType: 'text'
+    });
+    console.log(BASE_FILE_SERVER_URL)
+    return this.http.request(req);
 
-}
+  }
   // --- 2. POST FETCHING METHOD (Infinite Scroll) ---
 
   /**

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.__Blog.helper.CustomUserDetails;
+
 @RestController
 @RequestMapping("/access")
 public class AccessContronller {
     @GetMapping("")
-    public boolean isLogged() {
+    public boolean isLogged(@AuthenticationPrincipal CustomUserDetails cu) {
         return true;
     }
     @PreAuthorize("hasRole('ADMIN')")

@@ -9,13 +9,13 @@
 
             @if(!editing){
             <button (click)="startEdit()" class="edit">Edit</button>
+            <button (click)="deleted.emit()" class="delete">Delete</button>
 
             }@else {
             <button (click)="saveEdit()" class="save">Save</button>
             <button (click)="cancelEdit()" class="cancel">Cancel</button>
             }
 
-            <button (click)="deleted.emit()" class="delete">Delete</button>
         </div>
         }
     </div>
@@ -31,7 +31,7 @@
                     placeholder="comment..." 
                     class="comment-input"
                     [value]="comment.content"
-                    
+                    (input)="update($event.target.value)"
                     (keydown.enter)="saveEdit()"
                 />
                 <div class="emoji-wrapper">

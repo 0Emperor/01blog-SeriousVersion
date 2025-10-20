@@ -1,8 +1,27 @@
 <div class="container">
     @if (post!=null){
     <div class="Header">
-        <app-user-header [userr]="post.user"></app-user-header>
-        <div class="time">{{post.createdAt|timeAgo}}</div>
+        <div class="meta">
+            <app-user-header [userr]="post.user"></app-user-header>
+            <div class="time">{{post.createdAt|timeAgo}}</div>
+        </div>
+        <div class="actions">
+            @if(post.isOwn){
+            <button class="edit" routerLink="edit/{{post.postId}}">Edit</button>
+            <button class="delete" (click)="delete()">Delete</button>
+            }@else if(current.getUser?.role =="ADMIN"){
+            @if(post.hidden){
+            <button class="hide" (click)="unHide()">UnHide</button>
+            }@else {
+            <button class="hide" (click)="hide()">Hide</button>
+            }
+            <button class="delete" (click)="delete()">Delete</button>
+            }@else if(post.user.role!="ADMIN"){
+            <button class="report">Report</button>
+            }
+        </div>
+
+
     </div>
     <div class="preview">
         <h1>{{post.title}}</h1>

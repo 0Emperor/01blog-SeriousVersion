@@ -6,10 +6,11 @@ import com.example.__Blog.repository.PostRepository;
 import com.example.__Blog.specification.PostSpecifications;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,7 +30,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post createPost(String description, String title, User user,String[] media) {
+    public Post createPost(String description, String title, User user, String[] media) {
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
@@ -38,6 +39,40 @@ public class PostService {
         return post;
     }
 
+    public Post ediPost(UUID uId, Integer pID, String description, String title, String[] media) {
+        Post toEdit = postRepository.findById(pID).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found"));
+        if (!toEdit.getUser().getId().equals(uId)) {
+            throw new AccessDeniedException("U can only edit your own posts");
+        }
+        toEdit.setDescription(description);
+        toEdit.setMedia(media);
+        toEdit.setTitle(title);
+        return postRepository.save(toEdit);
+    }
+
+    public void deletePost(UUID uId, Integer pID, String role) {
+        Post toDelete = postRepository.findById(pID).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found"));
+        System.out.println(role);
+        if (role != "Admin" && !toDelete.getUser().getId().equals(uId)) {
+            throw new AccessDeniedException("U can only edit your own posts");
+        }
+        postRepository.delete(toDelete);
+    }
+
+    public void hidePost(Integer pID) {
+        Post toHide = postRepository.findById(pID).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found"));
+        toHide.setHidden(true);
+        postRepository.save(toHide);
+    }
+    public void unHidePost(Integer pID) {
+        Post toHide = postRepository.findById(pID).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found"));
+        toHide.setHidden(false);
+        postRepository.save(toHide);
+    }
     public List<Post> getAll() {
         return postRepository.findAll();
     }
@@ -46,9 +81,10 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
-    public Page<Post> getAllFromFollowed(UUID id,PageRequest pageable) {
-        return postRepository.findPostsFromSubscribedUsers(id,pageable);
+    public Page<Post> getAllFromFollowed(UUID id, PageRequest pageable) {
+        return postRepository.findPostsFromSubscribedUsers(id, pageable);
     }
+
     public Page<Post> getByUser(PageRequest pageable, UUID id) {
         return postRepository.findAll(PostSpecifications.byUserId(id), pageable);
     }
@@ -59,7 +95,6 @@ public class PostService {
 
     public Post getById(Integer id) {
         return postRepository.findById(id).orElseThrow(
-           ()->  new  ResourceNotFoundException("post not found")
-        );
+                () -> new ResourceNotFoundException("post not found"));
     }
 }

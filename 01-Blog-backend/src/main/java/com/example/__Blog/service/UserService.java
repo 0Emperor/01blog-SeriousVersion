@@ -8,6 +8,7 @@ import com.example.__Blog.model.User;
 import com.example.__Blog.repository.UserRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -27,7 +28,7 @@ public class UserService {
         }
     }
 
-    public User getUser(Integer id) {
+    public User getUser(UUID id) {
         return userRepository.findById(id)
                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
@@ -41,7 +42,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void deleteUser(Integer id) {
+    public void deleteUser(UUID id) {
         if (!userRepository.existsById(id)) {
             throw new ResourceNotFoundException("User not found");
         }

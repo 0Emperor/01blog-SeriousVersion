@@ -2,7 +2,11 @@ package com.example.__Blog.model;
 
 import java.sql.Timestamp;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +23,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
     @NotBlank(message = "Post description cannot be empty.")
@@ -28,6 +33,15 @@ public class Post {
     private String title;
     private Timestamp createdAt;
     private String[] media;
+    private boolean hidden;
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean getHidden() {
+        return hidden;
+    }
 
     public String[] getMedia() {
         return media;

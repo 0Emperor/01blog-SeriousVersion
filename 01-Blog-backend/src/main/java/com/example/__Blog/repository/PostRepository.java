@@ -18,9 +18,10 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
     WHERE p.user.id IN (
         SELECT s.subscribedTo.id FROM Subscription s
         WHERE s.subscriber.id = :userId
-    ) OR p.user.id = :userId
+    ) OR p.user.id = :userId 
     ORDER BY p.createdAt DESC
 """)
+
 Page<Post> findPostsFromSubscribedUsers(@Param("userId") UUID userId, PageRequest pageable);
 
 }

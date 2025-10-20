@@ -23,4 +23,7 @@ export class Auth {
   checkAdmin() {
     return this.http.get<boolean>(Auth.adminApi)
   }
+  checkIsOwnPost(pId: string){
+    // return this.http.get()
+  }
 }

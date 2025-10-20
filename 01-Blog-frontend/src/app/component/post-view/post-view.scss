@@ -26,19 +26,23 @@
         border-bottom: 1px solid $border;
         padding-bottom: $space-md;
 
-        .time {
-            color: $muted-light;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            margin-left: $space-sm;
+        .meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            .time {
+                color: $muted-light;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+                margin-left: $space-sm;
+            }
         }
     }
 
     .preview {
         h1 {
             font-weight: $heading-font-weight;
-            color: $text-light;
-            margin-left: -1rem;
+            color: #000000;
             margin-top: $space-xs;
             margin-bottom: $space-lg;
             line-height: 1.1;
@@ -47,9 +51,9 @@
         .content {
             margin-bottom: $space-lg;
             line-height: 1.6;
-            margin-left: 0.5rem;
             overflow-wrap: break-word;
             white-space: normal;
+
             .text {
                 color: $text-light;
                 font-weight: $body-font-weight;
@@ -80,13 +84,13 @@
             border-bottom-color: $border-dark; // Dark border for header separator
         }
 
-        .Header .time {
+        .Header .meta .time {
             color: $muted-dark; // Dark muted text
         }
 
         .preview {
             h1 {
-                color: $text-dark; // Light text for the dark background
+                color: #fff; // Light text for the dark background
             }
 
             .content .text {

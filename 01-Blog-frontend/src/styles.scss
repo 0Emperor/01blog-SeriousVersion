@@ -5,6 +5,15 @@
     background-color: #0d1117;
     color: #c9d1d9;
   }
+
+  .emoji-picker {
+    background: $background-dark;
+    border: 1px solid $border-dark;
+  }
+}
+
+img {
+  width: 100%;
 }
 
 body {
@@ -12,27 +21,38 @@ body {
   background-color: $background-light;
 
   color: $text-light;
-  @media (prefers-color-scheme: dark){
+
+  @media (prefers-color-scheme: dark) {
     color: $text-dark;
     background-color: $background-dark;
-  
+
   }
+
   margin: 0;
   padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: $heading-font-weight;
   color: $text-light;
-  @media (prefers-color-scheme: dark){
+
+  @media (prefers-color-scheme: dark) {
     color: $text-dark;
   }
 }
 
-p, span, li {
+p,
+span,
+li {
   font-weight: $body-font-weight;
   color: $muted-light;
-  @media (prefers-color-scheme: dark){
+
+  @media (prefers-color-scheme: dark) {
     color: $muted-dark;
   }
 }
@@ -45,12 +65,75 @@ button {
 
 .card {
   background-color: $surface-light;
-  @media (prefers-color-scheme: dark){
+
+  @media (prefers-color-scheme: dark) {
     background-color: $surface-dark;
     border: 1px solid $border-dark;
 
   }
+
   padding: $space-md;
   border: 1px solid $border-light;
   border-radius: 8px;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+
+  button {
+    gap: $space-md;
+    background-color: transparent;
+    border: 1px solid $primary;
+    color: $primary;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: $primary;
+      color: white;
+    }
+  }
+
+  .delete {
+    border-color: #f14d4d;
+    color: #f14d4d;
+
+    &:hover {
+      background-color: #f14d4d;
+      color: #fff;
+    }
+  }
+  .report {
+    border-color: #ed8936;
+    color: #ed8936;
+
+    &:hover {
+      background-color: #ed8936;
+      color: #fff;
+    }
+  }
+  .cancel {
+    border-color: #8f5955;
+    color: #8f5955;
+
+    &:hover {
+      background-color: #8f5955;
+      color: #fff;
+    }
+  }
+  .hide {
+    border-color: #f0de40;
+    color: #f0de40;
+
+    &:hover {
+      background-color: #f0de40;
+      color: #fff;
+    }
+  }
 }

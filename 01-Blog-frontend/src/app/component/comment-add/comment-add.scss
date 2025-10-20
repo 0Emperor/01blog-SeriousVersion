@@ -2,14 +2,19 @@
 
 .comment-add-container {
   display: flex;
+  position: sticky;
+  bottom: 0;
   align-items: center;
   gap: $space-xs;
   font-family: $font-family;
 }
+
 .emoji-wrapper {
-  position: relative; /* so the picker can be positioned relative to the button */
+  position: relative;
+  /* so the picker can be positioned relative to the button */
   display: inline-block;
 }
+
 .emoji-wrapper {
   position: relative;
   display: inline-block;
@@ -17,17 +22,22 @@
 
 .emoji-picker {
   position: absolute;
-  bottom: 120%; /* places above the button */
-  right: 0; /* align end of picker to button */
-  transform: translateY(4px); /* small offset for animation */
-  background: #fff;
-  border: 1px solid #ccc;
+  bottom: 120%;
+  /* places above the button */
+  right: 0;
+  /* align end of picker to button */
+  transform: translateY(4px);
+  /* small offset for animation */
+  background: $background-light;
+  border: 1px solid $border-light;
   border-radius: 8px;
   padding: 6px 10px;
   display: flex;
-  flex-direction: row; /* horizontal */
+  flex-direction: row;
+  /* horizontal */
   gap: 6px;
-  white-space: nowrap; /* stay on one line */
+  white-space: nowrap;
+  /* stay on one line */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
   pointer-events: none;
@@ -52,33 +62,34 @@
 }
 
 .avatar-container {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 0.75rem;
-    border: 2px solid $primary;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 0.75rem;
+  border: 2px solid $primary;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 
-    .profile-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 
-    .initials-avatar {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white; /* White text over the colored background */
-        font-size: 1.1rem;
-        font-weight: 600;
-        user-select: none;
-    }
+  .initials-avatar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    /* White text over the colored background */
+    font-size: 1.1rem;
+    font-weight: 600;
+    user-select: none;
+  }
 }
 
 .input-wrapper {
@@ -114,7 +125,7 @@
   color: $primary;
   transition: color 0.2s ease;
   flex-shrink: 0;
-  
+
   &:hover {
     opacity: 0.8;
   }
@@ -126,15 +137,21 @@
     background-color: $border-dark;
     color: $muted-dark;
   }
-  
+
   .input-wrapper {
     background-color: $panel-bg-dark;
     border-color: $border-dark;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
+  .emoji-picker {
+    background: $background-dark;
+    border: 1px solid $border-dark;
+  }
+
   .comment-input {
     color: $text-dark;
+
     &::placeholder {
       color: $muted-dark;
     }

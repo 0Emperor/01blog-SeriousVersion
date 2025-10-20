@@ -13,6 +13,8 @@ public record Postdto(
                 boolean isLiked,
                 int totalLikes,
                 boolean isOwn,
+                boolean hidden,
+                String[] media,
                 int commentsCount) {
         public static Postdto from(Post post,
                         UUID currentUserId,
@@ -36,6 +38,8 @@ public record Postdto(
                                 isLiked,
                                 totalLikes,
                                 post.getUser().getId().equals(currentUserId),
+                                post.getHidden(),
+                                post.getMedia(),
                                 totalComments);
         }
 }
