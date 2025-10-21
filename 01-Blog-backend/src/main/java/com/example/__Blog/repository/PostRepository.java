@@ -15,13 +15,12 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post>{
 @Query("""
     SELECT p FROM Post p
-    WHERE p.user.id IN (
+    WHERE p.hidden = false AND p.user.id IN (
         SELECT s.subscribedTo.id FROM Subscription s
         WHERE s.subscriber.id = :userId
-    ) OR p.user.id = :userId 
+    )
     ORDER BY p.createdAt DESC
 """)
-
-Page<Post> findPostsFromSubscribedUsers(@Param("userId") UUID userId, PageRequest pageable);
+Page<Post> findPostsFromSubscribedUsersAndNotHidden(@Param("userId") UUID userId, PageRequest pageable);
 
 }

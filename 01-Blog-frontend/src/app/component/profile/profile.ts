@@ -10,6 +10,7 @@ import { ProfileS } from '../../service/profile';
 export class Profile {
   name = signal("wrong claim name")
   prf = inject(ProfileS)
+  
   get() {
     this.prf.getName().subscribe({
       next: (d) => {

@@ -1,7 +1,9 @@
 package com.example.__Blog.service;
 
+import com.example.__Blog.model.NotificationType;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.User;
+import com.example.__Blog.repository.FollowRepository;
 import com.example.__Blog.repository.PostRepository;
 import com.example.__Blog.specification.PostSpecifications;
 
@@ -20,14 +22,27 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
+    private final FollowRepository followRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, FollowRepository fr, NotificationService ns) {
         this.postRepository = postRepository;
+        notificationService = ns;
+        followRepository = fr;
     }
 
     public Post save(Post post) {
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        return postRepository.save(post);
+        postRepository.save(post);
+        List<User> followers = followRepository.findSubscribersByUserId(post.getUser().getId());
+        for (User follower : followers) {
+            notificationService.createNotification(
+                    post.getUser(),
+                    follower,
+                    "/" + post.getId(),
+                    NotificationType.POST);
+        }
+        return post;
     }
 
     public Post createPost(String description, String title, User user, String[] media) {
@@ -59,6 +74,13 @@ public class PostService {
             throw new AccessDeniedException("U can only edit your own posts");
         }
         postRepository.delete(toDelete);
+        if (role == "Admin" && !toDelete.getUser().getId().equals(uId)) {
+            notificationService.createNotification(
+                    null,
+                    toDelete.getUser(),
+                    "/" + toDelete.getId(),
+                    NotificationType.HIDDEN);
+        }
     }
 
     public void hidePost(Integer pID) {
@@ -66,13 +88,21 @@ public class PostService {
                 () -> new ResourceNotFoundException("Post not found"));
         toHide.setHidden(true);
         postRepository.save(toHide);
+        notificationService.createNotification(
+                null,
+                toHide.getUser(),
+                null,
+                NotificationType.REMOVED);
     }
+
     public void unHidePost(Integer pID) {
         Post toHide = postRepository.findById(pID).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found"));
         toHide.setHidden(false);
         postRepository.save(toHide);
     }
+
+    
     public List<Post> getAll() {
         return postRepository.findAll();
     }
@@ -82,7 +112,7 @@ public class PostService {
     }
 
     public Page<Post> getAllFromFollowed(UUID id, PageRequest pageable) {
-        return postRepository.findPostsFromSubscribedUsers(id, pageable);
+        return postRepository.findPostsFromSubscribedUsersAndNotHidden(id, pageable);
     }
 
     public Page<Post> getByUser(PageRequest pageable, UUID id) {

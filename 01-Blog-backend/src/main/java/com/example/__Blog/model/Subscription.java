@@ -17,6 +17,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "subscriptions")
 public class Subscription {
+    public Subscription() {
+        createdAt = new Timestamp(System.currentTimeMillis());
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,6 +36,14 @@ public class Subscription {
     private User subscribedTo;
 
     private Timestamp createdAt;
+
+    public void setSubscribedTo(User subscribedTo) {
+        this.subscribedTo = subscribedTo;
+    }
+
+    public void setSubscriber(User subscriber) {
+        this.subscriber = subscriber;
+    }
 
     public Timestamp getCreatedAt() {
         return createdAt;

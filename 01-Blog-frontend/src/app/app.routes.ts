@@ -9,6 +9,8 @@ import { Home } from './component/home/home';
 import { Feed } from './component/feed/feed';
 import { PostCompose } from './component/post-compose/post-compose';
 import { PostView } from './component/post-view/post-view';
+import { Explore } from './component/explore/explore';
+import { NotificationSection } from './component/notification-section/notification-section';
 
 export const routes: Routes = [
     { path: "register", component: Register },
@@ -18,6 +20,9 @@ export const routes: Routes = [
         { path: "admin", component: AdminPanel, canActivate: [AdminGuard] },
         { path: "profile", component: Profile },
         { path: "create", component: PostCompose },
+        { path: "create", component: PostCompose },
+        { path: "explore", component:  Explore},
+        { path: "notifications", component:  NotificationSection},
         { path: ":id", component: PostView },
         ]
     },

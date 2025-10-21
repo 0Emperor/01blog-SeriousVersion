@@ -1,27 +1,22 @@
 <div class="container">
-<app-user-header></app-user-header>
+  <app-user-header></app-user-header>
 
   <nav class="nav-items">
-
-    <button
-      *ngFor="let item of navItems()"
-      class="nav-item"
-      [class.active]="isActive(item.id)"
-      (click)="setActiveItem(item.id)"
-    >
+    <a *ngFor="let item of navItems()" class="nav-item" routerLink="{{ item.id }}" routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
       <span class="material-icons">{{ item.icon }}</span>
       <span class="label">{{ item.label }}</span>
-    </button>
+    </a>
   </nav>
-<div class="buttons">
+
+  <div class="buttons">
     <button class="create-post" routerLink="/create">
-    <span class="material-icons">add</span>
-    Create Post
-  </button>
-  <button class="logout" (click)="logout()">
-    <span class="material-icons">logout</span>
-    Log Out
-  </button>
+      <span class="material-icons">add</span>
+      Create Post
+    </button>
+    <button class="logout" (click)="logout()">
+      <span class="material-icons">logout</span>
+      Log Out
+    </button>
+  </div>
 </div>
-</div>
-  

@@ -1,0 +1,63 @@
+@use '../../../variables' as *;
+
+.notification-section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  padding: $space-md;
+
+  // Header
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      font-weight: $heading-font-weight;
+      color: $text-light;
+
+      @media (prefers-color-scheme: dark) {
+        color: $text-dark;
+      }
+    }
+
+    button {
+      font-weight: 600;
+    }
+  }
+
+  // Notification list
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+  }
+
+  // Empty state
+  .empty {
+    text-align: center;
+    color: $muted-light;
+    font-style: italic;
+
+    @media (prefers-color-scheme: dark) {
+      color: $muted-dark;
+    }
+  }
+
+  // Loading state
+  .loading {
+    text-align: center;
+    color: $muted-light;
+
+    @media (prefers-color-scheme: dark) {
+      color: $muted-dark;
+    }
+  }
+
+  // Load more button
+  button[mat-raised-button] {
+    align-self: center;
+    margin-top: $space-sm;
+  }
+}

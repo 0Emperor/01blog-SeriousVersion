@@ -1,0 +1,13 @@
+<div class="container">
+    @for (user of notFollowed; track $index) {
+    <div class="user-container" >
+        <app-user-header [userr]="user"></app-user-header>
+        <div class="actions">
+            <button class="hide" (click)="follow($index)">follow</button>
+        </div>
+    </div>
+    }
+    @if (notFollowed.length==0) {
+    <h1 >no users to follow</h1>
+    }
+</div>

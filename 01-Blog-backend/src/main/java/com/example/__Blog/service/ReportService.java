@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.__Blog.dto.ReportDto;
 import com.example.__Blog.model.Post;
@@ -46,6 +47,29 @@ public class ReportService {
         report.setReason(reason);
         report.setReportedBy(user);
         report.setReportedPost(post);
+        reportRepository.save(report);
+    }
+
+    @Transactional
+    public void dismissReport(Integer rId) {
+        Report report = reportRepository.findById(rId).orElseThrow(() -> {
+            throw new ResourceNotFoundException("Report not found (somehow)");
+        });
+        report.setState(state.DISMISSED);
+        reportRepository.save(report);
+    }
+
+    public void takeAction(Integer rId) {
+        Report report = reportRepository.findById(rId).orElseThrow(() -> {
+            throw new ResourceNotFoundException("Report not found (somehow)");
+        });
+        if (!report.getState().equals(state.PENDING)) {
+            throw new AccessDeniedException("Report already resolved");
+        }
+        Post post = report.getReportedPost();
+        post.setHidden(true);
+        report.setState(state.ACTION_TAKEN);
+        postRepository.save(post);
         reportRepository.save(report);
     }
 }

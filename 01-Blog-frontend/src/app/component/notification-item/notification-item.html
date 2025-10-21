@@ -1,0 +1,19 @@
+<div class="notification-item" [class.unseen]="!notification.seen" (click)="onClick()">
+    <!-- Sender -->
+    @if(notification.sender){
+      <app-user-header [userr]="notification.sender"></app-user-header>
+    }
+  
+    <!-- Notification content -->
+    <div class="notification-content">
+      <span class="notification-type">{{ notification.type }}</span>
+  
+      <!-- Optional link -->
+      @if(notification.link){
+        <a [routerLink]="notification.link" (click)="$event.stopPropagation()">View</a>
+    }
+  
+      <span class="timestamp">{{ formattedDate }}</span>
+    </div>
+  </div>
+  

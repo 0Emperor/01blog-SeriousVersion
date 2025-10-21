@@ -10,7 +10,14 @@ export interface User {
     bio: string;
     profile: string;
 }
-
+export interface NotificationDto {
+    sender: User | null; 
+    id:number,
+    link: string | null;
+    seen: boolean;
+    type: 'FOLLOW' | 'POST' | 'LINK' | 'REMOVED' | 'HIDDEN';
+    createdAt: string; // ISO timestamp
+  }
 /**
  * Interface for a single post object.
  * Corresponds to your Java PostResponse.
@@ -35,4 +42,11 @@ export interface Comment{
     createdAt: Date;
     content:string
     isOwn:boolean;
+}
+export enum reason {
+    SPAM,
+    HATE_SPEECH,
+    INAPPROPRIATE_CONTENT,
+    BULLYING_HARASSMENT,
+    INTELLECTUAL_PROPERTY
 }

@@ -19,7 +19,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
+    public List<User> getAllUsersNotFollowed(UUID userId) {
+        return userRepository.findUsersNotFollowedBy(userId);
+    }
+    
     public User createUser(User user) {
         try {
             return userRepository.save(user);
