@@ -48,6 +48,10 @@ public class NotificationService {
                 notificationRepository.delete(notification);
         }
 
+        public void deleteAllNotificationsFor(UUID uid) {
+                notificationRepository.deleteByToNotifyId(uid);
+        }
+
         public List<Notificationdto> getNotifications(UUID userId, int page, int size) {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));

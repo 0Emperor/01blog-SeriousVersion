@@ -1,0 +1,44 @@
+<div class="notification-section">
+  <!-- Header with "Mark all as seen" -->
+  <div class="header">
+    @if(notifications.length){
+    <div class="actions">
+      <button mat-raised-button class="delete" (click)="clear()">
+        <h4>
+          Clear
+        </h4>
+      </button>
+      <button mat-raised-button (click)="markAllAsSeen()">
+        <h4>
+          Mark all as seen
+        </h4>
+      </button>
+    </div>
+    }
+  </div>
+
+  <!-- Empty state -->
+  @if(!notifications.length && !loading){
+  <p class="empty">No notifications for now.</p>
+  }
+
+  <!-- Notification list -->
+  <div class="notification-list">
+    @for(notification of notifications; track $index){
+    <app-notification-item [notification]="notification" (click)="onItemClick(notification)"
+      (deleted)="onItemDeleted($index)"></app-notification-item>
+    }
+  </div>
+
+  <!-- Loading state -->
+  @if(loading){
+  <p class="loading">Loading...</p>
+  }
+
+  <!-- Load more button -->
+  @if(!allLoaded && !loading && notifications.length){
+  <button mat-raised-button color="primary" (click)="loadNotifications()">
+    Load more
+  </button>
+  }
+</div>

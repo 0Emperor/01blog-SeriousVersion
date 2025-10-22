@@ -1,0 +1,111 @@
+@use '../../../../variables' as *;
+
+.home-container {
+  font-family: $font-family;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden; 
+  
+  background-color: $background-light;
+  color: $text-light;
+  transition: background-color 0.3s, color 0.3s;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $background-dark;
+    color: $text-dark;
+  }
+
+  @media (min-width: $mobile-breakpoint) {
+    display: grid;
+    grid-template-columns: $sidebar-width 1fr; 
+  }
+
+
+  .sidebar {
+    background-color: $surface-light;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    transition: transform 0.3s ease-in-out; 
+    @media (prefers-color-scheme: dark) {
+      background-color: $surface-dark;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (min-width: $mobile-breakpoint) {
+      grid-column: 1 / 2;
+      height: 100vh; /* Fill the viewport height */
+      position:fixed; 
+      top: 0;
+      /* Ensure transform is reset for desktop visibility */
+      transform: translateX(0); 
+    }
+
+    /* Mobile Styles (Fixed and Hidden) */
+    @media (max-width: $mobile-breakpoint) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: $sidebar-width;
+      height: 100%;
+      transform: translateX(-100%); /* Hidden by default */
+      z-index: 1000; /* Must be high to cover the content */
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5); 
+      border-right: none;
+    }
+  }
+  
+  /* Mobile State: Toggled Open (controlled by TS) */
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .container {
+    /* Base styles (Applies to both) */
+    overflow-y: scroll; 
+    min-height: 100vh;
+    
+    /* Desktop Styles */
+    @media (min-width: $mobile-breakpoint) {
+      grid-column: 2 / 3;
+      padding-right: 2rem;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: $mobile-breakpoint) {
+      /* Mobile layout is simple stacking, content starts at the top */
+      padding: 1rem; 
+      /* No padding-top needed since we are not using a fixed header */
+    }
+  }
+
+  /* ---------------------------------------------------- */
+  /* 3. Mobile Menu Toggle Button Placeholder */
+  /* ---------------------------------------------------- */
+  /* NOTE: You must add a <button> element (with class 'menu-toggle-btn') 
+     to your HTML inside the .container or main content area.
+  */
+  .menu-toggle-btn {
+    display: none; /* Hidden on desktop */
+    
+    @media (max-width: $mobile-breakpoint) {
+      display: block; 
+      position: fixed;
+      z-index: 1000000;
+      top: 1rem;
+      right: 1rem;
+      z-index: 50; /* Above content, below sidebar */
+      padding: 0.5rem;
+      background-color: $surface-light;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
+
+      @media (prefers-color-scheme: dark) {
+        background-color: $surface-dark;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { BehaviorSubject, scan, switchMap, tap, filter } from 'rxjs';
 import { PostService } from '../../service/post';
 import { Post } from '../../dto/dto';
 
-import { PostFeed } from "../post-feed/post-feed";
+import { PostFeed } from "../posts/post-feed/post-feed";
 
 @Component({
   selector: 'app-feed',

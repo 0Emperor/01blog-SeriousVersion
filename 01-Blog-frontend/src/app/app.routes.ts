@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guard/auth-guard';
-import { Register } from './component/register/register';
-import { Login } from './component/login/login';
-import { AdminPanel } from './component/admin-panel/admin-panel';
+import { Register } from './component/auth/register/register';
+import { Login } from './component/auth/login/login';
+import { AdminPanel } from './component/users/admin-panel/admin-panel';
 import { AdminGuard } from './guard/admin-guard';
-import { Profile } from './component/profile/profile';
-import { Home } from './component/home/home';
+import { Profile } from './component/users/profile/profile';
+import { Home } from './component/main/home/home';
 import { Feed } from './component/feed/feed';
-import { PostCompose } from './component/post-compose/post-compose';
-import { PostView } from './component/post-view/post-view';
-import { Explore } from './component/explore/explore';
-import { NotificationSection } from './component/notification-section/notification-section';
+import { PostCompose } from './component/posts/post-compose/post-compose';
+import { PostView } from './component/posts/post-view/post-view';
+import { Explore } from './component/users/explore/explore';
+import { NotificationSection } from './component/notifications/notification-section/notification-section';
 
 export const routes: Routes = [
     { path: "register", component: Register },

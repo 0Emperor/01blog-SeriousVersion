@@ -1,0 +1,146 @@
+@use '../../../../variables' as *;
+@use "sass:color";
+
+.notification-item {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  font-family: $font-family;
+  padding: $space-sm 0;
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $space-md;
+
+    .sender {
+      display: flex;
+      align-items: center;
+
+      .system-sender {
+        display: flex;
+        align-items: center;
+        gap: $space-sm;
+
+        .robot-icon {
+          width: 24px;
+          height: 24px;
+          color: $muted-light;
+        }
+
+        .system-name {
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: $muted-light;
+        }
+      }
+    }
+
+    .right-options {
+      .view-link {
+        text-decoration: none;
+
+        h3 {
+          &:hover {
+            color: $primary;
+          }
+        }
+
+      }
+    }
+  }
+
+  .notification-body {
+    background-color: $surface-light;
+    border: 1px solid $border-light;
+    border-radius: $border-radius-sm;
+    padding: $space-md;
+    transition: background-color 0.3s, border-color 0.3s;
+    display: flex;
+    justify-content: space-between;
+
+    &.unseen {
+      border-color: $primary;
+      background-color: color.adjust($primary-light, $lightness: 45%);
+    }
+
+    .message {
+      font-size: 0.95rem;
+      color: $text-light;
+      margin-bottom: $space-sm;
+    }
+
+    .bottom-row {
+      display: flex;
+      flex-direction: column;
+      gap: $space-md;
+
+      justify-content: flex-end;
+      align-items: flex-end;
+      font-size: 0.8rem;
+      color: $muted-light;
+
+      .delete {
+        background: transparent;
+        border: 1px solid $error-light;
+        color: $error-light;
+        cursor: pointer;
+        padding: $space-xs $space-sm;
+        border-radius: $border-radius-sm;
+        font-size: 0.8rem;
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+          background-color: $error-light;
+          color: $button-text-light;
+        }
+      }
+    }
+  }
+
+  // DARK MODE
+  @media (prefers-color-scheme: dark) {
+    .notification-body {
+      background-color: $surface-dark;
+      border-color: $border-dark;
+
+      &.unseen {
+        background-color: color.adjust($primary-dark, $lightness: -15%);
+        border-color: $primary;
+      }
+
+      .message {
+        color: $text-dark;
+      }
+
+      .bottom-row {
+        color: $muted-dark;
+
+        .delete {
+          border-color: $error-dark;
+          color: $error-dark;
+
+          &:hover {
+            background-color: $error-dark;
+            color: $button-text-dark;
+          }
+        }
+      }
+    }
+
+    .right-options .view-link {
+      color: $primary-light;
+    }
+
+    .system-sender {
+      .robot-icon {
+        color: $muted-dark;
+      }
+
+      .system-name {
+        color: $muted-dark;
+      }
+    }
+  }
+}

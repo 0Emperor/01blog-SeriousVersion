@@ -31,6 +31,9 @@ export class NotificationService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+  clear(): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}`);
+  }
 
   // Get unread notifications count (optional)
   getUnreadCount(): Observable<number> {

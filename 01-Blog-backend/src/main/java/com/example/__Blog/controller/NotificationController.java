@@ -28,6 +28,13 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll(
+            @AuthenticationPrincipal(expression = "id") UUID userId) {
+        notificationService.deleteAllNotificationsFor(userId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/unread-count")
     public ResponseEntity<Long> getUnreadCount(@AuthenticationPrincipal(expression = "id") UUID userId) {
         long count = notificationService.countUnread(userId);

@@ -2,9 +2,17 @@ package com.example.__Blog.repository;
 
 import com.example.__Blog.model.Notification;
 import com.example.__Blog.model.User;
+
+import jakarta.transaction.Transactional;
+
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 
@@ -16,4 +24,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
     // Optional: count unread notifications
     long countByToNotifyAndSeenFalse(User toNotify);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Notification n WHERE n.toNotify.id = :userId")
+    Integer deleteByToNotifyId(@Param("userId") UUID userId);
+
 }
