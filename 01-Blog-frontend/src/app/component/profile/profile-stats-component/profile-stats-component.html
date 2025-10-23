@@ -1,0 +1,13 @@
+<div class="stats-container">
+    <div class="counts">
+      <span>{{ followersCount }} followers</span> •
+      <span>{{ followingCount }} following</span>
+    </div>
+  
+    @if (people.length > 0) {
+      <div class="mutuals-preview">
+        <span *for="let person of people">{{ person.username }}</span>
+      </div>
+    }
+  </div>
+  

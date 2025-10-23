@@ -1,7 +1,6 @@
 package com.example.__Blog.model;
 
 import java.sql.Timestamp;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;

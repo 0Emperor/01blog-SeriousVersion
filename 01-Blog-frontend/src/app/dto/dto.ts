@@ -50,3 +50,11 @@ export enum reason {
     BULLYING_HARASSMENT,
     INTELLECTUAL_PROPERTY
 }
+export interface ProfileDto {
+    user: User;                 
+    people: User[];            
+    followersCount: number;     
+    followingCount: number;     
+    isFollowing: boolean;       
+    isMe: boolean;             
+  }

@@ -1,0 +1,53 @@
+<div class="profile-header">
+    <!-- Avatar -->
+    <div class="avatar-container" (click)="onAvatarClick()">
+      @if (user.profile || selectedFilePreview) {
+        <img
+          [src]="selectedFilePreview || 'http://localhost:8080/api/files/' + user.profile"
+          alt="{{ user.username }}'s profile picture"
+          class="profile-img"
+        />
+      } @else {
+        <div
+          class="initials-avatar"
+          [style.background-color]="getBackgroundColor(user.username)"
+        >
+          {{ getInitial(user.username) }}
+        </div>
+      }
+  
+      @if (isMe) {
+        <div class="edit-overlay">
+          <span>Change</span>
+        </div>
+      }
+  
+      <!-- Hidden input for file upload -->
+      <input
+        type="file"
+        #fileInput
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+    </div>
+  
+    <!-- Username -->
+    @if (isMe) {
+      <input [(ngModel)]="editableUsername" />
+    } @else {
+      <span>{{ user.username }}</span>
+    }
+  
+    <!-- Save / Follow button -->
+    <div class="actions">
+      @if (isMe) {
+        <button (click)="onSaveClick()">Save</button>
+      } @else {
+        <button class="hide" (click)="onFollowClick()">
+          {{ isFollowing ? 'Unfollow' : 'Follow' }}
+        </button>
+      }
+    </div>
+  </div>
+  

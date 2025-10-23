@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,20 @@ public interface FollowRepository extends JpaRepository<Subscription, Integer> {
 
     @Query("SELECT s.subscriber FROM Subscription s WHERE s.subscribedTo.id = :userId")
     List<User> findSubscribersByUserId(@Param("userId") UUID userId);
+
+    Long countBySubscribedTo(User user);
+
+    Long countBySubscriber(User user);
+
+    boolean existsBySubscriberAndSubscribedTo(User subscriber, User subscribedTo);
+
+    @Query("SELECT s.subscribedTo FROM Subscription s " +
+            "WHERE s.subscriber = :currentUser " +
+            "AND s.subscribedTo IN (" +
+            "   SELECT sub.subscriber FROM Subscription sub WHERE sub.subscribedTo = :profileUser" +
+            ")")
+    List<User> findMutuals(@Param("currentUser") User currentUser,
+            @Param("profileUser") User profileUser,
+            PageRequest pageable);
+
 }

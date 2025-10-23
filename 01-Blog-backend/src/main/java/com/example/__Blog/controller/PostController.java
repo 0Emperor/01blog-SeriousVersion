@@ -70,8 +70,31 @@ public class PostController {
                 return ResponseEntity.ok(r);
         }
 
+        @GetMapping("/posts/{name}")
+        public ResponseEntity<Object> GetOthersPosts(
+                        @AuthenticationPrincipal CustomUserDetails jwt,
+                        @PathVariable String name,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
+                PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+                Page<Post> postsPage = postService.getByUser(pageable, name);
+
+                List<Postdto> dtos = postsPage.stream()
+                                .map(i -> Postdto.from(i, jwt.getId(), likeService.getLikeCount(i.getId()),
+                                                commentService.CountComment(i.getId()),
+                                                likeService.didUserLikePost(jwt.getId(), i.getId())))
+                                .collect(Collectors.toList());
+                Map<String, Object> r = new HashMap<>();
+
+                r.put("posts", dtos);
+                r.put("hasNext", postsPage.hasNext());
+                return ResponseEntity.ok(r);
+        }
+
         @GetMapping("/{id}")
-        public ResponseEntity<Postdto> getPostById(@AuthenticationPrincipal CustomUserDetails jwt,
+        public ResponseEntity<Postdto> getPostById(
+                        @AuthenticationPrincipal CustomUserDetails jwt,
                         @PathVariable Integer id) {
                 Post post = postService.getById(id);
                 return (post != null)

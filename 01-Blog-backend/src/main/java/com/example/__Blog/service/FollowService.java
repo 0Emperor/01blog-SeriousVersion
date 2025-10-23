@@ -47,6 +47,7 @@ public class FollowService {
                 () -> new ResourceNotFoundException("no such user"));
         User follower = userRepository.findById(followerId).orElseThrow(
                 () -> new ResourceNotFoundException("no such user"));
+        
         Subscription follow = new Subscription();
         follow.setSubscribedTo(followed);
         follow.setSubscriber(follower);

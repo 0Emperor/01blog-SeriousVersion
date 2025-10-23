@@ -3,10 +3,15 @@ package com.example.__Blog.service;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.__Blog.dto.Userdto;
 import com.example.__Blog.model.User;
 import com.example.__Blog.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,15 +19,17 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, FileStorageService fs) {
         this.userRepository = userRepository;
+        fileStorageService = fs;
     }
 
     public List<User> getAllUsersNotFollowed(UUID userId) {
         return userRepository.findUsersNotFollowedBy(userId);
     }
-    
+
     public User createUser(User user) {
         try {
             return userRepository.save(user);
@@ -33,13 +40,13 @@ public class UserService {
 
     public User getUser(UUID id) {
         return userRepository.findById(id)
-               .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
+
     public User getUser(String name) {
         return userRepository.findByUsername(name)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-   
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -50,5 +57,27 @@ public class UserService {
             throw new ResourceNotFoundException("User not found");
         }
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Userdto updateProfile(UUID uid, String username, String bio, MultipartFile profile)
+            throws IOException {
+        User currentUser = userRepository.findById(uid)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        if (username != null && !username.isBlank()) {
+            currentUser.setUsername(username);
+        }
+
+        if (bio != null) {
+            currentUser.setBio(bio);
+        }
+
+        if (profile != null && !profile.isEmpty()) {
+            String fileName = fileStorageService.save(profile);
+            currentUser.setProfile(fileName);
+        }
+
+        userRepository.save(currentUser);
+        return Userdto.from(currentUser);
     }
 }

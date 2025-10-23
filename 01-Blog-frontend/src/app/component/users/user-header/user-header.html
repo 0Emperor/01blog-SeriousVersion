@@ -1,5 +1,5 @@
 <div class="user-header">
-    @if(user!=null){ <a [routerLink]="['/user', user.username]" class="profile-link">
+    @if(user!=null){ <a [routerLink]="['profile', user.username]" class="profile-link">
 
         <div class="avatar-container">
             @if (user.profile) {

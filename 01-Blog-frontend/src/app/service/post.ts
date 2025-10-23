@@ -29,14 +29,14 @@ export class PostService {
     return this.http.request(req);
   }
   // --- 1. POST CREATION METHOD (File Upload) ---
-  delete(pId: string|undefined) {
+  delete(pId: string | undefined) {
     return this.http.delete(`${POST_API}/${pId}`)
   }
-  hide(pId: string|undefined) {
-    return this.http.patch(`${POST_API}/hide/${pId}`,{})
+  hide(pId: string | undefined) {
+    return this.http.patch(`${POST_API}/hide/${pId}`, {})
   }
-  unHide(pId: string|undefined) {
-    return this.http.patch(`${POST_API}/unhide/${pId}`,{})
+  unHide(pId: string | undefined) {
+    return this.http.patch(`${POST_API}/unhide/${pId}`, {})
   }
   /**
    * Sends a new post (caption and file) to the server using FormData.
@@ -62,12 +62,12 @@ export class PostService {
    * @param limit The number of items per page (maps to Spring 'size').
    * @returns An Observable of the backend Map: { posts: [...], hasNext: boolean }
    */
-  getPostsFeed(page: number, limit: number = 10): Observable<any> {
+  getPostsFeed(page: number, limit: number = 10, forUser: string | null = null): Observable<any> {
     // Adjust 1-based Angular page to 0-based Spring page
     const springPage = page - 1;
 
     // Build the query string using Spring's parameters: 'page' and 'size'
-    const url = `${POSTS_FEED_API}?page=${springPage}&size=${limit}`;
+    const url = `${POSTS_FEED_API}${(forUser == null) ? "" : `/posts/` + forUser}?page=${springPage}&size=${limit}`;
 
     // Expecting the Map<String, Object> response { posts: [...], hasNext: boolean }
     return this.http.get<any>(url);

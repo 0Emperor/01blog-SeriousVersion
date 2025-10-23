@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { Component, OnInit, HostListener, inject, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BehaviorSubject, scan, switchMap, tap, filter } from 'rxjs';
 import { PostService } from '../../service/post';
 import { Post } from '../../dto/dto';
@@ -10,16 +10,17 @@ import { PostFeed } from "../posts/post-feed/post-feed";
   selector: 'app-feed',
   standalone: true,
   imports: [CommonModule, PostFeed],
-  templateUrl: './feed.html', 
-  styleUrl: './feed.scss'     
+  templateUrl: './feed.html',
+  styleUrl: './feed.scss'
 })
-export class Feed implements OnInit { 
-  
+export class Feed implements OnInit {
+
   // Dependency injection using the modern inject function
   private postService = inject(PostService);
-  
+
   // State Management for Infinite Scroll
-  private page$ = new BehaviorSubject<number>(1); 
+  private page$ = new BehaviorSubject<number>(1);
+  @Input() forUser?: string | null = null
   posts: Post[] = [];
   loading = false;
   finished = false; // Flag to stop loading when all data is fetched
@@ -37,26 +38,26 @@ export class Feed implements OnInit {
       // 1. Only fetch if we're not loading and haven't reached the end
       filter(page => page > 0 && !this.loading && !this.finished),
       tap(() => this.loading = true), // Start loading state
-      
+
       // 2. Fetch data: switchMap cancels previous requests if page$ fires quickly
-      switchMap(page => this.postService.getPostsFeed(page, this.limit)),
-      
+     
+      switchMap(page => this.postService.getPostsFeed(page, this.limit,this.forUser)),
+
       // 3. Accumulate data: scan combines results from previous pages (acc) with new results (currentChunk)
       scan((acc: Post[], currentChunk: any) => {
         // Use the 'posts' key from the backend Map response
         const newPosts: Post[] = currentChunk.posts.map((post: any) => (post));
 
         // Use the 'hasNext' key from the backend Map response to reliably stop loading
-        if (!currentChunk.hasNext) { 
+        if (!currentChunk.hasNext) {
           this.finished = true;
         }
-        
+
         this.loading = false;
         return [...acc, ...newPosts]; // Accumulate all posts
       }, []) // Initial accumulator value is an empty array
     ).subscribe(allPosts => {
-      this.posts = allPosts; 
-      console.log(this.posts);
+      this.posts = allPosts;
       // Update the component property bound to the template
     });
   }
@@ -70,7 +71,7 @@ export class Feed implements OnInit {
     const tolerance = 200;
     const scrollPosition = window.scrollY + window.innerHeight;
     const totalHeight = document.documentElement.scrollHeight;
-    
+
     // Trigger next page if near bottom AND not currently loading AND not finished
     if (scrollPosition > totalHeight - tolerance && !this.loading && !this.finished) {
       this.loadNextPage();

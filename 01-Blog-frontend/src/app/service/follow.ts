@@ -11,6 +11,6 @@ export class Follow {
     return this.http.post(this.API + uid, {});
   }
   unfollow(uid: string) {
-    return this.http.post(this.API + uid, {});
+    return this.http.delete(this.API + uid, {});
   }
 }

@@ -1,0 +1,18 @@
+@if (profile) {
+<!-- Header: avatar, username, Save / Follow button -->
+<app-profile-header [user]="profile.user" [isMe]="profile.isMe" [isFollowing]="profile.isFollowing"
+    (save)="onSave($event)" (followToggle)="onFollowToggle()">
+</app-profile-header>
+
+<!-- Bio -->
+<app-profile-bio [bio]="profile.user.bio" [isMe]="profile.isMe">
+</app-profile-bio>
+
+<!-- Stats -->
+<app-profile-stats [followersCount]="profile.followersCount" [followingCount]="profile.followingCount"
+    [people]="profile.people">
+</app-profile-stats>
+
+<!-- Posts feed -->
+<app-feed [forUser]="profile.user.username"></app-feed>
+}
