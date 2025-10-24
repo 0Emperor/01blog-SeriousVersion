@@ -9,7 +9,7 @@ import { MarkdownComponent } from "ngx-markdown";
 
 @Component({
   selector: 'app-post-feed',
-  imports: [RouterLink, UserHeaderComponent, DatePipe, FormatCountsPipe, MarkdownComponent],
+  imports: [ UserHeaderComponent, DatePipe, FormatCountsPipe, MarkdownComponent],
   templateUrl: './post-feed.html',
   styleUrl: './post-feed.scss'
 })
@@ -32,5 +32,9 @@ export class PostFeed {
   }
   navigate(){
     this.router.navigate([this.post.postId])
+  }
+  editNavigate(){
+    this.router.navigate(["edit",this.post.postId])
+
   }
 }

@@ -19,7 +19,7 @@ import { UserStore } from '../../../service/user';
 export class ProfileComponent implements OnInit {
   profile: ProfileDto | null = null;
   username: string = '';
-
+  bio: string = ''
   constructor(
     private route: ActivatedRoute,
     private profileService: ProfileService,
@@ -27,7 +27,9 @@ export class ProfileComponent implements OnInit {
     private userStore: UserStore,
     private router: Router
   ) { }
-
+  udpatebio(nBio: string) {
+    this.bio = nBio;
+  }
   ngOnInit(): void {
     this.username = this.route.snapshot.paramMap.get('username') || '';
     this.loadProfile();
@@ -41,15 +43,15 @@ export class ProfileComponent implements OnInit {
   }
 
   /** Handle Save button click (own profile) */
-  onSave({ username, bio, file }: { username?: string; bio?: string; file?: File }) {
-    if (!username && !bio && !file) {
+  onSave({ username, file }: { username?: string; file?: File }) {
+    if (!username && !file) {
       return;
     }
-    this.profileService.updateProfile(username, bio, file).subscribe(({ user, jwt }) => {
+    this.profileService.updateProfile(username, this.bio, file).subscribe(({ user, jwt }) => {
       if (this.profile) this.profile.user = user;
       localStorage.setItem("jwt", jwt)
       this.userStore.setUser(user)
-      this.router.navigate(['profile',user.username])
+      this.router.navigate(['profile', user.username])
     });
   }
 

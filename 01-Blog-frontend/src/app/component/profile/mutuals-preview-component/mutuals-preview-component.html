@@ -1,1 +1,30 @@
-<p>mutuals-preview-component works!</p>
+<div class="mutuals-container" *ngIf="people.length > 0">
+    <p class="title">Mutual connections</p>
+  
+    <div class="mutuals-list">
+      @for (person of people; track person.id) {
+        <div class="mutual-item" title="{{ person.username }}">
+          @if (person.profile) {
+            <img
+              [src]="'http://localhost:8080/api/files/' + person.profile"
+              alt="{{ person.username }}"
+              class="avatar"
+            />
+          } @else {
+            <div
+              class="avatar initials"
+              [style.background-color]="getBackgroundColor(person.username)"
+            >
+              {{ getInitial(person.username) }}
+            </div>
+          }
+          <span class="username">{{ person.username }}</span>
+        </div>
+      }
+    </div>
+  </div>
+  
+  @if (people.length === 0) {
+    <p class="no-mutuals">No mutual connections yet</p>
+  }
+  

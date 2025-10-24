@@ -24,8 +24,10 @@ export class PostService {
     const url = `${POST_API}/${postId}`;
     return this.http.get<any>(url);
   }
-  editPost(caption: string, title: string, media: string[]): Observable<HttpEvent<any>> {
-    const req = new HttpRequest('PUT', POST_API, { description: caption, title: title, media: media });
+  editPost(caption: string, title: string, media: string[], pId: string): Observable<HttpEvent<any>> {
+    const url = `${POST_API}/edit/${pId}`;
+
+    const req = new HttpRequest('PUT', url, { description: caption, title: title, media: media });
     return this.http.request(req);
   }
   // --- 1. POST CREATION METHOD (File Upload) ---
@@ -81,5 +83,10 @@ export class PostService {
    */
   getMediaUrl(mediaPath: string): string {
     return `${BASE_FILE_SERVER_URL}${mediaPath}`;
+  }
+  getPostToEdit(postId: string | undefined): Observable<any> {
+    // 💥 ASSUMING your backend has an endpoint like GET /api/posts/{postId}
+    const url = `${POST_API}/edit/${postId}`;
+    return this.http.get<any>(url);
   }
 }

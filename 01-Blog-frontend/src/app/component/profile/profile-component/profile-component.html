@@ -5,7 +5,7 @@
 </app-profile-header>
 
 <!-- Bio -->
-<app-profile-bio [bio]="profile.user.bio" [isMe]="profile.isMe">
+<app-profile-bio [bio]="profile.user.bio" [isMe]="profile.isMe" (bioChange)="udpatebio($event)">
 </app-profile-bio>
 
 <!-- Stats -->

@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { HttpEventType, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // Needed for [(ngModel)]
-import { CommonModule } from '@angular/common'; // Needed for *ngIf
+import { CommonModule, Location } from '@angular/common'; // Needed for *ngIf
 import { PostService } from '../../../service/post';
 import { Router } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
@@ -27,13 +27,13 @@ export class PostCompose {
 
   // File input reference
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-
+  location = inject(Location)
   // Data Properties
   @Input() title: string = '';
   @Input() description: string = ''; // Markdown content
-  @Input() edit: boolean = false;
+  @Input() edit: string = '';
   // Media Management
-  mediaFilenames: string[] = [];
+  @Input() mediaFilenames: string[] = [];
   mediaPreviews: MediaPreview[] = [];
 
   // UI State Properties
@@ -217,7 +217,7 @@ export class PostCompose {
     this.mediaPreviews = [];
 
     // Navigate back to the home page or feed
-    this.router.navigate(['/home']);
+    this.location.back();
   }
 
   /**
@@ -239,40 +239,40 @@ export class PostCompose {
     this.postSuccess = null;
 
     // The service call is now expected to accept a JSON body
- if (!this.edit) {
-  this.postService.createPost(this.description, this.title, this.mediaFilenames).subscribe({
-      next: (event: any) => {
-        if (event.type === HttpEventType.Response) {
+    if (!this.edit) {
+      this.postService.createPost(this.description, this.title, this.mediaFilenames).subscribe({
+        next: (event: any) => {
+          if (event.type === HttpEventType.Response) {
+            this.isPosting = false;
+            this.postSuccess = true;
+            console.log('Post created successfully!');
+            this.cancelPost();
+          }
+        },
+        error: (err: any) => {
+          console.error('Post creation failed:', err);
           this.isPosting = false;
-          this.postSuccess = true;
-          console.log('Post created successfully!');
-          this.cancelPost();
+          this.postSuccess = false;
+          console.error('Failed to create post. Please check the network tab.');
         }
-      },
-      error: (err: any) => {
-        console.error('Post creation failed:', err);
-        this.isPosting = false;
-        this.postSuccess = false;
-        console.error('Failed to create post. Please check the network tab.');
-      }
-    });
- }else{
-  this.postService.editPost(this.description, this.title, this.mediaFilenames).subscribe({
-    next: (event: any) => {
-      if (event.type === HttpEventType.Response) {
-        this.isPosting = false;
-        this.postSuccess = true;
-        console.log('Post created successfully!');
-        this.cancelPost();
-      }
-    },
-    error: (err: any) => {
-      console.error('Post creation failed:', err);
-      this.isPosting = false;
-      this.postSuccess = false;
-      console.error('Failed to create post. Please check the network tab.');
+      });
+    } else {
+      this.postService.editPost(this.description, this.title, this.mediaFilenames, this.edit).subscribe({
+        next: (event: any) => {
+          if (event.type === HttpEventType.Response) {
+            this.isPosting = false;
+            this.postSuccess = true;
+            console.log('Post updated successfully!');
+            this.cancelPost();
+          }
+        },
+        error: (err: any) => {
+          console.error('Post creation failed:', err);
+          this.isPosting = false;
+          this.postSuccess = false;
+          console.error('Failed to create post. Please check the network tab.');
+        }
+      });
     }
-  });
- }
   }
 }

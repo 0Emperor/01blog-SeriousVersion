@@ -4,10 +4,8 @@
       <span>{{ followingCount }} following</span>
     </div>
   
-    @if (people.length > 0) {
-      <div class="mutuals-preview">
-        <span *for="let person of people">{{ person.username }}</span>
-      </div>
-    }
+    <!-- @if (people.length > 0) { -->
+      <app-mutuals-preview [people]="people"></app-mutuals-preview>
+    <!-- } -->
   </div>
   

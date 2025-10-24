@@ -7,7 +7,7 @@
         </div>
         <div class="actions">
             @if(post.isOwn){
-            <button class="edit" routerLink="edit/{{post.postId}}">Edit</button>
+            <button class="edit" routerLink="/edit/{{post.postId}}">Edit</button>
             <button class="delete" (click)="delete()">Delete</button>
             }@else if(current.getUser?.role =="ADMIN"){
             @if(post.hidden){

@@ -67,4 +67,8 @@ export class PostView {
       }
     })
   }
+  editNavigate(){
+    this.router.navigate(["edit",this.post?.postId])
+
+  }
 }

@@ -21,13 +21,12 @@
             </div>
 
             @if(post.isOwn){
-            <button class="edit-button" (click)="$event.stopPropagation(); ">
+            <button class="edit-button" (click)="$event.stopPropagation(); editNavigate()">
                 Edit Post
             </button>
             }
 
         </div>
-
         <span class="timestamp">{{ post.createdAt | date: 'short' }}</span>
     </div>
 
