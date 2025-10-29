@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // =======================
 // Typography
 // =======================
@@ -11,6 +13,8 @@ $body-font-weight: 400;
 
 /* Primary */
 $primary: #7f13ec;
+$primary-dark: color.adjust($primary, $lightness: -10%);
+$primary-light: color.adjust($primary, $lightness: 10%);
 
 /* Backgrounds */
 $background-light: #f7f6f8;
@@ -26,7 +30,7 @@ $text-dark: #b7b1be;
 $muted-light: #a199ab;
 $muted-dark: #71697d;
 
-/* surface */
+/* Surface */
 $surface-light: #ffffff; 
 $surface-dark: #231a2f;
 
@@ -41,6 +45,16 @@ $button-text-light: #ffffff;
 $button-bg-dark: #444444;
 $button-text-dark: #f0f0f0;
 
+/* Status Colors */
+$success-light: #10b981;
+$success-dark: #34d399;
+
+$warning-light: #f59e0b;
+$warning-dark: #fbbf24;
+
+$danger-light: #ef4444;
+$danger-dark: #f87171;
+
 /* Errors */
 $error-light: #ff6b6b;
 $error-dark: #ff6b6b;
@@ -48,6 +62,10 @@ $error-dark: #ff6b6b;
 /* File placeholders */
 $file-placeholder-bg-light: #e0e0e0;
 $file-placeholder-bg-dark: #3a3a3a;
+
+/* Input Fields */
+$input-bg: #444455;
+$input-bg-light: #f7f7f7;
 
 // =======================
 // Spacing
@@ -57,6 +75,7 @@ $space-xs: $spacing-unit;
 $space-sm: $spacing-unit * 2;     
 $space-md: $spacing-unit * 4;      
 $space-lg: $spacing-unit * 8;      
+$space-xl: $spacing-unit * 10;
 
 // =======================
 // Borders & Radius
@@ -74,11 +93,7 @@ $sidebar-width: 15.625rem;
 // =======================
 $mobile-breakpoint: 48rem; 
 
-
-
-
-///something
-@use "sass:color";
-
-$primary-dark: color.adjust($primary, $lightness: -10%);
-$primary-light: color.adjust($primary, $lightness: 10%);
+// =======================
+// Shadows
+// =======================
+$shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

@@ -1,6 +1,7 @@
 <div class="post-feed">
 
   @for (post of posts; track post.postId) {
+    
   <app-post-feed [post]="post"></app-post-feed>
   }
 

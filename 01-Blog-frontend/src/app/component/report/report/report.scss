@@ -1,0 +1,159 @@
+@use '../../../../variables' as *;
+
+.report-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  // Styling to match the existing dark/light components
+  background-color: $panel-bg-dark;
+  color: $text-dark;
+  border-radius: $border-radius-lg;
+  padding: $space-lg; // Slightly larger padding for premium look
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8); // Deeper shadow
+  z-index: 1000;
+  width: 90%;
+  max-width: 450px;
+  animation: scaleIn 0.3s ease-out; // Entrance animation
+  border: 1px solid rgba(127, 19, 236, 0.3); // Subtle border
+
+  @media (prefers-color-scheme: light) {
+    background-color: $panel-bg-light;
+    color: $text-light;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid $border;
+  }
+  @media (max-width: 30rem) { /* Approx 480px */
+    // On small phones, reduce padding and ensure max-width is respected.
+    padding: $space-lg; 
+    max-width: 95%; 
+}
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-lg;
+
+    h3 {
+      font-size: 1.5rem; // Larger title
+      font-weight: 700;
+      margin: 0;
+      color: $primary;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: $muted-dark;
+      cursor: pointer;
+      padding: $space-sm;
+      transition: color 0.2s;
+      
+      &:hover {
+        color: #ef4444; // Red on hover for dismiss/close
+      }
+
+      @media (prefers-color-scheme: light) {
+        color: $muted-light;
+      }
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: $space-lg;
+    color: $muted-dark;
+    
+    @media (prefers-color-scheme: light) {
+        color: $muted-light;
+    }
+  }
+
+  .reason-options {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+    margin-bottom: $space-lg;
+  
+    .reason-option {
+      display: flex;
+      align-items: center;
+      padding: $space-md;
+      border-radius: $border-radius-sm;
+      cursor: pointer;
+      transition: background-color 0.2s, border 0.2s;
+      
+      // Use theming variables for definition
+      border: 1px solid $border-dark; 
+  
+      @media (prefers-color-scheme: light) {
+        border-color: $border;
+      }
+  
+      // Highlighting selected option
+      input[type="radio"]:checked + span {
+        font-weight: 600;
+        color: $primary; // Highlight text of selected item
+      }
+  
+      &:hover {
+        background-color: rgba(127, 19, 236, 0.1);
+        border-color: $primary;
+      }
+      
+      input[type="radio"] {
+        // Standardize input size
+        margin-right: $space-md;
+        accent-color: $primary;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+      
+      span {
+        font-size: 1rem;
+        color: $text-dark; // Ensure text is visible
+        @media (prefers-color-scheme: light) {
+          color: $text-light;
+        }
+      }
+    }
+  }
+  .submit-btn {
+    width: 100%;
+    padding: $space-md;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    font-weight: $heading-font-weight;
+    transition: background-color 0.2s;
+
+    &:hover:not(:disabled) {
+      background-color: darken($primary, 10%);
+    }
+
+    &:disabled {
+      background-color: $muted-dark;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  .message {
+    text-align: center;
+    margin-top: $space-md;
+    color: #22c55e;
+  }
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

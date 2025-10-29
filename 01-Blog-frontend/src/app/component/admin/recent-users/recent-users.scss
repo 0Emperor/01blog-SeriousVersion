@@ -1,0 +1,263 @@
+@use '../../../../variables' as *;
+
+.recent-users-card {
+  background-color: $panel-bg-dark;
+  border-radius: $border-radius-lg;
+  padding: $space-lg;
+
+  @media (prefers-color-scheme: light) {
+    background-color: $panel-bg-light;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: $heading-font-weight;
+    color: $text-dark;
+    margin: 0 0 $space-lg 0;
+
+    @media (prefers-color-scheme: light) {
+      color: $text-light;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        border-bottom: 1px solid $border-dark;
+
+        @media (prefers-color-scheme: light) {
+          border-bottom-color: $border;
+        }
+
+        th {
+          text-align: left;
+          padding: $space-md $space-sm;
+          font-size: 0.75rem;
+          font-weight: $heading-font-weight;
+          color: $muted-dark;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+
+          @media (prefers-color-scheme: light) {
+            color: $muted-light;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border-dark;
+        transition: background-color 0.2s;
+
+        @media (prefers-color-scheme: light) {
+          border-bottom-color: $border;
+        }
+
+        &:hover {
+          background-color: rgba(127, 19, 236, 0.05);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        td {
+          padding: $space-md $space-sm;
+          font-size: 0.875rem;
+          color: $text-dark;
+
+          @media (prefers-color-scheme: light) {
+            color: $text-light;
+          }
+
+          &.email,
+          &.date {
+            color: $muted-dark;
+
+            @media (prefers-color-scheme: light) {
+              color: $muted-light;
+            }
+          }
+        }
+      }
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: $space-md;
+
+      .avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, rgba(127, 19, 236, 0.3) 0%, rgba(127, 19, 236, 0.1) 100%);
+
+        @media (prefers-color-scheme: light) {
+          background: linear-gradient(135deg, rgba(127, 19, 236, 0.2) 0%, rgba(127, 19, 236, 0.05) 100%);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .avatar-initials {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.875rem;
+          font-weight: $heading-font-weight;
+          color: $primary;
+
+          @media (prefers-color-scheme: light) {
+            color: $primary;
+          }
+        }
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: $space-xs;
+
+        .user-name {
+          font-weight: $heading-font-weight;
+          color: $text-dark;
+
+          @media (prefers-color-scheme: light) {
+            color: $text-light;
+          }
+        }
+
+        .user-username {
+          font-size: 0.75rem;
+          color: $muted-dark;
+
+          @media (prefers-color-scheme: light) {
+            color: $muted-light;
+          }
+        }
+      }
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: $space-xs $space-sm;
+      border-radius: $border-radius-sm;
+      font-size: 0.75rem;
+      font-weight: $heading-font-weight;
+      text-transform: capitalize;
+
+      &.active {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+      }
+
+      &.admin {
+        background-color: rgba(147, 51, 234, 0.1);
+        color: #9333ea;
+      }
+
+      &.banned {
+        // 👈 NEW: Banned state style
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+    }
+
+    .actions {
+      display: flex;
+      gap: $space-sm;
+      justify-content: flex-start;
+
+      .action-btn {
+        background: none;
+        border: none;
+        padding: $space-sm;
+        cursor: pointer;
+        border-radius: $border-radius-sm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        color: $muted-dark;
+
+        @media (prefers-color-scheme: light) {
+          color: $muted-light;
+        }
+
+        &:hover {
+          background-color: rgba(127, 19, 236, 0.1);
+        }
+
+        &.edit-btn {
+          color: #f59e0b;
+
+          &:hover {
+            background-color: rgba(245, 158, 11, 0.1);
+          }
+        }
+
+        &.ban-btn {
+          color: #ef4444;
+
+          &:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+          }
+        }
+
+        &.activate-btn {
+          color: #22c55e;
+
+          &:hover {
+            background-color: rgba(34, 197, 94, 0.1);
+          }
+        }
+
+        svg {
+          width: 1.125rem;
+          height: 1.125rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .recent-users-card {
+    padding: $space-md;
+
+    .users-table {
+      font-size: 0.8125rem;
+
+      thead th,
+      tbody td {
+        padding: $space-sm;
+      }
+
+      .user-info {
+        gap: $space-sm;
+
+        .avatar {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+  }
+}

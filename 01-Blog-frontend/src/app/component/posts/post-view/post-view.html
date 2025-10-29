@@ -1,3 +1,4 @@
+
 <div class="container">
     @if (post!=null){
     <div class="Header">
@@ -17,10 +18,24 @@
             }
             <button class="delete" (click)="delete()">Delete</button>
             }@else if(post.user.role!="ADMIN"){
-            <button class="report">Report</button>
-            }
+                <button class="report" (click)="openReportModal = true">Report</button>            }
         </div>
-
+        @if (showConfirmModal) {
+            <app-confirmation-modal
+                [message]="confirmMessage"
+                [confirmText]="confirmButtonText"
+                (confirm)="onConfirmAction()"
+                (cancel)="showConfirmModal = false"
+            ></app-confirmation-modal>
+        }
+        @if (openReportModal && post) {
+            <div class="modal-backdrop" (click)="openReportModal = false"> 
+              <app-report-post 
+                [postId]="post.postId" 
+                (close)="openReportModal = false"
+                (click)="$event.stopPropagation()" ></app-report-post>
+            </div>
+          }
 
     </div>
     <div class="preview">

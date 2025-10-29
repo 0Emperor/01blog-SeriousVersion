@@ -41,18 +41,23 @@ public class Report {
     public state getState() {
         return state;
     }
-public void setReason(reason reason) {
-    this.reason = reason;
-}
-public void setReportedBy(User reportedBy) {
-    this.reportedBy = reportedBy;
-}
-public void setReportedPost(Post reportedPost) {
-    this.reportedPost = reportedPost;
-}
-public void setId(Integer id) {
-    this.id = id;
-}
+
+    public void setReason(reason reason) {
+        this.reason = reason;
+    }
+
+    public void setReportedBy(User reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+    public void setReportedPost(Post reportedPost) {
+        this.reportedPost = reportedPost;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setState(state state) {
         this.state = state;
     }

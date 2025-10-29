@@ -1,63 +1,369 @@
-@use '../../../../variables' as *;
+@import '../../../../variables';
 
-.notification-section {
+.notifications-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $space-xl $space-lg;
+
+  @media (max-width: $mobile-breakpoint) {
+    padding: $space-md;
+  }
+}
+
+// Header
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-lg;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-md;
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: $heading-font-weight;
+  color: $text-light;
+  margin: 0;
+
+  @media (prefers-color-scheme: dark) {
+    color: $text-dark;
+  }
+
+  @media (max-width: $mobile-breakpoint) {
+    font-size: 1.5rem;
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: $space-sm;
+}
+
+.btn-clear,
+.btn-view-all {
+  padding: $space-sm $space-md;
+  border-radius: $border-radius-sm;
+  font-family: $font-family;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-clear {
+  background: transparent;
+  color: $text-light;
+  border: 2px solid $border;
+
+  @media (prefers-color-scheme: dark) {
+    color: $text-dark;
+    border-color: $border-dark;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba($primary, 0.1);
+    border-color: $primary;
+    color: $primary;
+  }
+}
+
+.btn-view-all {
+  background: $primary;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: $primary-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary, 0.3);
+  }
+}
+
+// Notifications List
+.notifications-list {
   display: flex;
   flex-direction: column;
   gap: $space-md;
+}
+
+.notification-item {
+  background: $panel-bg-light;
+  border-radius: $border-radius-lg;
   padding: $space-md;
+  display: flex;
+  gap: $space-md;
+  align-items: flex-start;
+  position: relative;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
 
-  // Header
-  .header {
-    display: flex;
-    justify-content: flex-end;
-    align-items:  flex-end;
-
-    h2 {
-      margin: 0;
-      font-weight: $heading-font-weight;
-      color: $text-light;
-
-      @media (prefers-color-scheme: dark) {
-        color: $text-dark;
-      }
-    }
-
-    button {
-      font-weight: 600;
-    }
+  @media (prefers-color-scheme: dark) {
+    background: $panel-bg-dark;
   }
 
-  // Notification list
-  .notification-list {
-    display: flex;
-    flex-direction: column;
-    gap: $space-sm;
-  }
-
-  // Empty state
-  .empty {
-    text-align: center;
-    color: $muted-light;
-    font-style: italic;
+  &.unread {
+    border-color: $primary;
+    background: rgba($primary, 0.05);
 
     @media (prefers-color-scheme: dark) {
-      color: $muted-dark;
+      background: rgba($primary, 0.1);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60%;
+      background: $primary;
+      border-radius: 0 4px 4px 0;
     }
   }
 
-  // Loading state
-  .loading {
-    text-align: center;
-    color: $muted-light;
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: $shadow;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Avatar Section
+.notification-avatar {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid $border;
+
+  @media (prefers-color-scheme: dark) {
+    border-color: $border-dark;
+  }
+}
+
+.system-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: $primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+// Content Section
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-header {
+  margin-bottom: $space-xs;
+}
+
+.username {
+  font-weight: 600;
+  color: $text-light;
+  margin-right: $space-xs;
+
+  @media (prefers-color-scheme: dark) {
+    color: $text-dark;
+  }
+}
+
+.subtitle {
+  color: $text-light;
+  font-weight: $body-font-weight;
+
+  @media (prefers-color-scheme: dark) {
+    color: $text-dark;
+  }
+}
+
+.timestamp {
+  font-size: 0.875rem;
+  color: $muted-light;
+  margin: 0 0 $space-xs 0;
+
+  @media (prefers-color-scheme: dark) {
+    color: $muted-dark;
+  }
+}
+
+.detail {
+  font-size: 0.875rem;
+  color: $muted-light;
+  margin: 0;
+  line-height: 1.5;
+
+  @media (prefers-color-scheme: dark) {
+    color: $muted-dark;
+  }
+}
+
+// Actions Section
+.notification-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.btn-view {
+  padding: $space-sm $space-md;
+  border-radius: $border-radius-sm;
+  background: $surface-light;
+  color: $text-light;
+  border: 2px solid $border;
+  font-family: $font-family;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  @media (prefers-color-scheme: dark) {
+    background: $surface-dark;
+    color: $text-dark;
+    border-color: $border-dark;
+  }
+
+  &:hover {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+  }
+}
+
+.btn-delete {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: $muted-light;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  @media (prefers-color-scheme: dark) {
+    color: $muted-dark;
+  }
+
+  &:hover {
+    background: rgba($danger-light, 0.1);
+    color: $danger-light;
 
     @media (prefers-color-scheme: dark) {
-      color: $muted-dark;
+      color: $danger-dark;
+    }
+  }
+}
+
+// Loading State
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-xl;
+  color: $muted-light;
+
+  @media (prefers-color-scheme: dark) {
+    color: $muted-dark;
+  }
+
+  p {
+    margin-top: $space-md;
+    font-size: 1rem;
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-xl * 2;
+  text-align: center;
+  color: $muted-light;
+
+  @media (prefers-color-scheme: dark) {
+    color: $muted-dark;
+  }
+
+  svg {
+    opacity: 0.3;
+    margin-bottom: $space-md;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: $heading-font-weight;
+    color: $text-light;
+    margin: 0 0 $space-sm 0;
+
+    @media (prefers-color-scheme: dark) {
+      color: $text-dark;
     }
   }
 
-  // Load more button
-  button[mat-raised-button] {
-    align-self: center;
-    margin-top: $space-sm;
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// Spinners
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+
+  @media (prefers-color-scheme: dark) {
+    border-color: $border-dark;
+    border-top-color: $primary;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

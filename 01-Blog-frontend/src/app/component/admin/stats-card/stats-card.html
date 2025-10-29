@@ -1,1 +1,47 @@
-<p>stats-card works!</p>
+<div class="stats-card" [attr.data-type]="cardConfig.color">
+    <div class="card-background" [style.background]="cardConfig.gradient"></div>
+    
+    <div class="card-content">
+      <div class="card-header">
+        <span class="card-title">{{ cardConfig.title }}</span>
+        <div class="card-icon">
+          @switch (cardConfig.icon) {
+            @case ('users') {
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            }
+            @case ('posts') {
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <line x1="10" y1="9" x2="8" y2="9"/>
+              </svg>
+            }
+            @case ('reports') {
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <path d="M12 9v4"/>
+                <path d="M12 17h.01"/>
+              </svg>
+            }
+          }
+        </div>
+      </div>
+  
+      <div class="card-stats">
+        <h3 class="stat-number">{{ formattedNumber }}</h3>
+        <div class="stat-change" [class.positive]="isPositiveChange" [class.negative]="!isPositiveChange">
+          <span class="change-value">{{ changeText }}</span>
+          <span class="change-period">{{ timePeriod }}</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card-shine"></div>
+  </div>

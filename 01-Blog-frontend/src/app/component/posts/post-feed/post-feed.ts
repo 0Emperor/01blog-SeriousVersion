@@ -9,7 +9,7 @@ import { MarkdownComponent } from "ngx-markdown";
 
 @Component({
   selector: 'app-post-feed',
-  imports: [ UserHeaderComponent, DatePipe, FormatCountsPipe, MarkdownComponent],
+  imports: [ UserHeaderComponent, DatePipe, FormatCountsPipe],
   templateUrl: './post-feed.html',
   styleUrl: './post-feed.scss'
 })

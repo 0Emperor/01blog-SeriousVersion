@@ -36,9 +36,7 @@ export class CommentArea implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadPage(): void {
-    console.log("hi");
-    
+  private loadPage(): void {    
     this.loading = true;
     this.commentSvc
       .getCommentsPerPost(this.page, this.size, this.pid)

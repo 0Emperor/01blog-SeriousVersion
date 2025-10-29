@@ -25,8 +25,8 @@ public class ReportController {
     public ResponseEntity<Object> report(
             @AuthenticationPrincipal CustomUserDetails cu,
             @PathVariable Integer id,
-            @RequestBody reason reason) {
-        reportService.createReport(reason, id, cu.getId());
+            @RequestBody String Reason) {
+        reportService.createReport(reason.valueOf(Reason), id, cu.getId());
         return ResponseEntity.ok().build();
     }
 }

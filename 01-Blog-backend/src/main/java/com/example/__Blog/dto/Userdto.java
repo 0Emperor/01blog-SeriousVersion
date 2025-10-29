@@ -7,13 +7,15 @@ public record Userdto(
         String username,
         String role,
         String bio,
-        String profile) {
+        String profile,
+        boolean isBaned) {
     public static Userdto from(User user) {
         return new Userdto(
                 user.getId().toString(),
                 user.getUsername(),
                 user.getRole(),
                 user.getBio(),
-                user.getProfile());
+                user.getProfile(),
+                user.getBaned());
     }
 }

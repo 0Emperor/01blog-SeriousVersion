@@ -1,13 +1,15 @@
 <div class="user-header">
-    @if(user!=null){ <a [routerLink]="['profile', user.username]" class="profile-link">
+    @if(user!=null){ <a [routerLink]="['/profile', user.username]" class="profile-link">
 
         <div class="avatar-container">
             @if (user.profile) {
             <img [src]="'http://localhost:8080/api/files/' + user.profile" alt="{{ user.username }}'s profile picture"
                 class="profile-img">
             } @else {
-            <div class="initials-avatar" [style.background-color]="getBackgroundColor(user.username)">
-                {{ getInitial(user.username)}}
+            <div class='no-avatar {{getBackgroundColor(user.username)}}'>
+                <div class="initials">
+                    {{ getInitial(user.username)}}
+                </div>
             </div>
             }
         </div>

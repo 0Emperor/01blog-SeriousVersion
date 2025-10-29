@@ -2,6 +2,7 @@ package com.example.__Blog.repository;
 
 import com.example.__Blog.model.Post;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -22,5 +23,5 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
     ORDER BY p.createdAt DESC
 """)
 Page<Post> findPostsFromSubscribedUsersAndNotHidden(@Param("userId") UUID userId, PageRequest pageable);
-
+long countByCreatedAtAfter(LocalDateTime date);
 }

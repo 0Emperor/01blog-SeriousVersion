@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfileBioComponent } from './profile-bio-component';
+import { Confirm } from './confirm';
 
-describe('ProfileBioComponent', () => {
-  let component: ProfileBioComponent;
-  let fixture: ComponentFixture<ProfileBioComponent>;
+describe('Confirm', () => {
+  let component: Confirm;
+  let fixture: ComponentFixture<Confirm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileBioComponent]
+      imports: [Confirm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProfileBioComponent);
+    fixture = TestBed.createComponent(Confirm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

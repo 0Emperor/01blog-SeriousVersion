@@ -27,7 +27,6 @@ export class Bar {
     { id: 'home', icon: 'home', label: 'Home' },
     { id: 'explore', icon: 'explore', label: 'Explore' },
     { id: 'notifications', icon: 'notifications', label: 'Notifications' },
-    { id: 'profile', icon: 'person', label: 'Profile' },
   ]);
 
   ngOnInit() {

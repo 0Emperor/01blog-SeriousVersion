@@ -6,7 +6,7 @@ import { Comment } from '../dto/dto';
   providedIn: 'root'
 })
 export class CommentShare {
-  private comment = new BehaviorSubject<Comment|null>(null); // or any type
+  private comment = new BehaviorSubject<Comment|null>(null); 
   currentComment = this.comment.asObservable();
 
   changeMessage(comment: Comment|null) {

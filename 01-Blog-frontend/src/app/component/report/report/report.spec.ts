@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MutualsPreviewComponent } from './mutuals-preview-component';
+import { Report } from './report';
 
-describe('MutualsPreviewComponent', () => {
-  let component: MutualsPreviewComponent;
-  let fixture: ComponentFixture<MutualsPreviewComponent>;
+describe('Report', () => {
+  let component: Report;
+  let fixture: ComponentFixture<Report>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MutualsPreviewComponent]
+      imports: [Report]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MutualsPreviewComponent);
+    fixture = TestBed.createComponent(Report);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

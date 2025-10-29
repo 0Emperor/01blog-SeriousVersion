@@ -1,0 +1,126 @@
+@use '../../../../variables' as *;
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1050; // Higher z-index than the report modal
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out; 
+    @media (prefers-color-scheme: light) {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+.confirmation-modal {
+    background-color: $panel-bg-dark;
+    color: $text-dark;
+    border-radius: $border-radius-lg;
+    padding: $space-xl;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    z-index: 1060;
+    text-align: center;
+    width: 90%; 
+    max-width: 400px;
+    padding: $space-xl; 
+
+    @media (max-width: 30rem) { /* Approx 480px */
+        padding: $space-lg; 
+        max-width: 90%; 
+    }
+    @media (prefers-color-scheme: light) {
+        background-color: $panel-bg-light;
+        color: $text-light;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    animation: fadeIn 0.3s ease-out; // Changed to fadeIn for the modal
+    
+    .modal-icon {
+        color: #f59e0b; // Amber color for caution
+        margin-bottom: $space-md; 
+        
+        // FIX 1: Use Flex for Perfect Centering
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        height: 3.5rem; // Sufficient container height
+
+        svg {
+            // FIX 2: Explicit Size and No Compression
+            width: 3rem; 
+            height: 3rem;
+            flex-shrink: 0; // Ensures it uses 3rem and isn't squeezed
+            
+            // FIX 3: Ensure stroke is correctly drawn (optional, often fixed by Flex/Size)
+            stroke-width: 2.2; // Slightly increase stroke weight for better visibility
+        }
+    }
+    h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: $space-sm;
+        color: #ef4444; // Red for warning
+    }
+
+    .message {
+        font-size: 1rem;
+        margin-bottom: $space-xl;
+        color: $muted-dark;
+
+        @media (prefers-color-scheme: light) {
+            color: $muted-light;
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: $space-md;
+
+        button {
+            flex: 1;
+            padding: $space-md;
+            border-radius: $border-radius-sm;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .cancel-btn {
+            background-color: transparent;
+            color: $muted-dark;
+            border-color: $border-dark;
+
+            @media (prefers-color-scheme: light) {
+                color: $muted-light;
+                border-color: $border;
+            }
+
+            &:hover {
+                background-color: rgba(107, 114, 128, 0.1);
+            }
+        }
+
+        .confirm-btn {
+            background-color: #ef4444; // Destructive action color
+            color: white;
+            border-color: #ef4444;
+
+            &:hover {
+                background-color: darken(#ef4444, 10%);
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

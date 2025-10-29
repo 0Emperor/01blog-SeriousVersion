@@ -1,7 +1,7 @@
 <div class="home-container">
     <app-bar class="sidebar" [ngClass]="{'open': isSidebarOpen}"></app-bar>
-    <div class="container">
-        <button class="menu-toggle-btn" (click)="toggleSidebar()">
+    <div class="container" (click)="isSidebarOpen && toggleSidebar()">
+        <button class="menu-toggle-btn" (click)="toggleSidebar(); $event.stopPropagation()">
             ☰
         </button>
         <router-outlet></router-outlet>

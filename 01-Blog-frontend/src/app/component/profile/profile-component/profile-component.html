@@ -1,18 +1,14 @@
-@if (profile) {
-<!-- Header: avatar, username, Save / Follow button -->
-<app-profile-header [user]="profile.user" [isMe]="profile.isMe" [isFollowing]="profile.isFollowing"
-    (save)="onSave($event)" (followToggle)="onFollowToggle()">
-</app-profile-header>
+<div class="profile-page-wrapper">
+    @if (profile) {
+    <app-profile-header [profileData]="profile" (followToggle)="onFollowToggle()" (banToggle)="onBanToggle()"
+        (deleteUser)="onDeleteUser()">
+    </app-profile-header>
 
-<!-- Bio -->
-<app-profile-bio [bio]="profile.user.bio" [isMe]="profile.isMe" (bioChange)="udpatebio($event)">
-</app-profile-bio>
+    <app-feed [forUser]="profile.user.username"></app-feed>
+    }
+</div>
 
-<!-- Stats -->
-<app-profile-stats [followersCount]="profile.followersCount" [followingCount]="profile.followingCount"
-    [people]="profile.people">
-</app-profile-stats>
-
-<!-- Posts feed -->
-<app-feed [forUser]="profile.user.username"></app-feed>
+@if (showConfirmModal) {
+<app-confirmation-modal [message]="confirmMessage" [confirmText]="confirmButtonText" (confirm)="onConfirmAction()"
+    (cancel)="showConfirmModal = false"></app-confirmation-modal>
 }

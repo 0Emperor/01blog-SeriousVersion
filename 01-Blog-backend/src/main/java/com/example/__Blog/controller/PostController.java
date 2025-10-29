@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +28,10 @@ import java.util.stream.Collectors;
 public class PostController {
 
         private final PostService postService;
-        private final CommentService commentService;
+
         private final UserService userService;
         private final LikeService likeService;
+        private final CommentService commentService;
 
         public PostController(PostService postService, CommentService commentService, UserService userService,
                         LikeService likeService) {
@@ -97,6 +97,11 @@ public class PostController {
                         @AuthenticationPrincipal CustomUserDetails jwt,
                         @PathVariable Integer id) {
                 Post post = postService.getById(id);
+                User cUser = userService.getUser(jwt.getId());
+                if (post!=null && post.getHidden() && cUser.getRole()!="ADMIN") {
+
+                throw new AccessDeniedException("u cannot view this post");
+                }
                 return (post != null)
                                 ? ResponseEntity.ok(Postdto.from(post, jwt.getId(), likeService.getLikeCount(id),
                                                 commentService.CountComment(id),
@@ -136,19 +141,4 @@ public class PostController {
                 postService.deletePost(cUserDetails.getId(), id, userService.getUser(cUserDetails.getId()).getRole());
                 return ResponseEntity.ok().build();
         }
-
-        @PreAuthorize("hasRole('ADMIN')")
-        @PatchMapping("/hide/{id}")
-        public ResponseEntity<Object> hidePost(@PathVariable Integer id) {
-                postService.hidePost(id);
-                return ResponseEntity.ok().build();
-        }
-
-        @PreAuthorize("hasRole('ADMIN')")
-        @PatchMapping("/unhide/{id}")
-        public ResponseEntity<Object> unHidePost(@PathVariable Integer id) {
-                postService.unHidePost(id);
-                return ResponseEntity.ok().build();
-        }
-
 }

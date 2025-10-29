@@ -27,7 +27,8 @@ public record Postdto(
                                 post.getUser().getUsername(),
                                 post.getUser().getRole(),
                                 post.getUser().getBio(),
-                                post.getUser().getProfile());
+                                post.getUser().getProfile(),
+                                post.getUser().getBaned());
 
                 return new Postdto(
                                 post.getId().toString(),
@@ -42,4 +43,29 @@ public record Postdto(
                                 post.getMedia(),
                                 totalComments);
         }
+
+        public static Postdto from(Post post) {
+
+                Userdto summary = new Userdto(
+                                post.getUser().getId().toString(),
+                                post.getUser().getUsername(),
+                                post.getUser().getRole(),
+                                post.getUser().getBio(),
+                                post.getUser().getProfile(),
+                                post.getUser().getBaned());
+
+                return new Postdto(
+                                post.getId().toString(),
+                                post.getDescription(),
+                                post.getTitle(),
+                                post.getCreatedAt(),
+                                summary,
+                                false,
+                                0,
+                                false,
+                                post.getHidden(),
+                                post.getMedia(),
+                                0);
+        }
+
 }

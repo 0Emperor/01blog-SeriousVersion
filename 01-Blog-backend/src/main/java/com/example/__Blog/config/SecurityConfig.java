@@ -29,7 +29,9 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll().requestMatchers("/api/files/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/files/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

@@ -1,64 +1,157 @@
-import { Component, ElementRef, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject, signal } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../dto/dto';
+import { ProfileDto } from '../../../dto/dto';
+import { ProfileService } from '../../../service/profile-service';
+import { Follow } from '../../../service/follow';
+import { AdminService } from '../../../service/admin-service';
+import { RouterLink } from "@angular/router";
+import { UserStore } from '../../../service/user';
 
 @Component({
   selector: 'app-profile-header',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './profile-header-component.html',
   styleUrls: ['./profile-header-component.scss']
 })
 export class ProfileHeaderComponent {
-  @Input() user!: User;
-  @Input() isMe = false;
-  @Input() isFollowing = false;
+  @Input() profileData!: ProfileDto;
+  @Input() currentUserRole: 'beta' | 'ADMIN' = 'beta';
 
-  @Output() save = new EventEmitter<{ username?: string;bio?:string ;file?: File }>();
-  @Output() follow = new EventEmitter<void>();
+  profileService = inject(ProfileService);
+  followService = inject(Follow);
+  adminService = inject(AdminService);
+  usersStore = inject(UserStore)
+  location = inject(Location)
+
+  @Output() banToggle = new EventEmitter<void>();
+  @Output() followToggle = new EventEmitter<void>();
+  @Output() deleteUser = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  editableUsername = '';
-  selectedFile?: File;
-  selectedFilePreview: string | null = null;
-
   ngOnInit() {
-    this.editableUsername = this.user.username;
+    if (this.usersStore.getUser?.role) this.currentUserRole = this.usersStore.getUser?.role;
+  }
+  // Edit mode signals
+  isEditingName = signal(false);
+  isEditingBio = signal(false);
+  isEditingImage = signal(false);
+
+  // Temporary edit values
+  editedUsername = signal('');
+  editedBio = signal('');
+  selectedFile = signal<File | null>(null);
+  previewUrl = signal<string | null>(null);
+
+  // Loading states
+  isSaving = signal(false);
+
+  get isViewingOwnProfile(): boolean {
+    return this.profileData.isMe;
   }
 
-  onAvatarClick() {
-    if (this.isMe) this.fileInput.nativeElement.click();
+  get isViewedByAdmin(): boolean {
+    return this.currentUserRole === 'ADMIN' && !this.profileData.isMe;
+  }
+
+  editProfileClick() {
+    this.fileInput.nativeElement.click()
+  }
+  getBadgeInfo(): { text: string; class: string } | null {
+    const user = this.profileData.user;
+
+    if (user.role === 'ADMIN') {
+      return { text: 'Admin', class: 'badge-admin' };
+    }
+
+    if (user.isBaned) {
+      return { text: 'Banned', class: 'badge-banned' };
+    }
+
+    return { text: 'Active', class: 'badge-active' };
+  }
+
+  startEditUsername() {
+    this.editedUsername.set(this.profileData.user.username);
+    this.isEditingName.set(true);
+  }
+
+  startEditBio() {
+    this.editedBio.set(this.profileData.user.bio);
+    this.isEditingBio.set(true);
   }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
-    this.selectedFile = input.files[0];
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.selectedFile.set(file);
 
-    const reader = new FileReader();
-    reader.onload = e => {
-      this.selectedFilePreview = e.target?.result as string;
-    };
-    reader.readAsDataURL(this.selectedFile);
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl.set(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      this.isEditingImage.set(true);
+    }
   }
 
-  onSaveClick() {
-    this.save.emit({ username: this.editableUsername, file: this.selectedFile });
+  cancelEdit() {
+    this.isEditingName.set(false);
+    this.isEditingBio.set(false);
+    this.isEditingImage.set(false);
+    this.selectedFile.set(null);
+    this.previewUrl.set(null);
   }
 
-  onFollowClick() {
-    this.follow.emit();
+  async saveChanges() {
+    this.isSaving.set(true);
+
+    try {
+      const username = this.isEditingName() ? this.editedUsername() : undefined;
+      const bio = this.isEditingBio() ? this.editedBio() : undefined;
+      const file = this.selectedFile() || undefined;
+
+      const response = await this.profileService.updateProfile(username, bio, file).toPromise();
+
+      if (response) {
+        // Update local profile data
+        if (username) this.profileData.user.username = response.user.username;
+        if (bio) this.profileData.user.bio = response.user.bio;
+        if (file) this.profileData.user.profile = response.user.profile;
+
+        if (response.jwt) {
+          localStorage.setItem('jwt', response.jwt);
+        }
+
+        // Reset edit states
+        this.location.replaceState(`/profile/${username}`)
+        this.cancelEdit();
+        this.usersStore.setUser(this.profileData.user)
+      }
+    } finally {
+      this.isSaving.set(false);
+    }
   }
 
-  getInitial(username: string): string {
-    return username ? username.charAt(0).toUpperCase() : '?';
+  async toggleFollow() {
+    this.followToggle.emit()
   }
 
-  getBackgroundColor(username: string): string {
-    const colors = ['#6a5acd', '#ff7f50', '#20b2aa', '#dc143c', '#1e90ff'];
-    const index = username.charCodeAt(0) % colors.length;
-    return colors[index];
+  async banUser() {
+    this.banToggle.emit()
+
+  }
+
+  async unbanUser() {
+    this.banToggle.emit()
+  }
+
+  async delete() {
+    this.deleteUser.emit()
   }
 }

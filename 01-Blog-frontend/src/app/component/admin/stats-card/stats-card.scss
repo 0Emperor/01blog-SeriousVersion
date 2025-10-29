@@ -1,0 +1,269 @@
+@use '../../../../variables' as *;
+
+.stats-card {
+  position: relative;
+  border-radius: $border-radius-lg;
+  padding: $space-lg;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  
+  // Shadow for depth
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  @media (prefers-color-scheme: light) {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+
+    @media (prefers-color-scheme: light) {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-background {
+      transform: scale(1.05);
+      opacity: 0.95;
+    }
+
+    .card-shine {
+      opacity: 0.3;
+      transform: translateX(100%);
+    }
+
+    .card-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-number {
+      transform: scale(1.02);
+    }
+  }
+
+  // Background gradient layer
+  .card-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 0.3s ease;
+    opacity: 1;
+
+    @media (prefers-color-scheme: light) {
+      opacity: 0.9;
+    }
+  }
+
+  // Shine effect on hover
+  .card-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // Content layer
+  .card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $space-md;
+    height: 100%;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .card-title {
+      font-size: 0.875rem;
+      font-weight: $heading-font-weight;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: capitalize;
+      letter-spacing: 0.025em;
+    }
+
+    .card-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: $border-radius-sm;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+
+      svg {
+        color: rgba(255, 255, 255, 0.95);
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+  }
+
+  .card-stats {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+    margin-top: auto;
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+      line-height: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-change {
+      display: flex;
+      align-items: center;
+      gap: $space-xs;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.8);
+
+      .change-value {
+        font-weight: $heading-font-weight;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+      &.positive .change-value {
+        color: #ffffff;
+      }
+
+      &.negative .change-value {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .change-period {
+        opacity: 0.85;
+      }
+    }
+  }
+
+  // Responsive adjustments - MOBILE FIRST
+  @media (max-width: 420px) {
+    padding: $space-md;
+    min-height: 110px;
+    flex: 1 1 100%;
+    width: 90%;
+
+    .card-header {
+      .card-title {
+        font-size: 0.75rem;
+      }
+
+      .card-icon {
+        width: 2rem;
+        height: 2rem;
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+
+    .card-stats {
+      gap: 4px;
+
+      .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .stat-change {
+        font-size: 0.625rem;
+        
+        .change-value {
+          padding: 1px 4px;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 421px) and (max-width: $mobile-breakpoint) {
+    padding: $space-md;
+    min-height: 120px;
+
+    .card-header {
+      .card-title {
+        font-size: 0.8125rem;
+      }
+
+      .card-icon {
+        width: 2rem;
+        height: 2rem;
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+
+    .card-stats {
+      gap: $space-xs;
+
+      .stat-number {
+        font-size: 1.75rem;
+      }
+
+      .stat-change {
+        font-size: 0.6875rem;
+      }
+    }
+  }
+
+  // Tablet size
+  @media (min-width: $mobile-breakpoint) and (max-width: 64rem) {
+    min-height: 130px;
+  }
+}
+
+// Active/Focus states for accessibility
+.stats-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.stats-card:active {
+  transform: translateY(-2px);
+}
+
+// Optional: Add a subtle animation on mount
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// Stagger animation for multiple cards
+.stats-card:nth-child(1) { animation-delay: 0s; }
+.stats-card:nth-child(2) { animation-delay: 0.1s; }
+.stats-card:nth-child(3) { animation-delay: 0.2s; }

@@ -1,0 +1,45 @@
+@use '../../../../variables' as *;
+
+.admin-dashboard {
+    background-color: $background-dark;
+    color: $text-dark;
+    font-family: $font-family;
+    min-height: 100vh;
+    width: 100%;
+    padding-top: $space-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $space-lg;
+
+    .stats-section {
+        display: flex;
+        width: auto;
+        height: auto;
+        margin-right:1rem;
+        gap: $space-md;
+    }
+
+    .tables-section {
+        display: flex;
+        flex-direction: column;
+        gap: $space-lg;
+    }
+}
+
+.loading-state {
+    text-align: center;
+    color: $muted-dark;
+    font-size: 1rem;
+    margin-top: $space-lg;
+}
+
+@media (prefers-color-scheme: light) {
+    .loading-state {
+        color: $muted-light;
+    }
+
+    .admin-dashboard {
+        background-color: $background-light;
+        color: $text-light;
+    }
+}

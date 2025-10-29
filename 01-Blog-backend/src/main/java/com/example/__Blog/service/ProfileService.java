@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.__Blog.dto.ProfileDto;
-import com.example.__Blog.dto.Userdto;
-import com.example.__Blog.model.Subscription;
 import com.example.__Blog.model.User;
 import com.example.__Blog.repository.FollowRepository;
 import com.example.__Blog.repository.UserRepository;

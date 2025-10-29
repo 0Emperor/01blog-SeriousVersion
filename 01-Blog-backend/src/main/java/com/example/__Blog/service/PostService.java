@@ -1,20 +1,23 @@
 package com.example.__Blog.service;
 
+import com.example.__Blog.dto.Stat;
 import com.example.__Blog.model.NotificationType;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.User;
+import com.example.__Blog.model.Report.state;
 import com.example.__Blog.repository.FollowRepository;
 import com.example.__Blog.repository.PostRepository;
+import com.example.__Blog.repository.ReportRepository;
 import com.example.__Blog.specification.PostSpecifications;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,11 +27,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final NotificationService notificationService;
     private final FollowRepository followRepository;
+    private final ReportRepository reportRepository;
 
-    public PostService(PostRepository postRepository, FollowRepository fr, NotificationService ns) {
+    public PostService(PostRepository postRepository, FollowRepository fr, NotificationService ns,
+            ReportRepository rr) {
         this.postRepository = postRepository;
         notificationService = ns;
         followRepository = fr;
+        reportRepository = rr;
     }
 
     public Post save(Post post) {
@@ -70,23 +76,35 @@ public class PostService {
         Post toDelete = postRepository.findById(pID).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found"));
         System.out.println(role);
-        if (role != "Admin" && !toDelete.getUser().getId().equals(uId)) {
+        if (role != "ADMIN" && !toDelete.getUser().getId().equals(uId)) {
             throw new AccessDeniedException("U can only edit your own posts");
         }
         postRepository.delete(toDelete);
-        if (role == "Admin" && !toDelete.getUser().getId().equals(uId)) {
+        if (role == "ADMIN" && !toDelete.getUser().getId().equals(uId)) {
             notificationService.createNotification(
                     null,
                     toDelete.getUser(),
                     "/" + toDelete.getId(),
-                    NotificationType.HIDDEN);
+                    NotificationType.REMOVED);
         }
+    }
+
+    public void deletePost(Integer pID) {
+        Post toDelete = postRepository.findById(pID).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found"));
+        postRepository.delete(toDelete);
+        notificationService.createNotification(
+                null,
+                toDelete.getUser(),
+                "/" + toDelete.getId(),
+                NotificationType.REMOVED);
     }
 
     public void hidePost(Integer pID) {
         Post toHide = postRepository.findById(pID).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found"));
         toHide.setHidden(true);
+        reportRepository.updateReports(pID, state.ACTION_TAKEN);
         postRepository.save(toHide);
         notificationService.createNotification(
                 null,
@@ -98,11 +116,22 @@ public class PostService {
     public void unHidePost(Integer pID) {
         Post toHide = postRepository.findById(pID).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found"));
+        reportRepository.updateReports(pID, state.DISMISSED);
         toHide.setHidden(false);
         postRepository.save(toHide);
     }
 
-    
+    public Stat count() {
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        Long all = postRepository.count();
+        long lastWeek = postRepository.countByCreatedAtAfter(oneWeekAgo);
+        long prec = 0;
+        if (all != 0) {
+            prec = lastWeek / all * 100;
+        }
+        return new Stat(all, prec);
+    }
+
     public List<Post> getAll() {
         return postRepository.findAll();
     }

@@ -1,5 +1,7 @@
 package com.example.__Blog.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.__Blog.dto.ReportDto;
+import com.example.__Blog.dto.Stat;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.Report;
 import com.example.__Blog.model.User;
@@ -29,6 +32,7 @@ public class ReportService {
         postRepository = p;
     }
 
+    @Transactional
     public void createReport(reason reason, Integer pid, UUID uid) {
         User user = userRepository.findById(uid).orElseThrow(() -> {
             throw new ResourceNotFoundException("User not found (somehow)");
@@ -59,6 +63,7 @@ public class ReportService {
         reportRepository.save(report);
     }
 
+    @Transactional
     public void takeAction(Integer rId) {
         Report report = reportRepository.findById(rId).orElseThrow(() -> {
             throw new ResourceNotFoundException("Report not found (somehow)");
@@ -71,5 +76,26 @@ public class ReportService {
         report.setState(state.ACTION_TAKEN);
         postRepository.save(post);
         reportRepository.save(report);
+    }
+
+    public List<ReportDto> getAllReport() {
+        return reportRepository.findAll().stream().map(ReportDto::from).toList();
+    }
+
+    public List<ReportDto> getLast3Reports() {
+        return reportRepository.findTop3ByStateOrderByCreatedAtDesc(state.PENDING).stream().map(ReportDto::from)
+                .toList();
+    }
+
+    public Stat countUnhandeledReports() {
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        Long all = reportRepository.countByState(state.PENDING);
+        long lastWeek = reportRepository.countByStateAndCreatedAtAfter(state.PENDING, oneWeekAgo);
+        long prec = 0;
+        if (all != 0) {
+            prec = lastWeek / all * 100;
+        }           
+
+        return new Stat(all, prec);
     }
 }

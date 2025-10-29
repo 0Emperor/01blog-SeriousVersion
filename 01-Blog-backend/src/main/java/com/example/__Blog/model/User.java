@@ -29,6 +29,15 @@ public class User {
     private String password_hash;
     @CreationTimestamp
     private Timestamp created_at;
+    private boolean isBaned = false;
+
+    public void setBaned(boolean isBaned) {
+        this.isBaned = isBaned;
+    }
+
+    public boolean getBaned() {
+        return isBaned;
+    }
 
     public String getProfile() {
         return profile;

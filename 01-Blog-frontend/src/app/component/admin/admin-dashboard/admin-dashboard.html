@@ -1,11 +1,18 @@
+@if (dashboardData) {
 <div class="admin-dashboard">
-    <section class="stats-section">
-      <app-stats-cards />
-    </section>
-  
-    <section class="tables-section">
-      <app-recent-users />
-      <app-recent-reports />
-    </section>
-  </div>
-  
+  <section class="stats-section">
+    <app-stats-card type="TUsers" [stat]="dashboardData.UsersStats" routerLink="users" />
+    <app-stats-card type="TPosts" [stat]="dashboardData.PostsStats" routerLink="posts" />
+    <app-stats-card type="TUnhadeledReport" [stat]="dashboardData.ReportsStats" routerLink="reports" />
+  </section>
+
+  <section class="tables-section">
+    <app-recent-users [recentUser]="dashboardData.recentUsers" />
+    <app-recent-reports [recentreports]="dashboardData.recentReports" />
+  </section>
+</div>
+} @else {
+<div class="loading-state">
+  <p>Loading dashboard data...</p>
+</div>
+}

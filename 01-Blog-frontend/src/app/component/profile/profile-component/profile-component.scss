@@ -1,0 +1,11 @@
+@use '../../../../variables' as *; // !!! Ensure this path is correct !!!
+
+.profile-page-wrapper {
+    /* Centered, single-column max width */
+    margin-right: $space-lg;
+    padding: $space-lg;
+
+    @media (max-width: 40rem) {
+        padding: $space-md;
+    }
+}

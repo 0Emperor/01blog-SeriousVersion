@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AdminService } from './admin-service';
 
 // ⬅️ CRUCIAL: Hardcoded full URLs using your backend port
 const BASE_URL = 'http://localhost:8080/api';
@@ -31,7 +32,7 @@ export class PostService {
     return this.http.request(req);
   }
   // --- 1. POST CREATION METHOD (File Upload) ---
-  delete(pId: string | undefined) {
+  deletePost(pId: string | undefined) {
     return this.http.delete(`${POST_API}/${pId}`)
   }
   hide(pId: string | undefined) {
@@ -64,13 +65,12 @@ export class PostService {
    * @param limit The number of items per page (maps to Spring 'size').
    * @returns An Observable of the backend Map: { posts: [...], hasNext: boolean }
    */
-  getPostsFeed(page: number, limit: number = 10, forUser: string | null = null): Observable<any> {
+  getPostsFeed(page: number, limit: number = 10, forUser: string | null = null, admin: boolean = false): Observable<any> {
     // Adjust 1-based Angular page to 0-based Spring page
     const springPage = page - 1;
-
     // Build the query string using Spring's parameters: 'page' and 'size'
-    const url = `${POSTS_FEED_API}${(forUser == null) ? "" : `/posts/` + forUser}?page=${springPage}&size=${limit}`;
-
+    let base = (admin) ? "http://localhost:8080/api/admin/posts" : POSTS_FEED_API
+    const url = `${base}${(forUser == null) ? "" : `/posts/` + forUser}?page=${springPage}&size=${limit}`;
     // Expecting the Map<String, Object> response { posts: [...], hasNext: boolean }
     return this.http.get<any>(url);
   }

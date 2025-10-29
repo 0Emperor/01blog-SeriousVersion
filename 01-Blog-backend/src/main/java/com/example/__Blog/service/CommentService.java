@@ -3,7 +3,6 @@ package com.example.__Blog.service;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

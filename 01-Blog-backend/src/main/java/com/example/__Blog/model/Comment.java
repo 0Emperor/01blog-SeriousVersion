@@ -5,8 +5,6 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
