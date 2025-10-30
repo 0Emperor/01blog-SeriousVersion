@@ -1,0 +1,5 @@
+<div class="toast-container">
+    @for (toast of toastService.toasts$ | async; track toast.id) {
+    <app-toast [type]="toast.type" [msg]="toast.message" [id]="toast.id" [title]="toast.title"></app-toast>
+    }
+</div>

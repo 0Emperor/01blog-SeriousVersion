@@ -1,0 +1,13 @@
+@use '../../../../variables' as  *;
+
+.toast-container {
+    display: flex;
+    flex-direction:column-reverse;
+    justify-content: start;
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    gap: $space-md;
+    height: 100vh;
+    overflow-y: hidden;
+}
