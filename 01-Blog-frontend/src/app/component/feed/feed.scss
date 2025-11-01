@@ -4,9 +4,11 @@
     --text-color: #{$text-light};
     --surface-color: #{$surface-light};
     --muted-color: #{$muted-light};
-    
+
+    justify-content: center;
     padding: 1.5rem 0; 
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     
     @media (prefers-color-scheme: dark) {

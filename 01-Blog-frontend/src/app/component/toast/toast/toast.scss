@@ -7,34 +7,39 @@
   gap: $space-md;
   min-width: 320px;
   max-width: 420px;
-  padding: $space-md;
-  border-radius: $border-radius-sm;
-  background: $panel-bg-light;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: $space-md $space-lg;
+  border-radius: $border-radius-lg;
   overflow: hidden;
   animation: slideIn 0.3s ease-out;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 
   @media (prefers-color-scheme: dark) {
-    background: $panel-bg-dark;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   @media (max-width: $mobile-breakpoint) {
     min-width: 280px;
     max-width: calc(100vw - 2rem);
   }
+  &.closing {
+    animation: slideOut 0.3s ease-in forwards; // 👈 exit animation
+  }
 }
 
 // Icon
 .toast-icon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 // Content
@@ -47,52 +52,38 @@
   margin: 0 0 $space-xs 0;
   font-size: 0.9375rem;
   font-weight: $heading-font-weight;
-  color: $text-light;
-
-  @media (prefers-color-scheme: dark) {
-    color: $text-dark;
-  }
 }
 
 .toast-message {
   margin: 0;
   font-size: 0.875rem;
-  color: $muted-light;
   line-height: 1.5;
-
-  @media (prefers-color-scheme: dark) {
-    color: $muted-dark;
-  }
 }
 
 // Close Button
 .toast-close {
   flex-shrink: 0;
   width: fit-content;
-  height: fit-content;
+  height: 24px;
   border-radius: $border-radius-sm;
   background: transparent;
   border: none;
-  color: $muted-light;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-//   margin-top: -4px;
-
-  @media (prefers-color-scheme: dark) {
-    color: $muted-dark;
-  }
+  margin-top: -2px;
+  opacity: 0.6;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: $text-light;
+    opacity: 1;
+    transform: scale(1.1);
+  }
 
-    @media (prefers-color-scheme: dark) {
-      background: rgba(255, 255, 255, 0.1);
-      color: $text-dark;
-    }
+  svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -101,92 +92,213 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 3px;
+  height: 4px;
   width: 100%;
   transform-origin: left;
-  animation: progress 5s linear forwards;
+  animation: progress 3s linear forwards;
+  opacity: 0.4;
 }
 
-// Success Type
+// Success Type (Green/Mint)
 .toast-success {
+  background: linear-gradient(135deg, #d4f4e7 0%, #c8f0dd 100%);
+  color: #0a4d2e;
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #1e4d3a 0%, #1a4233 100%);
+    color: #7ee3b8;
+  }
+
   .toast-icon {
-    background: rgba($success-light, 0.15);
-    color: $success-light;
+    color: #0f9d58;
 
     @media (prefers-color-scheme: dark) {
-      background: rgba($success-dark, 0.2);
-      color: $success-dark;
+      color: #4ade80;
+    }
+  }
+
+  .toast-title {
+    color: #0a4d2e;
+
+    @media (prefers-color-scheme: dark) {
+      color: #a8f5d0;
+    }
+  }
+
+  .toast-message {
+    color: #0f5c3a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #7ee3b8;
+    }
+  }
+
+  .toast-close {
+    color: #0a4d2e;
+
+    @media (prefers-color-scheme: dark) {
+      color: #7ee3b8;
     }
   }
 
   .toast-progress {
-    background: $success-light;
+    background: #0f9d58;
 
     @media (prefers-color-scheme: dark) {
-      background: $success-dark;
+      background: #4ade80;
     }
   }
 }
 
-// Error Type
+// Error Type (Red/Salmon)
 .toast-error {
+  background: linear-gradient(135deg, #ffd4d4 0%, #ffc8c8 100%);
+  color: #8b1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #4d1e1e 0%, #421a1a 100%);
+    color: #ff9999;
+  }
+
   .toast-icon {
-    background: rgba($danger-light, 0.15);
-    color: $danger-light;
+    color: #dc3545;
 
     @media (prefers-color-scheme: dark) {
-      background: rgba($danger-dark, 0.2);
-      color: $danger-dark;
+      color: #ff6b6b;
+    }
+  }
+
+  .toast-title {
+    color: #8b1a1a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ffb3b3;
+    }
+  }
+
+  .toast-message {
+    color: #a02828;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ff9999;
+    }
+  }
+
+  .toast-close {
+    color: #8b1a1a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ff9999;
     }
   }
 
   .toast-progress {
-    background: $danger-light;
+    background: #dc3545;
 
     @media (prefers-color-scheme: dark) {
-      background: $danger-dark;
+      background: #ff6b6b;
     }
   }
 }
 
-// Info Type
+// Info Type (Blue/Lavender)
 .toast-info {
+  background: linear-gradient(135deg, #ddd4ff 0%, #d4ccff 100%);
+  color: #3d2a7a;
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #2a1e4d 0%, #231a42 100%);
+    color: #b8a8ff;
+  }
+
   .toast-icon {
-    background: rgba($primary, 0.15);
-    color: $primary;
+    color: #6c4bf6;
 
     @media (prefers-color-scheme: dark) {
-      background: rgba($primary-light, 0.2);
-      color: $primary-light;
+      color: #9b7dff;
+    }
+  }
+
+  .toast-title {
+    color: #3d2a7a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #d4c8ff;
+    }
+  }
+
+  .toast-message {
+    color: #4d3690;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b8a8ff;
+    }
+  }
+
+  .toast-close {
+    color: #3d2a7a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b8a8ff;
     }
   }
 
   .toast-progress {
-    background: $primary;
+    background: #6c4bf6;
 
     @media (prefers-color-scheme: dark) {
-      background: $primary-light;
+      background: #9b7dff;
     }
   }
 }
 
-// Warning Type
+// Warning Type (Orange/Peach)
 .toast-warning {
+  background: linear-gradient(135deg, #ffe4cc 0%, #ffddc4 100%);
+  color: #7a4a1a;
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #4d3420 0%, #422d1c 100%);
+    color: #ffb885;
+  }
+
   .toast-icon {
-    background: rgba($warning-light, 0.15);
-    color: $warning-light;
+    color: #fd7e14;
 
     @media (prefers-color-scheme: dark) {
-      background: rgba($warning-dark, 0.2);
-      color: $warning-dark;
+      color: #ffa94d;
+    }
+  }
+
+  .toast-title {
+    color: #7a4a1a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ffd4a8;
+    }
+  }
+
+  .toast-message {
+    color: #8b5a2b;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ffb885;
+    }
+  }
+
+  .toast-close {
+    color: #7a4a1a;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ffb885;
     }
   }
 
   .toast-progress {
-    background: $warning-light;
+    background: #fd7e14;
 
     @media (prefers-color-scheme: dark) {
-      background: $warning-dark;
+      background: #ffa94d;
     }
   }
 }
@@ -202,7 +314,16 @@
     opacity: 1;
   }
 }
-
+@keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
 @keyframes progress {
   from {
     transform: scaleX(1);

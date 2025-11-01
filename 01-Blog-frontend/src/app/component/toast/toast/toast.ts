@@ -13,6 +13,7 @@ export class Toast {
   @Input() msg!: string
   @Input() title!: string
   @Input() id!: number
+  @Input() closing!: boolean
   constructor(public toastService: ToastService) { }
 
   onDelete() {

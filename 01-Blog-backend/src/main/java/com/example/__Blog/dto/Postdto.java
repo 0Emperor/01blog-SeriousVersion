@@ -3,10 +3,17 @@ package com.example.__Blog.dto;
 import java.sql.Timestamp;
 import java.util.UUID;
 import com.example.__Blog.model.Post;
+import com.example.__Blog.model.User;
+
+import jakarta.validation.constraints.Size;
 
 public record Postdto(
                 String postId,
+                @Size(min = 10,message="post content cant be less than 10 characters")
+                @Size(max = 4748,message="post content cant exced 4748 characters")
                 String description,
+                @Size(min = 3,message="post title cant be less than 3 characters")
+                @Size(max = 17,message="post title cant exced 17 characters")
                 String title,
                 Timestamp createdAt,
                 Userdto user,
@@ -21,14 +28,8 @@ public record Postdto(
                         int totalLikes,
                         int totalComments,
                         boolean isLiked) {
-
-                Userdto summary = new Userdto(
-                                post.getUser().getId().toString(),
-                                post.getUser().getUsername(),
-                                post.getUser().getRole(),
-                                post.getUser().getBio(),
-                                post.getUser().getProfile(),
-                                post.getUser().getBaned());
+                
+                Userdto summary =Userdto.from(post.getUser());
 
                 return new Postdto(
                                 post.getId().toString(),
@@ -46,14 +47,7 @@ public record Postdto(
 
         public static Postdto from(Post post) {
 
-                Userdto summary = new Userdto(
-                                post.getUser().getId().toString(),
-                                post.getUser().getUsername(),
-                                post.getUser().getRole(),
-                                post.getUser().getBio(),
-                                post.getUser().getProfile(),
-                                post.getUser().getBaned());
-
+                Userdto summary =Userdto.from(post.getUser());
                 return new Postdto(
                                 post.getId().toString(),
                                 post.getDescription(),

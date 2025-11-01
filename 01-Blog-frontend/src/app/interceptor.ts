@@ -1,48 +1,45 @@
-// src/app/core/interceptors/auth.interceptor.ts
-
-import { HttpInterceptorFn, HttpEventType } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { tap, catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-// NOTE: You would typically inject a service here using inject()
-// import { ToastService } from '../services/toast.service'; 
-const EXCLUDE_AUTH_PATH = '/access';
+import { inject } from '@angular/core';
+import { ToastService } from './service/toast-service';
+
+const EXCLUDE_AUTH_PATH = '/access/admin';
+interface BackendResponse<T = any> {
+  toast?: { message: string; title: string; type: 'success' | 'error' | 'info' | 'warning' };
+  body?: T;
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
-
+  const toastService = inject(ToastService);
   const authToken = localStorage.getItem('jwt');
 
   const authReq = authToken
     ? req.clone({ setHeaders: { Authorization: `Bearer ${authToken}` } })
     : req;
-  if (req.url.includes(EXCLUDE_AUTH_PATH)) {
-    console.log(`INTERCEPTOR: Skipping toast for URL: ${req.url}`);
-    return next(authReq);
-  }
   return next(authReq).pipe(
-    tap(event => {
-      if (event.type === HttpEventType.Response) {
-        if (event.status === 201) {
-          console.log('INTERCEPTOR: Successful creation, showing global success toast.');
+    map(event => {
+      if (event instanceof HttpResponse) {
+        const typedBody = event.body as BackendResponse<any>;
+        if (typedBody&&typedBody.toast) {
+          toastService.show(typedBody.toast.message, typedBody.toast.title, typedBody.toast.type);
+        } else {
+          return event
         }
+        return event.clone({ body: typedBody.body ?? {} });
       }
+
+      return event;
     }),
 
     catchError(error => {
-      if (error.status) {
-        console.error(`INTERCEPTOR: HTTP Error ${error} caught globally.`, error);
-
-        switch (error.status) {
-          case 401:
-            console.error('INTERCEPTOR: Unauthorized (401). Redirecting to login...');
-            break;
-          case 404:
-            console.warn('INTERCEPTOR: Resource not found (404).');
-            break;
-          case 500:
-            console.error('INTERCEPTOR: Internal Server Error (500).');
-            break;
-        }
-      }
+      let message = 'Something went wrong!';
+      let title = 'Error'
+      let type: "success" | "error" | "info" | "warning"  = 'error'
+      if (error.error?.toast) message = error.error.toast.message;
+      if (error.error?.toast) title = error.error.toast.title;
+      if (error.error?.toast) type = error.error.toast.type;
+      if (error.error?.toast) toastService.show(message, title, type);
       return throwError(() => error);
     })
   );

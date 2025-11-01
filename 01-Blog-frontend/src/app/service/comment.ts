@@ -16,7 +16,7 @@ export class CommentS {
     });
   }
   editComment(id: string, content: string) {
-    return this.http.put<void>(`${this.api}/${id}`, content);
+    return this.http.put<void>(`${this.api}/${id}`, {content});
   }
   
   deleteComment(id: string) { 

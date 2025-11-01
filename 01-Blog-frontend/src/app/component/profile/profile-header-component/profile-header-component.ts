@@ -7,6 +7,7 @@ import { Follow } from '../../../service/follow';
 import { AdminService } from '../../../service/admin-service';
 import { RouterLink } from "@angular/router";
 import { UserStore } from '../../../service/user';
+import { AvatarMissingService } from '../../../service/avatar-missing-service';
 
 @Component({
   selector: 'app-profile-header',
@@ -35,11 +36,13 @@ export class ProfileHeaderComponent {
     if (this.usersStore.getUser?.role) this.currentUserRole = this.usersStore.getUser?.role;
   }
   // Edit mode signals
-  isEditingName = signal(false);
+  isEditingUsername = signal(false);
+  isEditingName = signal(false)
   isEditingBio = signal(false);
   isEditingImage = signal(false);
-
+  missing = inject(AvatarMissingService)
   // Temporary edit values
+  editedName = signal('')
   editedUsername = signal('');
   editedBio = signal('');
   selectedFile = signal<File | null>(null);
@@ -57,6 +60,10 @@ export class ProfileHeaderComponent {
   }
 
   editProfileClick() {
+
+    this.fileInput.nativeElement.click();
+    this.fileInput.nativeElement.click();
+
     this.fileInput.nativeElement.click()
   }
   getBadgeInfo(): { text: string; class: string } | null {
@@ -75,9 +82,13 @@ export class ProfileHeaderComponent {
 
   startEditUsername() {
     this.editedUsername.set(this.profileData.user.username);
+    this.isEditingUsername.set(true);
+  }
+  startEditName() {
+
+    this.editedName.set(this.profileData.user.name);
     this.isEditingName.set(true);
   }
-
   startEditBio() {
     this.editedBio.set(this.profileData.user.bio);
     this.isEditingBio.set(true);
@@ -101,6 +112,7 @@ export class ProfileHeaderComponent {
   }
 
   cancelEdit() {
+    this.isEditingUsername.set(false);
     this.isEditingName.set(false);
     this.isEditingBio.set(false);
     this.isEditingImage.set(false);
@@ -110,26 +122,27 @@ export class ProfileHeaderComponent {
 
   async saveChanges() {
     this.isSaving.set(true);
-
     try {
-      const username = this.isEditingName() ? this.editedUsername() : undefined;
+      const username = this.isEditingUsername() ? this.editedUsername() : undefined;
       const bio = this.isEditingBio() ? this.editedBio() : undefined;
       const file = this.selectedFile() || undefined;
+      const name = this.isEditingName() ? this.editedName() : undefined;
 
-      const response = await this.profileService.updateProfile(username, bio, file).toPromise();
+      const response = await this.profileService.updateProfile(username, bio, file, name).toPromise();
 
       if (response) {
         // Update local profile data
         if (username) this.profileData.user.username = response.user.username;
         if (bio) this.profileData.user.bio = response.user.bio;
         if (file) this.profileData.user.profile = response.user.profile;
+        if (name) this.profileData.user.name = response.user.name;
 
         if (response.jwt) {
           localStorage.setItem('jwt', response.jwt);
+          this.location.replaceState(`/profile/${username}`)
         }
 
         // Reset edit states
-        this.location.replaceState(`/profile/${username}`)
         this.cancelEdit();
         this.usersStore.setUser(this.profileData.user)
       }

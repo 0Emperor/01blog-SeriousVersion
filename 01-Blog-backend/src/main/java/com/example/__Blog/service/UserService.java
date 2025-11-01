@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.__Blog.dto.Stat;
+import com.example.__Blog.dto.UserRegister;
 import com.example.__Blog.dto.Userdto;
 import com.example.__Blog.model.User;
 import com.example.__Blog.repository.UserRepository;
@@ -39,6 +40,26 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             return null;
         }
+    }
+
+    public User createUser(UserRegister user, String encodedPassword) throws IOException {
+        User User = new User();
+        User.setUsername(user.username());
+        User.setPassword(encodedPassword);
+        String name = user.name();
+        if (name != null && name.equals("")) {
+            User.setName(name);
+        }
+        String bio = user.bio();
+        if (bio != null && bio.equals("")) {
+            User.setBio(bio);
+        }
+        MultipartFile file = user.profile();
+        if (file != null) {
+            String fileName = fileStorageService.save(file);
+            User.setProfile(fileName);
+        }
+        return userRepository.save(User);
     }
 
     public User getUser(UUID id) {
@@ -79,10 +100,11 @@ public class UserService {
     }
 
     @Transactional
-    public Userdto updateProfile(UUID uid, String username, String bio, MultipartFile profile)
+    public Userdto updateProfile(UUID uid, String username, String name, String bio, MultipartFile profile)
             throws IOException {
         User currentUser = userRepository.findById(uid)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        
         if (username != null && !username.isBlank()) {
             currentUser.setUsername(username);
         }
@@ -95,14 +117,18 @@ public class UserService {
             String fileName = fileStorageService.save(profile);
             currentUser.setProfile(fileName);
         }
-
+        if (name != null && !name.isBlank()) {
+            currentUser.setName(name);
+        }
         userRepository.save(currentUser);
         return Userdto.from(currentUser);
     }
-    public void ban(UUID uid){
+
+    public void ban(UUID uid) {
         userRepository.banUser(uid);
     }
-    public void unban(UUID uid){
+
+    public void unban(UUID uid) {
         userRepository.unbanUser(uid);
     }
 }

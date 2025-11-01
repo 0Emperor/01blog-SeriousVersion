@@ -3,25 +3,27 @@
 .user-header {
     display: flex;
     align-items: center;
-    padding: 0.5rem ; 
-    
+    padding: 0.5rem;
+
     .profile-link {
         display: flex;
         align-items: center;
         text-decoration: none;
-        color: inherit; 
+        color: inherit;
         cursor: pointer;
-        
+
         &:hover .username {
             text-decoration: underline;
         }
     }
-    
+
     .avatar-container {
         border-radius: 50%;
         overflow: hidden;
         margin-right: 0.75rem;
-        // border: 2px solid $primary;
+        border: 2px solid $primary;
+        width: 2.5rem;
+        height: 2.5rem;
 
         .profile-img {
             width: 100%;
@@ -35,26 +37,26 @@
         display: flex;
         flex-direction: column;
         line-height: 1.2;
-        
+
         .username {
             font-weight: bold;
             font-size: 1rem;
             color: var(--text-color, $text-dark);
         }
-        
+
         .handle {
             font-size: 0.8rem;
             color: var(--muted-color);
         }
-        
+
         .role-tag {
             font-size: 0.7rem;
             font-weight: bold;
             color: $primary;
             margin-top: 2px;
-            
+
             padding: 1px 4px;
-            background-color: rgba(127, 19, 236, 0.1); 
+            background-color: rgba(127, 19, 236, 0.1);
             border-radius: 4px;
             align-self: flex-start;
         }

@@ -54,6 +54,7 @@ export interface ProfileDto {
 export interface User {
     id: string;
     username: string;
+    name: string;
     role: 'beta' | 'ADMIN';
     bio: string;
     profile: string;

@@ -26,13 +26,15 @@ export class Register {
   username = signal("")
   password = signal("")
   register = () => {
-    this.auth.register(this.username(), this.password())
-      .pipe(catchError((e) => {
-        throw e
-      }))
+    try {
+        this.auth.register(this.username(), this.password())
       .subscribe((e: any) => {
         window.localStorage.setItem("jwt", e["jwt"]);
         this.router.navigate(['/home']);
       })
+    } catch (error) {
+      
+    }
+  
   }
 }

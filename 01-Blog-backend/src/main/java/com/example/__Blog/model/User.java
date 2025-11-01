@@ -30,6 +30,15 @@ public class User {
     @CreationTimestamp
     private Timestamp created_at;
     private boolean isBaned = false;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setBaned(boolean isBaned) {
         this.isBaned = isBaned;

@@ -21,12 +21,18 @@ export class UserHeaderComponent {
   @Input() userr?: User;
   // Default fallback color
   get user() {
+
     if (this.userr) {
       return this.userr
     }
+    console.log(this.userS.user());
+    
     return this.userS.user();
   }
+
   protected getInitial(username: string): string {
+    
+    
     return this.missing.getInitial(username);
   }
   protected getBackgroundColor(username: string): string {

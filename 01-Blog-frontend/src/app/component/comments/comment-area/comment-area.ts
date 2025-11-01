@@ -75,7 +75,6 @@ export class CommentArea implements OnInit, OnDestroy {
   }
   onEdit(comment: Comment, newText: string) {
     this.commentSvc.editComment(comment.id, newText).subscribe((d) => {
-      console.log(d)
       comment.content = newText;
     });
   }

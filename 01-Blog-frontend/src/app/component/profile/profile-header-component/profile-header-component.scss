@@ -39,6 +39,7 @@
   position: relative;
   width: 150px;
   height: 150px;
+
 }
 
 .profile-image {
@@ -151,7 +152,16 @@
     justify-content: center;
   }
 }
+.handle-section {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-bottom: $space-xs;
 
+  @media (max-width: $mobile-breakpoint) {
+    justify-content: center;
+  }
+}
 .username {
   font-size: 2rem;
   font-weight: $heading-font-weight;
@@ -170,7 +180,6 @@
 .handle {
   font-size: 1rem;
   color: $primary;
-  margin: 0 0 $space-md 0;
   font-weight: $body-font-weight;
 }
 

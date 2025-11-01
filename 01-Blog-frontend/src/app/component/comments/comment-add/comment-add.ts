@@ -2,6 +2,7 @@ import { Component, inject, Input, signal } from '@angular/core';
 import { UserStore } from '../../../service/user';
 import { CommentS } from '../../../service/comment';
 import { CommentShare } from '../../../service/comment-share';
+import { ToastService } from '../../../service/toast-service';
 
 @Component({
   selector: 'app-comment-add',
@@ -14,16 +15,19 @@ export class CommentAdd {
   userS = inject(UserStore)
   commentService = inject(CommentS)
   cmmentPublish = inject(CommentShare)
+  toastService = inject(ToastService);
+
   @Input() pId!: string;
   submitComment() {
 
     if (this.commentText().trim()) {
       this.commentService.addComment(this.commentText(), this.pId).subscribe({
         next: (d) => {
-          console.log(d);
-          
           this.cmmentPublish.changeMessage(d);
-        }
+        },
+        error(err) {
+            
+        },
       })
       this.commentText.set('');
     }
@@ -31,15 +35,15 @@ export class CommentAdd {
 
   emojiPickerVisible = false;
 
-openEmojiPicker() {
-  this.emojiPickerVisible = !this.emojiPickerVisible;
-  console.log('Emoji picker is now:', this.emojiPickerVisible ? 'open' : 'closed');
-}
+  openEmojiPicker() {
+    this.emojiPickerVisible = !this.emojiPickerVisible;
+    console.log('Emoji picker is now:', this.emojiPickerVisible ? 'open' : 'closed');
+  }
 
-addEmoji(emoji: string) {
-  this.commentText.set((this.commentText() || '') + emoji);
-  this.emojiPickerVisible = false; // optionally close after picking
-}
+  addEmoji(emoji: string) {
+    this.commentText.set((this.commentText() || '') + emoji);
+    this.emojiPickerVisible = false; // optionally close after picking
+  }
 
   userInitial: string = '';
   avatarBackgroundColor: string = '#ccc'; // Default fallback color

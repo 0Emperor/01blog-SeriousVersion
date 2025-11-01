@@ -51,7 +51,7 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<AdminDashBoardDatadto> hidePost() {
+    public ResponseEntity<AdminDashBoardDatadto> dashboard() {
         List<ReportDto> reports = reportService.getLast3Reports();
         List<Userdto> users = userService.get3RecentUsers().stream().map(Userdto::from).toList();
         Stat reportsCount = reportService.countUnhandeledReports();

@@ -6,6 +6,7 @@ import com.example.__Blog.model.Report;
 import com.example.__Blog.model.Report.reason;
 import com.example.__Blog.model.Report.state;
 
+
 public record ReportDto(
         Integer id,
         Userdto user,

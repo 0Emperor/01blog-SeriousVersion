@@ -9,6 +9,8 @@ import com.example.__Blog.service.LikeService;
 import com.example.__Blog.service.PostService;
 import com.example.__Blog.service.UserService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,9 +46,9 @@ public class PostController {
         @PostMapping
         public ResponseEntity<Postdto> createPost(
                         @AuthenticationPrincipal CustomUserDetails jwt,
-                        @RequestBody Post pos) {
+                        @Valid @RequestBody Postdto pos) {
                 User user = userService.getUser(jwt.getUsername());
-                Post post = postService.createPost(pos.getDescription(), pos.getTitle(), user, pos.getMedia());
+                Post post = postService.createPost(pos.description(), pos.title(), user, pos.media());
                 Post savedPost = postService.save(post);
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(Postdto.from(savedPost, jwt.getId(), 0, 0, false));
@@ -98,9 +100,9 @@ public class PostController {
                         @PathVariable Integer id) {
                 Post post = postService.getById(id);
                 User cUser = userService.getUser(jwt.getId());
-                if (post!=null && post.getHidden() && cUser.getRole()!="ADMIN") {
+                if (post != null && post.getHidden() && cUser.getRole() != "ADMIN") {
 
-                throw new AccessDeniedException("u cannot view this post");
+                        throw new AccessDeniedException("u cannot view this post");
                 }
                 return (post != null)
                                 ? ResponseEntity.ok(Postdto.from(post, jwt.getId(), likeService.getLikeCount(id),
@@ -124,7 +126,7 @@ public class PostController {
         @PutMapping("/edit/{id}")
         public ResponseEntity<Postdto> editPost(
                         @AuthenticationPrincipal CustomUserDetails cUserDetails,
-                        @RequestBody Postdto edited,
+                        @Valid @RequestBody Postdto edited,
                         @PathVariable Integer id) {
                 Post afterEdit = postService.ediPost(cUserDetails.getId(), id, edited.description(), edited.title(),
                                 edited.media());

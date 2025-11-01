@@ -11,12 +11,12 @@ export class ProfileService {
     return this.http.get<ProfileDto>(`${this.API}/${username}`);
   }
 
-  updateProfile(username?: string, bio?: string, file?: File) {
+  updateProfile(username?: string, bio?: string, file?: File, name?: string) {
     const formData = new FormData();
     if (username) formData.append('username', username);
     if (bio) formData.append('bio', bio);
     if (file) formData.append('profile', file);
-
-    return this.http.put<{user:User,jwt:string}>(`${this.API}/me`, formData);
+    if (name) formData.append('name', name)
+    return this.http.put<{ user: User, jwt: string }>(`${this.API}/me`, formData);
   }
 }

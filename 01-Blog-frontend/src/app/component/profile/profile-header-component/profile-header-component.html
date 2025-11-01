@@ -3,8 +3,19 @@
     <!-- Profile Image Section -->
     <div class="profile-image-wrapper">
       <div class="profile-image-container">
-        <img [src]="previewUrl() || profileData.user.profile" [alt]="profileData.user.username" class="profile-image" />
+        @if (profileData.user.profile) {
+        <img [src]=" missing.avatar_link(profileData.user.profile)"
+          alt="{{ profileData.user.username }}'s profile picture" class="profile-image">
+        } @else {
+        <div class='no-avatar {{missing.getBackgroundColor(profileData.user.username)}}'>
+          <div class="initials profile-image">
+            {{ missing.getInitial(profileData.user.username)}}
+          </div>
+        </div>
+        }
+        <div>
 
+        </div>
         <!-- Only show badge if NOT viewing own profile -->
         @if (!isViewingOwnProfile && getBadgeInfo(); as badge) {
         <div class="badge" [ngClass]="badge.class">
@@ -43,12 +54,12 @@
       <!-- Username Section -->
       <div class="username-section">
         @if (isViewingOwnProfile && isEditingName()) {
-        <input type="text" [(ngModel)]="editedUsername" class="edit-input username-input" [disabled]="isSaving()"
+        <input type="text" [(ngModel)]="editedName" class="edit-input username-input" [disabled]="isSaving()"
           maxlength="30" />
         } @else {
-        <h1 class="username">{{ profileData.user.username }}</h1>
+        <h1 class="username">{{ profileData.user.name||profileData.user.username }}</h1>
         @if (isViewingOwnProfile) {
-        <button class="edit-icon-btn" (click)="startEditUsername()" [disabled]="isSaving()">
+        <button class="edit-icon-btn" (click)="startEditName()" [disabled]="isSaving()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -58,8 +69,23 @@
         }
         }
       </div>
-
-      <p class="handle">@{{ profileData.user.username }}</p>
+      <div class="handle-section">
+        @if (isViewingOwnProfile && isEditingUsername()) {
+          <input type="text" [(ngModel)]="editedUsername" class="edit-input name-input" [disabled]="isSaving()"
+            maxlength="10" />
+          } @else {
+          <h1 class="handle">@{{ profileData.user.username }}</h1>
+          @if (isViewingOwnProfile) {
+          <button class="edit-icon-btn" (click)="startEditUsername()" [disabled]="isSaving()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </button>
+          }
+          }
+      </div>
 
       <!-- Bio Section -->
       <div class="bio-section">
@@ -124,7 +150,7 @@
       <div class="action-buttons">
         @if (isViewingOwnProfile) {
         <!-- Save/Cancel buttons when editing -->
-        @if (isEditingName() || isEditingBio() || isEditingImage()) {
+        @if (isEditingUsername() || isEditingBio() || isEditingImage()||isEditingName()) {
         <button class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving()">
           @if (isSaving()) {
           <span class="spinner"></span>

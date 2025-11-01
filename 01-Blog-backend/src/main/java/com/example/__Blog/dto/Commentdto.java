@@ -5,9 +5,13 @@ import java.util.UUID;
 
 import com.example.__Blog.model.Comment;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public record Commentdto(
         Integer pid,
         Integer id,
+        @NotBlank(message = "comment cant be empty") @Size(max=38 ,message="comment cant exced 38 characters")
         String content,
         Userdto user,
         Timestamp createdAt,

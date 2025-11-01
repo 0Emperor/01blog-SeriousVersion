@@ -25,6 +25,8 @@ import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Comment;
 import com.example.__Blog.service.CommentService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/comment")
 public class CommentControler {
@@ -37,7 +39,7 @@ public class CommentControler {
 
     @PostMapping
     public ResponseEntity<Object> AddComment(@AuthenticationPrincipal CustomUserDetails cUserDetails,
-            @RequestBody Commentdto cmt) {
+           @Valid @RequestBody Commentdto cmt) {
         return ResponseEntity.ok().body(
                 Commentdto.from(
                         commentService.AddComment(cmt.content(), cmt.pid(), cUserDetails.getId()),
@@ -54,8 +56,8 @@ public class CommentControler {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateComment(@AuthenticationPrincipal CustomUserDetails cUserDetails,
             @PathVariable Integer id,
-            @RequestBody String nContent) {
-        return ResponseEntity.ok().body(Commentdto.from(commentService.updaComment(nContent, id, cUserDetails.getId()),cUserDetails.getId()));
+           @Valid @RequestBody Commentdto nComment) {
+        return ResponseEntity.ok().body(Commentdto.from(commentService.updaComment(nComment.content(), id, cUserDetails.getId()),cUserDetails.getId()));
     }
 
     @GetMapping("/{id}")

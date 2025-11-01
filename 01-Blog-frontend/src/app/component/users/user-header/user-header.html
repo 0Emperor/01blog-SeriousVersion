@@ -3,19 +3,19 @@
 
         <div class="avatar-container">
             @if (user.profile) {
-            <img [src]="'http://localhost:8080/api/files/' + user.profile" alt="{{ user.username }}'s profile picture"
+            <img [src]=" missing.avatar_link(user.profile)" alt="{{ user.username }}'s profile picture"
                 class="profile-img">
             } @else {
-            <div class='no-avatar {{getBackgroundColor(user.username)}}'>
+            <div class='no-avatar {{missing.getBackgroundColor(user.username)}}'>
                 <div class="initials">
-                    {{ getInitial(user.username)}}
+                    {{ missing.getInitial(user.username)}}
                 </div>
             </div>
             }
         </div>
 
         <div class="user-info">
-            <span class="username">{{ user.username }}</span>
+            <span class="username">{{ user.name}}</span>
             <span class="handle">@{{ user.username }}</span>
 
             @if (user.role === 'ADMIN') {
