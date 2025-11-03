@@ -46,19 +46,6 @@ public class UserService {
         User User = new User();
         User.setUsername(user.username());
         User.setPassword(encodedPassword);
-        String name = user.name();
-        if (name != null && name.equals("")) {
-            User.setName(name);
-        }
-        String bio = user.bio();
-        if (bio != null && bio.equals("")) {
-            User.setBio(bio);
-        }
-        MultipartFile file = user.profile();
-        if (file != null) {
-            String fileName = fileStorageService.save(file);
-            User.setProfile(fileName);
-        }
         return userRepository.save(User);
     }
 

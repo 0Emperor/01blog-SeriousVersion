@@ -62,9 +62,9 @@ public class AuthController {
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Username is already taken"));
-        } catch(IOException e){
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(Map.of("error", "Something went wrong"));
+                    .body(Map.of("error", "Something went wrong"));
         }
         // Generate JWT
         CustomUserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getUsername());

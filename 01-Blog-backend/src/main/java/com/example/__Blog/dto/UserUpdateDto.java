@@ -6,8 +6,8 @@ import com.example.__Blog.validation.annotation.ValidUserUpdate;
 
 @ValidUserUpdate
 public record UserUpdateDto(
-        String username,
-        String name,
-        String bio,
-        MultipartFile profile) {
+                String username,
+                String name,
+                String bio,
+                MultipartFile profile)  {
 }

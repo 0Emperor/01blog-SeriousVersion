@@ -19,6 +19,8 @@ export class AvatarMissingService {
    * Extracts the first letter of the username for the avatar placeholder.
    */
   public getInitial(name: string): string {
+    console.log(name);
+    
     if (!name) return "";
 
     // Trim and split by one or more spaces
@@ -50,5 +52,14 @@ export class AvatarMissingService {
     // Map the hash to an index in the color array
     const index = Math.abs(hash) % this.colors.length;
     return this.colors[index];
+  }
+  public getImageClass(isAdmin: boolean, isBanned: boolean): string {
+    if (isAdmin) {
+      return "admin";
+    }
+    if (isBanned) {
+      return "banned"
+    }
+    return "active"
   }
 }

@@ -2,9 +2,10 @@
   <div class="profile-container">
     <!-- Profile Image Section -->
     <div class="profile-image-wrapper">
-      <div class="profile-image-container">
+      <div class="avatar-container"
+        [ngClass]="(profileData.user.profile)?missing.getImageClass(profileData.user.role =='ADMIN' ,profileData.user.isBaned):''">
         @if (profileData.user.profile) {
-        <img [src]=" missing.avatar_link(profileData.user.profile)"
+        <img [src]="previewUrl() ||missing.avatar_link(profileData.user.profile)"
           alt="{{ profileData.user.username }}'s profile picture" class="profile-image">
         } @else {
         <div class='no-avatar {{missing.getBackgroundColor(profileData.user.username)}}'>
@@ -17,7 +18,7 @@
 
         </div>
         <!-- Only show badge if NOT viewing own profile -->
-        @if (!isViewingOwnProfile && getBadgeInfo(); as badge) {
+        @if ((!isViewingOwnProfile||isAdmin) && getBadgeInfo(); as badge) {
         <div class="badge" [ngClass]="badge.class">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -37,7 +38,7 @@
         }
       </div>
 
-      @if (isViewingOwnProfile) {
+      @if (isViewingOwnProfile &&!isAdmin) {
       <label class="edit-image-btn" (click)="editProfileClick();$event.stopPropagation()" [class.disabled]="isSaving()">
         <input type="file" (change)="onFileSelected($event)" #fileInput accept="image/*" [disabled]="isSaving()"
           class="file-input-hidden" />
@@ -53,12 +54,12 @@
     <div class="profile-info">
       <!-- Username Section -->
       <div class="username-section">
-        @if (isViewingOwnProfile && isEditingName()) {
+        @if (isViewingOwnProfile && isEditingName()&&!isAdmin) {
         <input type="text" [(ngModel)]="editedName" class="edit-input username-input" [disabled]="isSaving()"
           maxlength="30" />
         } @else {
         <h1 class="username">{{ profileData.user.name||profileData.user.username }}</h1>
-        @if (isViewingOwnProfile) {
+        @if (isViewingOwnProfile&&!isAdmin) {
         <button class="edit-icon-btn" (click)="startEditName()" [disabled]="isSaving()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -70,31 +71,31 @@
         }
       </div>
       <div class="handle-section">
-        @if (isViewingOwnProfile && isEditingUsername()) {
-          <input type="text" [(ngModel)]="editedUsername" class="edit-input name-input" [disabled]="isSaving()"
-            maxlength="10" />
-          } @else {
-          <h1 class="handle">@{{ profileData.user.username }}</h1>
-          @if (isViewingOwnProfile) {
-          <button class="edit-icon-btn" (click)="startEditUsername()" [disabled]="isSaving()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-          }
-          }
+        @if (isViewingOwnProfile && isEditingUsername()&&!isAdmin) {
+        <input type="text" [(ngModel)]="editedUsername" class="edit-input name-input" [disabled]="isSaving()"
+          maxlength="10" />
+        } @else {
+        <h1 class="handle">@{{ profileData.user.username }}</h1>
+        @if (isViewingOwnProfile&&!isAdmin) {
+        <button class="edit-icon-btn" (click)="startEditUsername()" [disabled]="isSaving()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+        </button>
+        }
+        }
       </div>
 
       <!-- Bio Section -->
       <div class="bio-section">
-        @if (isViewingOwnProfile && isEditingBio()) {
+        @if (isViewingOwnProfile && isEditingBio()&&!isAdmin) {
         <textarea [(ngModel)]="editedBio" class="edit-input bio-input" [disabled]="isSaving()" maxlength="200"
           rows="3"></textarea>
         } @else {
         <p class="bio">{{ profileData.user.bio }}</p>
-        @if (isViewingOwnProfile) {
+        @if (isViewingOwnProfile&&!isAdmin) {
         <button class="edit-icon-btn" (click)="startEditBio()" [disabled]="isSaving()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

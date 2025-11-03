@@ -58,6 +58,9 @@ export class ProfileHeaderComponent {
   get isViewedByAdmin(): boolean {
     return this.currentUserRole === 'ADMIN' && !this.profileData.isMe;
   }
+  get isAdmin() {
+    return this.currentUserRole === 'ADMIN'
+  }
 
   editProfileClick() {
 

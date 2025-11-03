@@ -21,7 +21,7 @@
         border-radius: 50%;
         overflow: hidden;
         margin-right: 0.75rem;
-        border: 2px solid $primary;
+        // border: 2px solid $primary;
         width: 2.5rem;
         height: 2.5rem;
 
@@ -46,7 +46,7 @@
 
         .handle {
             font-size: 0.8rem;
-            color: var(--muted-color);
+            color: $primary;
         }
 
         .role-tag {

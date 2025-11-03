@@ -17,11 +17,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authReq = authToken
     ? req.clone({ setHeaders: { Authorization: `Bearer ${authToken}` } })
     : req;
+  if (req.url.includes(EXCLUDE_AUTH_PATH)) {
+    return next(authReq)
+  }
   return next(authReq).pipe(
     map(event => {
       if (event instanceof HttpResponse) {
         const typedBody = event.body as BackendResponse<any>;
-        if (typedBody&&typedBody.toast) {
+        if (typedBody && typedBody.toast) {
           toastService.show(typedBody.toast.message, typedBody.toast.title, typedBody.toast.type);
         } else {
           return event
@@ -35,7 +38,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(error => {
       let message = 'Something went wrong!';
       let title = 'Error'
-      let type: "success" | "error" | "info" | "warning"  = 'error'
+      let type: "success" | "error" | "info" | "warning" = 'error'
       if (error.error?.toast) message = error.error.toast.message;
       if (error.error?.toast) title = error.error.toast.title;
       if (error.error?.toast) type = error.error.toast.type;

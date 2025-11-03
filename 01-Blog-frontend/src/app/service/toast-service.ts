@@ -19,6 +19,11 @@ export class ToastService {
     const toast: Toast = { id: ++this.counter, message, type, title, closing: false };
     const current = this.toastsSubject.value;
     this.toastsSubject.next([...current, toast])
+    if (this.toastsSubject.value.length > 3) {
+      for (let i = 0; i < this.toastsSubject.value.length - 3; i++) {
+        this.remove(this.toastsSubject.value[i].id)
+      }
+    }
     setTimeout(() => this.remove(toast.id), duration);
   }
 
@@ -26,7 +31,7 @@ export class ToastService {
     const toast = this.toastsSubject.value.find(t => t.id === id);
     if (!toast) return;
 
-    toast .closing = true;
+    toast.closing = true;
     this.toastsSubject.next([...this.toastsSubject.value]);
 
     setTimeout(() => {

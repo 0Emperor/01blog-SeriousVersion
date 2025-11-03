@@ -5,6 +5,7 @@ import { CommonModule, Location } from '@angular/common'; // Needed for *ngIf
 import { PostService } from '../../../service/post';
 import { Router } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
+import { ToastService } from '../../../service/toast-service';
 interface MediaPreview {
   localUrl: string;
   serverUrl: string;
@@ -45,7 +46,7 @@ export class PostCompose {
   private fileServerBaseUrl = 'http://localhost:8080/api/files';
 
   // Inject the PostService
-  constructor(private postService: PostService, private router: Router) { }
+  constructor(private postService: PostService, private toastService: ToastService) { }
   togglePreview(): void {
     this.isPreviewVisible = !this.isPreviewVisible;
   }
@@ -245,15 +246,13 @@ export class PostCompose {
           if (event.type === HttpEventType.Response) {
             this.isPosting = false;
             this.postSuccess = true;
-            console.log('Post created successfully!');
             this.cancelPost();
+            this.toastService.show("post created succesfully", "created", 'success')
           }
         },
         error: (err: any) => {
-          console.error('Post creation failed:', err);
           this.isPosting = false;
           this.postSuccess = false;
-          console.error('Failed to create post. Please check the network tab.');
         }
       });
     } else {
@@ -262,15 +261,13 @@ export class PostCompose {
           if (event.type === HttpEventType.Response) {
             this.isPosting = false;
             this.postSuccess = true;
-            console.log('Post updated successfully!');
             this.cancelPost();
+            this.toastService.show("post edited succesfully", "edited", 'success')
           }
         },
         error: (err: any) => {
-          console.error('Post creation failed:', err);
           this.isPosting = false;
           this.postSuccess = false;
-          console.error('Failed to create post. Please check the network tab.');
         }
       });
     }
