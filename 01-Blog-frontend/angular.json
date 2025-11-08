@@ -30,6 +30,7 @@
               }
             ],
             "styles": [
+              "node_modules/quill/dist/quill.snow.css",
               "src/styles.scss"
             ]
           },
@@ -90,6 +91,7 @@
             "styles": [
               "src/_variables.scss",
               "src/theme.scss",
+              "node_modules/quill/dist/quill.snow.css",
               "src/styles.scss"
             ]
           }

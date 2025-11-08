@@ -4,7 +4,7 @@
         <div class="avatar-container">
             @if (user.profile) {
             <img [src]=" missing.avatar_link(user.profile)" alt="{{ user.username }}'s profile picture"
-                class="profile-img">
+                class="profile-image" [ngClass]="missing.getImageClass(user)">
             } @else {
             <div class='no-avatar {{missing.getBackgroundColor(user.username)}}'>
                 <div class="initials">

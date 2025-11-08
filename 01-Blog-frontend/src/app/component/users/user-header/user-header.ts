@@ -24,9 +24,7 @@ export class UserHeaderComponent {
 
     if (this.userr) {
       return this.userr
-    }
-    console.log(this.userS.user());
-    
+    }    
     return this.userS.user();
   }
 

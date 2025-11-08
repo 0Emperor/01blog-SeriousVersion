@@ -38,6 +38,7 @@ public class NotificationController {
     @GetMapping("/unread-count")
     public ResponseEntity<Long> getUnreadCount(@AuthenticationPrincipal(expression = "id") UUID userId) {
         long count = notificationService.countUnread(userId);
+        System.out.println(count);
         return ResponseEntity.ok(count);
     }
 

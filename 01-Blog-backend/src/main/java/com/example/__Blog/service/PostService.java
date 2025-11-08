@@ -10,16 +10,22 @@ import com.example.__Blog.repository.PostRepository;
 import com.example.__Blog.repository.ReportRepository;
 import com.example.__Blog.specification.PostSpecifications;
 
+import jakarta.transaction.Transactional;
+
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -30,7 +36,8 @@ public class PostService {
     private final ReportRepository reportRepository;
 
     public PostService(PostRepository postRepository, FollowRepository fr, NotificationService ns,
-            ReportRepository rr) {
+            ReportRepository rr, FileService fss) {
+        fileService = fss;
         this.postRepository = postRepository;
         notificationService = ns;
         followRepository = fr;
@@ -51,26 +58,28 @@ public class PostService {
         return post;
     }
 
-    public Post createPost(String description, String title, User user, String[] media) {
-        Post post = new Post();
-        post.setTitle(title);
-        post.setDescription(description);
-        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        post.setUser(user);
-        return post;
-    }
+    // public Post createPost(String description, String title, User user, String[]
+    // media) {
+    // Post post = new Post();
+    // post.setTitle(title);
+    // post.setDescription(description);
+    // post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    // post.setUser(user);
+    // return post;
+    // }
 
-    public Post ediPost(UUID uId, Integer pID, String description, String title, String[] media) {
-        Post toEdit = postRepository.findById(pID).orElseThrow(
-                () -> new ResourceNotFoundException("Post not found"));
-        if (!toEdit.getUser().getId().equals(uId)) {
-            throw new AccessDeniedException("U can only edit your own posts");
-        }
-        toEdit.setDescription(description);
-        toEdit.setMedia(media);
-        toEdit.setTitle(title);
-        return postRepository.save(toEdit);
-    }
+    // public Post ediPost(UUID uId, Integer pID, String description, String title,
+    // String[] media) {
+    // Post toEdit = postRepository.findById(pID).orElseThrow(
+    // () -> new ResourceNotFoundException("Post not found"));
+    // if (!toEdit.getUser().getId().equals(uId)) {
+    // throw new AccessDeniedException("U can only edit your own posts");
+    // }
+    // toEdit.setDescription(description);
+    // toEdit.setMedia(media);
+    // toEdit.setTitle(title);
+    // return postRepository.save(toEdit);
+    // }
 
     public void deletePost(UUID uId, Integer pID, String role) {
         Post toDelete = postRepository.findById(pID).orElseThrow(
@@ -130,6 +139,113 @@ public class PostService {
             prec = lastWeek / all * 100;
         }
         return new Stat(all, prec);
+    }
+
+    private static final String NEW_MEDIA_PLACEHOLDER = "NEW_MEDIA_PLACEHOLDER_";
+
+    private final FileService fileService;
+
+    // --- CREATE POST ---
+    @Transactional
+    public Post createPostWithMedia(String description, String title, User user, List<MultipartFile> mediaFiles) {
+
+        // 1. Save all new media files and get their URLs
+        List<String> newMediaUrls = new ArrayList<>();
+        if (mediaFiles != null) {
+            for (MultipartFile file : mediaFiles) {
+                String url = fileService.save(file);
+                System.out.println(url);
+                newMediaUrls.add(url);
+            }
+        }
+
+        // 2. Replace placeholders in the description HTML
+        String finalDescription = replacePlaceholders(description, newMediaUrls);
+
+        // 3. Create and save the post
+        Post post = new Post();
+        post.setTitle(title);
+        post.setDescription(finalDescription);
+        post.setUser(user);
+
+        // **IMPORTANT**: Assuming Post has a way to store media URLs
+        // If you have a @OneToMany Set<Media> media, you would create
+        // Media entities here and add them to the post.
+        // For this example, let's assume Post has a List<String> mediaUrls
+        post.setMedia(newMediaUrls); // Or add to a Set<Media>
+        System.out.println(newMediaUrls);
+
+        return postRepository.save(post);
+    }
+
+    // --- EDIT POST ---
+    @Transactional
+    public Post editPostWithMedia(UUID userId, Integer postId, String description, String title,
+            List<String> keepMedia, List<MultipartFile> newMedia) {
+
+        // 1. Get post and verify ownership
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found")); // Use custom exception
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("You can only edit your own posts");
+        }
+
+        // 2. Save all *new* media files
+        List<String> newMediaUrls = new ArrayList<>();
+        if (newMedia != null) {
+            for (MultipartFile file : newMedia) {
+                String url = fileService.save(file);
+                newMediaUrls.add(url);
+            }
+        }
+
+        // 3. Replace placeholders in the description HTML
+        String finalDescription = replacePlaceholders(description, newMediaUrls);
+
+        // 5. Update post fields
+        post.setTitle(title);
+        post.setDescription(finalDescription);
+        List<String> oldMedia = post.getMedia();
+
+        if (oldMedia != null) {
+            for (String media : oldMedia) {
+                System.out.println(media);
+                if (keepMedia == null || !keepMedia.contains(media)) {
+                    fileService.delete(media);
+                }
+            }
+        }
+        if (keepMedia != null) {
+            if (newMediaUrls != null) {
+                keepMedia.addAll(newMediaUrls);
+            }
+            post.setMedia(keepMedia);
+
+        } else {
+            post.setMedia(newMediaUrls);
+
+        }
+        return postRepository.save(post);
+    }
+
+    /**
+     * Replaces placeholders like "NEW_MEDIA_PLACEHOLDER_0" with final URLs.
+     */
+    private String replacePlaceholders(String description, List<String> newMediaUrls) {
+        if (description == null || newMediaUrls == null || newMediaUrls.isEmpty()) {
+            return description;
+        }
+
+        String finalDescription = description;
+        for (int i = 0; i < newMediaUrls.size(); i++) {
+            String placeholder = NEW_MEDIA_PLACEHOLDER + i;
+            String finalUrl = newMediaUrls.get(i);
+            // Use replaceAll in case the placeholder appears multiple times, though it
+            // shouldn't
+            finalDescription = finalDescription.replaceAll(placeholder, finalUrl);
+        }
+        return finalDescription;
     }
 
     public List<Post> getAll() {

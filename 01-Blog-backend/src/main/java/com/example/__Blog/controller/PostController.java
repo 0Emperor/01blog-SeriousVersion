@@ -1,5 +1,7 @@
 package com.example.__Blog.controller;
 
+import com.example.__Blog.dto.PostCreateDto;
+import com.example.__Blog.dto.PostUpdateDto;
 import com.example.__Blog.dto.Postdto;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Post;
@@ -11,6 +13,7 @@ import com.example.__Blog.service.UserService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,6 +37,41 @@ public class PostController {
         private final UserService userService;
         private final LikeService likeService;
         private final CommentService commentService;
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public ResponseEntity<Postdto> createPostWithMedia(
+                        @AuthenticationPrincipal CustomUserDetails jwt,
+                        @Valid @ModelAttribute PostCreateDto postDto) {
+                User user = userService.getUser(jwt.getUsername());
+                Post post = postService.createPostWithMedia(
+                                postDto.description(),
+                                postDto.title(),
+                                user,
+                                postDto.newMedia());
+                Post savedPost = postService.save(post);
+
+                return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(Postdto.from(savedPost, jwt.getId(), 0, 0, false));
+        }
+
+        // NEW: Batch update post with media management
+        @PutMapping(value = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public ResponseEntity<Postdto> editPostWithMedia(
+                        @AuthenticationPrincipal CustomUserDetails cUserDetails,
+                        @PathVariable Integer id,
+                        @Valid @ModelAttribute PostUpdateDto updateDto) {
+                Post afterEdit = postService.editPostWithMedia(
+                                cUserDetails.getId(),
+                                id,
+                                updateDto.description(),
+                                updateDto.title(),
+                                updateDto.keepMedia(),
+                                updateDto.newMedia());
+                return ResponseEntity.ok()
+                                .body(Postdto.from(afterEdit, cUserDetails.getId(),
+                                                likeService.getLikeCount(id),
+                                                commentService.CountComment(id),
+                                                likeService.didUserLikePost(cUserDetails.getId(), id)));
+        }
 
         public PostController(PostService postService, CommentService commentService, UserService userService,
                         LikeService likeService) {
@@ -41,17 +79,6 @@ public class PostController {
                 this.userService = userService;
                 this.likeService = likeService;
                 this.commentService = commentService;
-        }
-
-        @PostMapping
-        public ResponseEntity<Postdto> createPost(
-                        @AuthenticationPrincipal CustomUserDetails jwt,
-                        @Valid @RequestBody Postdto pos) {
-                User user = userService.getUser(jwt.getUsername());
-                Post post = postService.createPost(pos.description(), pos.title(), user, pos.media());
-                Post savedPost = postService.save(post);
-                return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(Postdto.from(savedPost, jwt.getId(), 0, 0, false));
         }
 
         @GetMapping
@@ -123,19 +150,7 @@ public class PostController {
                                 likeService.didUserLikePost(jwt.getId(), id)));
         }
 
-        @PutMapping("/edit/{id}")
-        public ResponseEntity<Postdto> editPost(
-                        @AuthenticationPrincipal CustomUserDetails cUserDetails,
-                        @Valid @RequestBody Postdto edited,
-                        @PathVariable Integer id) {
-                Post afterEdit = postService.ediPost(cUserDetails.getId(), id, edited.description(), edited.title(),
-                                edited.media());
-                return ResponseEntity.ok()
-                                .body(Postdto.from(afterEdit, cUserDetails.getId(), likeService.getLikeCount(id),
-                                                commentService.CountComment(id),
-                                                likeService.didUserLikePost(cUserDetails.getId(), id)));
-        }
-
+      
         @DeleteMapping("/{id}")
         public ResponseEntity<Object> deletePost(
                         @AuthenticationPrincipal CustomUserDetails cUserDetails,

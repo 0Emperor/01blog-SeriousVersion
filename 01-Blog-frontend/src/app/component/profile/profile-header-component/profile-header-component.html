@@ -2,11 +2,10 @@
   <div class="profile-container">
     <!-- Profile Image Section -->
     <div class="profile-image-wrapper">
-      <div class="avatar-container"
-        [ngClass]="(profileData.user.profile)?missing.getImageClass(profileData.user.role =='ADMIN' ,profileData.user.isBaned):''">
+      <div class="avatar-container">
         @if (profileData.user.profile) {
         <img [src]="previewUrl() ||missing.avatar_link(profileData.user.profile)"
-          alt="{{ profileData.user.username }}'s profile picture" class="profile-image">
+          alt="{{ profileData.user.username }}'s profile picture" class="profile-image" [ngClass]="missing.getImageClass(profileData.user.role =='ADMIN' ,profileData.user.isBaned)">
         } @else {
         <div class='no-avatar {{missing.getBackgroundColor(profileData.user.username)}}'>
           <div class="initials profile-image">

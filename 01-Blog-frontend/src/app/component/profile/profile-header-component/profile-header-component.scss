@@ -47,11 +47,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid $border;
 
-  @media (prefers-color-scheme: dark) {
-    border-color: $border-dark;
-  }
 }
 
 .badge {

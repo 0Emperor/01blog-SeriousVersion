@@ -5,7 +5,7 @@
   min-height: 100vh;
   width: 100%;
   overflow: hidden; 
-  
+  gap: $space-md;
   background-color: $background-light;
   color: $text-light;
   transition: background-color 0.3s, color 0.3s;

@@ -60,11 +60,7 @@
                 </svg>
               </div>
             } @else {
-              <img 
-                [src]="notification.sender!.profile" 
-                [alt]="notification.sender!.username"
-                class="avatar"
-              />
+              <app-user-header [userr]="notification.sender"></app-user-header>
             }
           </div>
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { reason } from '../../../dto/dto';
 import { Report } from '../../../service/report';
+import { ToastService } from '../../../service/toast-service';
 
 @Component({
   selector: 'app-report-post',
@@ -33,19 +34,19 @@ export class ReportPostComponent {
     };
     return reasonMap[key] || key;
   }
-
+  toastService = inject(ToastService)
   onSubmit() {
     if (this.selectedReason === null) return;
 
     // API call uses the selectedReason (which is already the enum value)
     this.reportService.report(this.postId, this.selectedReason).subscribe({
       next: () => {
-        this.reportMessage = 'Thank you. Your report has been submitted.';
-        setTimeout(() => this.close.emit(), 2000);
+        this.toastService.show('thank you for helping.', 'Report made', 'success')
+        this.close.emit();
       },
       error: (err) => {
         this.reportMessage = 'An error occurred while submitting the report.';
-        console.error(err);
+        // console.error(err);
       }
     });
   }

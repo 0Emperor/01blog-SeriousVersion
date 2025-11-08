@@ -1,6 +1,6 @@
 
 export interface NotificationDto {
-    sender: User | null;
+    sender?: User ;
     id: number,
     link: string | null;
     seen: boolean;

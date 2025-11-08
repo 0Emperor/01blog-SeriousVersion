@@ -15,18 +15,21 @@
         <tr>
           <td>
             <div class="user-info" (click)="onUserClick(user.username)" style="cursor: pointer;">
-              <div class="avatar">
+              <div class="avatar-container">
                 @if (user.profile) {
-                <img [src]="'http://localhost:8080/api/files/' + user.profile" alt="{{ user.username }}" />
+                <img [src]=" missing.avatar_link(user.profile)" alt="{{ user.username }}'s profile picture"
+                    class="profile-image" [ngClass]="missing.getImageClass(user)">
                 } @else {
-                <div class="avatar-initials">
-                  {{ getInitials(user.username) }}
+                <div class='no-avatar {{missing.getBackgroundColor(user.username)}}'>
+                    <div class="initials">
+                        {{ missing.getInitial(user.username)}}
+                    </div>
                 </div>
                 }
-              </div>
+            </div>
               <div class="user-details">
                 <span class="user-name">{{ user.name||user.username }}</span>
-                <span class="user-username">{{ '@' + user.username }}</span>
+                <span class="user-username">{{ '@' +user.username }}</span>
               </div>
             </div>
           </td>

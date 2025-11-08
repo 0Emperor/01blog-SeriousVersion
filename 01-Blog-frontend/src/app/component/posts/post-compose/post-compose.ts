@@ -1,275 +1,255 @@
-import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
-import { HttpEventType, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms'; // Needed for [(ngModel)]
-import { CommonModule, Location } from '@angular/common'; // Needed for *ngIf
-import { PostService } from '../../../service/post';
-import { Router } from '@angular/router';
-import { MarkdownModule } from 'ngx-markdown';
-import { ToastService } from '../../../service/toast-service';
-interface MediaPreview {
-  localUrl: string;
-  serverUrl: string;
-  serverFileName: string;
-  type: 'image' | 'video' | 'other';
-}
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule, QuillEditorComponent } from 'ngx-quill';
+import { HttpEventType } from '@angular/common/http';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
+import { PostService } from '../../../service/post'; // Adjust path
+
+// Define a placeholder prefix for new media
+const NEW_MEDIA_PLACEHOLDER = 'NEW_MEDIA_PLACEHOLDER_';
 
 @Component({
-  selector: 'app-post-compose',
-  // Make sure these are in your module or component imports array!
-  standalone: true, // Assuming standalone for simplicity, adjust if using modules
-  imports: [CommonModule, FormsModule, MarkdownModule],
+  selector: 'app-create-post',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    QuillModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatCardModule
+  ],
   templateUrl: './post-compose.html',
-  styleUrl: './post-compose.scss'
+  styleUrls: ['./post-compose.scss']
 })
-
-export class PostCompose {
-  // Access to the textarea for formatting
-  @ViewChild('editorArea') editorArea!: ElementRef<HTMLTextAreaElement>;
-
-  // File input reference
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  location = inject(Location)
-  // Data Properties
-  @Input() title: string = '';
-  @Input() description: string = ''; // Markdown content
-  @Input() edit: string = '';
-  // Media Management
-  @Input() mediaFilenames: string[] = [];
-  mediaPreviews: MediaPreview[] = [];
-
-  // UI State Properties
-  isPosting: boolean = false;
-  postSuccess: boolean | null = null;
-  isPreviewVisible: boolean = false; // Toggles the preview panel on mobile
-
-  // Base URL for fetching files from the server
-  private fileServerBaseUrl = 'http://localhost:8080/api/files';
-
-  // Inject the PostService
-  constructor(private postService: PostService, private toastService: ToastService) { }
-  togglePreview(): void {
-    this.isPreviewVisible = !this.isPreviewVisible;
-  }
-
+export class PostCompose implements OnInit {
+  @Input() title = '';
+  @Input() description = '';
+  @Input() edit = ''; // This should be the post ID
+  
+  @Output() postCreated = new EventEmitter<any>();
+  @Output() postUpdated = new EventEmitter<any>();
+  @Output() cancelled = new EventEmitter<void>();
+  
+  @ViewChild(QuillEditorComponent, { static: false }) quillEditor!: QuillEditorComponent;
+  
+  postForm!: FormGroup;
+  
   /**
-   * Handles file selection from the input, triggering an immediate upload for each file.
+   * Stores a map of Base64 URLs to the
+   * actual File object selected by the user.
    */
-  async handleFileInput(event: Event): Promise<void> {
-    const target = event.target as HTMLInputElement;
-    const newFiles = target.files;
+  private base64ToFileMap = new Map<string, File>(); 
+  
+  uploadProgress = 0;
+  isSubmitting = false;
+  isEditMode = false;
+  
+  // Base URL for your backend file server
+  private readonly SERVER_FILE_URL_PREFIX = 'http://localhost:8080/api/files/';
 
-    if (!newFiles) return;
-
-    for (let i = 0; i < newFiles.length; i++) {
-      const file = newFiles[i];
-      const localUrl = URL.createObjectURL(file);
-      const type = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'other';
-
-      // 1. Create a temporary preview object with a placeholder server URL
-      const tempPreview: MediaPreview = {
-        localUrl,
-        serverUrl: 'uploading...', // Placeholder to indicate status
-        serverFileName: '',
-        type
-      };
-      this.mediaPreviews.push(tempPreview);
-
-      try {
-        // 2. Upload the file
-        const serverFileName = await this.uploadSingleFile(file);
-
-        // 3. Update the preview object with the final server data
-        tempPreview.serverUrl = `${this.fileServerBaseUrl}/${serverFileName}`;
-        tempPreview.serverFileName = serverFileName;
-
-        // 4. Add the successful filename to the list for final post submission
-        this.mediaFilenames.push(serverFileName);
-
-      } catch (error) {
-        console.error('File upload failed for:', file.name, error);
-        // 5. Remove failed upload from previews and revoke local URL
-        const index = this.mediaPreviews.findIndex(p => p.localUrl === localUrl);
-        if (index !== -1) {
-          URL.revokeObjectURL(localUrl);
-          this.mediaPreviews.splice(index, 1);
-          console.error(`Upload failed for ${file.name}. Item removed from preview.`);
-        }
+  quillModules = {
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline'],
+        ['blockquote', 'code-block'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'header': [1, 2, 3, false] }],
+        ['image', 'video'],
+        ['clean']
+      ],
+      handlers: {
+        image: () => this.imageHandler(),
+        video: () => this.videoHandler()
       }
     }
-    // Reset file input value to allow selecting the same file again
-    target.value = '';
-  }
-  addMediaLink(i: number) {
-    let media = this.mediaPreviews[i];
-    this.description += `![img](http://localhost:8080/api/files/${media.serverFileName})`
-  }
-  /**
-   * Helper function to wrap the observable file upload into a promise.
-   */
-  private uploadSingleFile(file: File): Promise<string> {
-    const formData = new FormData();
-    // Assuming the server endpoint expects the file under the key 'file'
-    formData.append('file', file, file.name);
+  };
 
-    return new Promise((resolve, reject) => {
-      // We cast postService to 'any' to avoid type errors since PostService definition isn't provided
-      this.postService.uploadFile(formData).subscribe({
-        next: (event: any) => {
-          // Check for successful HTTP response and expected body data
-          console.log(event.type)
-          if (event.type === HttpEventType.Response && event.body) {
-            resolve(event.body);
-          }
-        },
-        error: (err: any) => reject(err),
-        // Progress events can be used here to update a progress bar on the tempPreview
-      });
+  constructor(
+    private fb: FormBuilder,
+    private postService: PostService
+  ) {}
+
+  ngOnInit(): void {
+    this.isEditMode = !!this.edit;
+    
+    this.postForm = this.fb.group({
+      title: [this.title, [Validators.required, Validators.minLength(3), Validators.maxLength(17)]],
+      description: [this.description, [Validators.required, Validators.minLength(10), Validators.maxLength(474800)]]
     });
   }
 
-
-  /**
-   * Removes a media file by index and revokes its local URL.
-   * NOTE: In a production app, this should also trigger a DELETE request to the server.
-   */
-  removeMedia(index: number): void {
-    const preview = this.mediaPreviews[index];
-
-    // Clean up the local URL
-    URL.revokeObjectURL(preview.localUrl);
-
-    // Remove filename from master list (if the upload was successful)
-    const filenameIndex = this.mediaFilenames.indexOf(preview.serverFileName);
-    if (filenameIndex !== -1) {
-      this.mediaFilenames.splice(filenameIndex, 1);
-    }
-
-    // Remove from previews array
-    this.mediaPreviews.splice(index, 1);
+  // --- Media Handlers ---
+  imageHandler(): void {
+    this.selectAndInsertFile('image/*');
   }
 
-  /**
-   * Stubs the functionality for applying Markdown formatting to selected text.
-   */
-  formatText(tag: 'b' | 'i' | 'l'): void {
-    const textarea = this.editorArea.nativeElement;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = this.description.substring(start, end);
-    if (!selectedText) {
-      return;
-    }
-    console.log(selectedText)
-    let wrappedText = selectedText;
-    let prefix = '';
-    let suffix = '';
-
-    switch (tag) {
-      case 'b':
-        prefix = '**';
-        suffix = '**';
-        break;
-      case 'i':
-        prefix = '*';
-        suffix = '*';
-        break;
-      case 'l':
-        prefix = '![';
-        suffix = '](place link here)';
-        break;
-    }
-
-    wrappedText = prefix + selectedText + suffix;
-
-    // Insert the wrapped text back into the description
-    this.description =
-      this.description.substring(0, start) +
-      wrappedText +
-      this.description.substring(end);
-
-    // Focus and restore cursor position after inserting text
-    setTimeout(() => {
-      textarea.focus();
-      textarea.selectionStart = start + prefix.length;
-      textarea.selectionEnd = end + prefix.length;
-    }, 0);
-  }
-  get isMediaUploading(): boolean {
-    // This logic replaces the complex call in the template's [disabled] attribute
-    return this.mediaPreviews.some(p => p.serverUrl === 'uploading...');
-  }
-  /**
-    * [NEW METHOD] Clicks the hidden file input to open the system file dialog.
-    * This is what the user's visible button calls.
-    */
-  triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
-  }
-  /**
-   * Clears the form and navigates away.
-   */
-  cancelPost(): void {
-    // Clean up local URLs to prevent memory leaks
-    this.mediaPreviews.forEach(p => URL.revokeObjectURL(p.localUrl));
-
-    this.title = '';
-    this.description = '';
-    this.mediaFilenames = [];
-    this.mediaPreviews = [];
-
-    // Navigate back to the home page or feed
-    this.location.back();
+  videoHandler(): void {
+    this.selectAndInsertFile('video/*');
   }
 
-  /**
-   * Submits the post data (Title, Description, and the list of media file names).
-   */
-  onSubmit(): void {
-    const isUploading = this.mediaPreviews.some(p => p.serverUrl === 'uploading...');
+  private selectAndInsertFile(accept: string): void {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', accept);
+    input.click();
 
-    if (!this.title || !this.description) {
-      console.error('Title and description cannot be empty.');
-      return;
-    }
-    if (isUploading) {
-      console.error('Please wait for all media files to finish uploading before publishing.');
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (file) {
+        // 1. Use FileReader to get Base64 (data:) URL
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const base64Url = e.target?.result as string;
+          
+          // 2. Store the file, mapping it by its Base64 URL
+          this.base64ToFileMap.set(base64Url, file);
+          
+          // 3. Insert the Base64 URL into the editor
+          const quill = this.quillEditor.quillEditor;
+          const range = quill.getSelection(true);
+          const embedType = accept.startsWith('image/') ? 'image' : 'video';
+          
+          quill.insertEmbed(range.index, embedType, base64Url, 'user');
+          quill.setSelection(range.index + 1, 0);
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    };
+  }
+
+  // --- Submission Logic ---
+
+  async onSubmit(): Promise<void> {
+    if (this.postForm.invalid) {
+      this.postForm.markAllAsTouched();
       return;
     }
 
-    this.isPosting = true;
-    this.postSuccess = null;
+    this.isSubmitting = true;
+    this.uploadProgress = 0;
 
-    // The service call is now expected to accept a JSON body
-    if (!this.edit) {
-      this.postService.createPost(this.description, this.title, this.mediaFilenames).subscribe({
-        next: (event: any) => {
-          if (event.type === HttpEventType.Response) {
-            this.isPosting = false;
-            this.postSuccess = true;
-            this.cancelPost();
-            this.toastService.show("post created succesfully", "created", 'success')
-          }
-        },
-        error: (err: any) => {
-          this.isPosting = false;
-          this.postSuccess = false;
-        }
+    try {
+      const formData = new FormData();
+      formData.append('title', this.postForm.value.title);
+
+      // 1. Process the HTML content to build media lists and placeholders
+      const processed = this.processHtmlContent(this.postForm.value.description, formData);
+
+      // 2. Append the processed description (with placeholders)
+      formData.append('description', processed.finalHtml);
+      
+      // 3. Append the list of existing URLs to keep
+      processed.keepMediaUrls.forEach(url => {
+        formData.append('keepMedia', url);
       });
-    } else {
-      this.postService.editPost(this.description, this.title, this.mediaFilenames, this.edit).subscribe({
-        next: (event: any) => {
-          if (event.type === HttpEventType.Response) {
-            this.isPosting = false;
-            this.postSuccess = true;
-            this.cancelPost();
-            this.toastService.show("post edited succesfully", "edited", 'success')
-          }
-        },
-        error: (err: any) => {
-          this.isPosting = false;
-          this.postSuccess = false;
-        }
-      });
+
+      // 4. Submit the single FormData object
+      if (this.isEditMode) {
+        this.postService.editPostWithMedia(this.edit, formData).subscribe({
+          next: (event) => this.handleUploadEvent(event, true),
+          error: (error) => this.handleError(error)
+        });
+      } else {
+        this.postService.createPostWithMedia(formData).subscribe({
+          next: (event) => this.handleUploadEvent(event, false),
+          error: (error) => this.handleError(error)
+        });
+      }
+
+    } catch (error) {
+      this.handleError(error);
     }
   }
+
+  /**
+   * Parses the editor's HTML content.
+   * - Finds all new (data:) media and adds their *File* to `formData`.
+   * - Finds all existing (server) media and adds them to a 'keep' list.
+   * - Replaces data: URLs in the HTML with placeholders for the backend.
+   */
+  private processHtmlContent(html: string, formData: FormData): { finalHtml: string, keepMediaUrls: string[] } {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const mediaElements = doc.querySelectorAll('img[src], video[src]');
+    
+    const keepMediaUrls: string[] = [];
+    let newMediaIndex = 0;
+
+    mediaElements.forEach(el => {
+      const src = el.getAttribute('src');
+      if (!src) return;
+
+      if (src.startsWith('data:')) {
+        // This is a NEW file (Base64)
+        const file = this.base64ToFileMap.get(src);
+        if (file) {
+          // Add the *File* to FormData
+          formData.append('newMedia', file, file.name);
+          
+          // Replace the 'src' with an indexed placeholder
+          el.setAttribute('src', `${NEW_MEDIA_PLACEHOLDER}${newMediaIndex}`);
+          newMediaIndex++;
+        }
+      } else if (src.startsWith(this.SERVER_FILE_URL_PREFIX)) {
+        // This is an EXISTING file. Add its URL to the 'keep' list.
+        keepMediaUrls.push(src);
+      }
+    });
+
+    return {
+      finalHtml: doc.body.innerHTML, // The HTML with placeholders
+      keepMediaUrls: keepMediaUrls    // The list of existing URLs to keep
+    };
+  }
+
+
+  // --- Event Handling and Cleanup ---
+
+  private handleUploadEvent(event: any, isEdit: boolean): void {
+    if (event.type === HttpEventType.UploadProgress) {
+      this.uploadProgress = Math.round(100 * event.loaded / (event.total || 1));
+    } else if (event.type === HttpEventType.Response) {
+      this.isSubmitting = false;
+      if (isEdit) {
+        this.postUpdated.emit(event.body);
+      } else {
+        this.postCreated.emit(event.body);
+      }
+      this.resetForm();
+    }
+  }
+
+  private handleError(error: any): void {
+    console.error('Error with post:', error);
+    this.isSubmitting = false;
+    this.uploadProgress = 0;
+  }
+
+  resetForm(): void {
+    this.postForm.reset();
+    this.base64ToFileMap.clear(); // Clean up the map
+    this.uploadProgress = 0;
+    
+    if (this.quillEditor?.quillEditor) {
+      this.quillEditor.quillEditor.setText('');
+    }
+  }
+
+  onCancel(): void {
+    this.cancelled.emit();
+    this.resetForm();
+  }
+  
+  // ... getters (titleControl, descriptionControl) ...
 }

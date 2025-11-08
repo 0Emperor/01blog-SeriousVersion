@@ -12,6 +12,7 @@
   overflow: hidden;
   animation: slideIn 0.3s ease-out;
   border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 10000000000000;
 
   @media (prefers-color-scheme: dark) {
     border-color: rgba(255, 255, 255, 0.1);
@@ -21,6 +22,7 @@
     min-width: 280px;
     max-width: calc(100vw - 2rem);
   }
+
   &.closing {
     animation: slideOut 0.3s ease-in forwards; // 👈 exit animation
   }
@@ -309,25 +311,30 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
   }
 }
+
 @keyframes slideOut {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(100%);
-    }
+  from {
+    opacity: 1;
+    transform: translateX(0);
   }
+
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
 @keyframes progress {
   from {
     transform: scaleX(1);
   }
+
   to {
     transform: scaleX(0);
   }

@@ -1,6 +1,7 @@
 package com.example.__Blog.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -32,7 +33,7 @@ public class Post {
     private String description;
     private String title;
     private Timestamp createdAt;
-    private String[] media;
+    private List<String>  media;
     private boolean hidden;
 
     public void setHidden(boolean hidden) {
@@ -43,11 +44,11 @@ public class Post {
         return hidden;
     }
 
-    public String[] getMedia() {
+    public List<String>  getMedia() {
         return media;
     }
 
-    public void setMedia(String[] media) {
+    public void setMedia(List<String> media) {
         this.media = media;
     }
 

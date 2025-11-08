@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, } from '@angular/router';
+import { Component, inject, signal, computed } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../../service/auth';
-import { User } from '../../../dto/dto';
 import { UserHeaderComponent } from "../../users/user-header/user-header";
-
+import { NotificationService } from '../../../service/notification';
+import { firstValueFrom } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface NavItem {
   id: string;
@@ -15,28 +16,38 @@ interface NavItem {
 @Component({
   selector: 'app-bar',
   standalone: true,
-  imports: [CommonModule, RouterLink, UserHeaderComponent,RouterLinkActive],
+  imports: [CommonModule, RouterLink, UserHeaderComponent, RouterLinkActive],
   templateUrl: './bar.html',
   styleUrls: ['./bar.scss']
 })
 export class Bar {
   activeItem = 'home';
   auth = inject(Auth);
+
   constructor(private router: Router) { }
+
   navItems = signal<NavItem[]>([
     { id: 'home', icon: 'home', label: 'Home' },
     { id: 'explore', icon: 'explore', label: 'Explore' },
     { id: 'notifications', icon: 'notifications', label: 'Notifications' },
   ]);
 
-  ngOnInit() {
+unreadCount = NotificationService.unreadCount
+ ngOnInit() {
     this.auth.checkAdmin().subscribe({
-      next: () => { this.navItems.update((l) => [...l, { id: 'admin', icon: 'manage_accounts', label: 'Admin panel' }]) },
-   
-    })
+      next: () => {
+        this.navItems.update((l) => [...l, {
+          id: 'admin',
+          icon: 'manage_accounts',
+          label: 'Admin panel'
+        }]);
+      },
+    });
+
   }
+
   logout() {
-    localStorage.clear()
-     this.router.navigate(["login"]) 
+    localStorage.clear();
+    this.router.navigate(["login"]);
   }
 }

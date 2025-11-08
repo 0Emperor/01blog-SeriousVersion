@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { StatsCardComponent } from '../stats-card/stats-card';
 import { RecentUsersComponent } from '../recent-users/recent-users';
-import { DashboardData, User, Post, report, reason, state } from '../../../dto/dto';
+import { DashboardData} from '../../../dto/dto';
 import { AdminService } from '../../../service/admin-service';
-import { catchError, of } from 'rxjs';
 import { RecentreportsComponent } from '../recent-reports/recent-reports';
 import { RouterLink } from "@angular/router";
 

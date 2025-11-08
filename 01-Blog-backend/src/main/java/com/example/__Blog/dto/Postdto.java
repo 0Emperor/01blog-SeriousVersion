@@ -1,9 +1,9 @@
 package com.example.__Blog.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 import com.example.__Blog.model.Post;
-import com.example.__Blog.model.User;
 
 import jakarta.validation.constraints.Size;
 
@@ -21,7 +21,7 @@ public record Postdto(
                 int totalLikes,
                 boolean isOwn,
                 boolean hidden,
-                String[] media,
+                List<String>  media,
                 int commentsCount) {
         public static Postdto from(Post post,
                         UUID currentUserId,

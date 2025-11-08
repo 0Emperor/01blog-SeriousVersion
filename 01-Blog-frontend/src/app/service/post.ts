@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AdminService } from './admin-service';
 
 // ⬅️ CRUCIAL: Hardcoded full URLs using your backend port
 const BASE_URL = 'http://localhost:8080/api';
@@ -13,6 +12,25 @@ const BASE_FILE_SERVER_URL = `${BASE_URL}/files`; // Assuming a /media/ endpoint
   providedIn: 'root'
 })
 export class PostService {
+  // In your post.service.ts
+  createPostWithMedia(formData: FormData): Observable<any> {
+    return this.http.post(`${BASE_URL}/posts`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+  editPostWithMedia(postId: string, formData: FormData): Observable<any> {
+    return this.http.put(`${BASE_URL}/posts/edit/${postId}`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+  upload(file: File) {
+    let from = new FormData;
+    from.append('file', file)
+    return this.http.post(BASE_URL + "/files", from)
+  }
 
   private http = inject(HttpClient);
   /**

@@ -14,19 +14,19 @@ import com.example.__Blog.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Override
-    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        @Override
+        public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new CustomUserDetails(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                List.of(
-                        new SimpleGrantedAuthority("ROLE_" + user.getRole())));
-    }
+                return new CustomUserDetails(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getPassword(),
+                                List.of(
+                                                new SimpleGrantedAuthority("ROLE_" + user.getRole())));
+        }
 }

@@ -23,9 +23,9 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final FileStorageService fileStorageService;
+    private final FileService fileStorageService;
 
-    public UserService(UserRepository userRepository, FileStorageService fs) {
+    public UserService(UserRepository userRepository, FileService fs) {
         this.userRepository = userRepository;
         fileStorageService = fs;
     }

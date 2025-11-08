@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AdminService } from '../../../service/admin-service';
 import { User } from '../../../dto/dto';
 import { ConfirmationModalComponent } from "../confirm/confirm";
+import { AvatarMissingService } from '../../../service/avatar-missing-service';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { ConfirmationModalComponent } from "../confirm/confirm";
 export class RecentUsersComponent {
   @Input() recentUser: User[] = [];
   @Input() title? ="Recent Users"
+  missing = inject(AvatarMissingService)
   showConfirmModal: boolean = false;
   pendingAction: 'ban' | 'unban' | 'delete' | null = null;
   userToActOn: User | null = null;

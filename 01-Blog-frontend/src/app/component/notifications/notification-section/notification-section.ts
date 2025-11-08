@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../service/notification';
 import { NotificationDto } from '../../../dto/dto';
+import { UserHeaderComponent } from "../../users/user-header/user-header";
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UserHeaderComponent],
   templateUrl: './notification-section.html',
   styleUrls: ['./notification-section.scss']
 })
@@ -153,13 +154,13 @@ export class NotificationsComponent implements OnInit {
   getNotificationDetail(notification: NotificationDto): string {
     switch (notification.type) {
       case 'POST':
-        return 'A glimpse into the latest artistic trends...';
+        return 'A glimpse into the latest artistic trends';
       case 'LINK':
         return 'Check out this amazing content!';
       case 'REMOVED':
-        return 'Please review our community guidelines.';
+        return 'Carefull, u might be next';
       case 'HIDDEN':
-        return 'Contact support if you believe this was a mistake.';
+        return 'Contact support if you believe this was a mistake';
       default:
         return '';
     }

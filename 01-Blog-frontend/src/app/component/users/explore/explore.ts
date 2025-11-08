@@ -3,10 +3,11 @@ import { ExploreSrvs } from '../../../service/explore';
 import { User } from '../../../dto/dto';
 import { UserHeaderComponent } from '../user-header/user-header';
 import { Follow } from '../../../service/follow';
+import { Search } from "../search/search";
 
 @Component({
   selector: 'app-explore',
-  imports: [UserHeaderComponent],
+  imports: [Search],
   templateUrl: './explore.html',
   styleUrl: './explore.scss'
 })
@@ -14,11 +15,22 @@ export class Explore {
   explore = inject(ExploreSrvs)
   followS = inject(Follow)
   notFollowed: User[] = []
+  arrived = false
   ngOnInit() {
-    this.explore.getAll().subscribe((d) => {
-      this.notFollowed = d;
-    })
+    this.explore.getAll().subscribe({
+      next: (d) => {
+        this.notFollowed = d;
+        this.arrived = true
+      }, error: () => {
+        this.arrived = true
+      }
+    }
+    )
   }
+  get usersWithIndex() {
+    return this.notFollowed.map((n, i) => ({ user: n, indexe: i }));
+  }
+
   follow(index: number) {
     this.followS.follow(this.notFollowed[index].id).subscribe({
       next: () => {

@@ -19,7 +19,6 @@ export class CommentAdd {
 
   @Input() pId!: string;
   submitComment() {
-
     if (this.commentText().trim()) {
       this.commentService.addComment(this.commentText(), this.pId).subscribe({
         next: (d) => {

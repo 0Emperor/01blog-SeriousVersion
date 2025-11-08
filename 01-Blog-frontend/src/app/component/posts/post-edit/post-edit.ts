@@ -28,6 +28,8 @@ export class PostEdit {
     ).subscribe({
       next: (data: Post) => {
         this.Post = data;
+        console.log(this.Post.mediaUrl);
+        
       },
       error: (err) => {
         this.router.navigate(["home"])

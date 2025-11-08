@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from '../dto/dto';
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +7,8 @@ import { Injectable } from '@angular/core';
 export class AvatarMissingService {
   readonly profile_base = "http://localhost:8080/api/files/"
   public avatar_link(avatar: string) {
-    return this.profile_base + avatar;
+    
+    return  avatar;
   }
   private colors = [
     'black', 'white', 'gray',
@@ -20,7 +22,7 @@ export class AvatarMissingService {
    */
   public getInitial(name: string): string {
     console.log(name);
-    
+
     if (!name) return "";
 
     // Trim and split by one or more spaces
@@ -53,7 +55,20 @@ export class AvatarMissingService {
     const index = Math.abs(hash) % this.colors.length;
     return this.colors[index];
   }
-  public getImageClass(isAdmin: boolean, isBanned: boolean): string {
+  public getImageClass(isAdmin: boolean, isBanned: boolean): string;
+  public getImageClass(user: User): string;
+
+  public getImageClass(arg1: any, arg2?: any): string {
+    let isAdmin: boolean;
+    let isBanned: boolean;
+
+    if (typeof arg1 === 'object') {
+      isAdmin = arg1.role === 'ADMIN'
+      isBanned = arg1.isBaned
+    } else {
+      isAdmin = arg1;
+      isBanned = arg2
+    }
     if (isAdmin) {
       return "admin";
     }
@@ -62,4 +77,5 @@ export class AvatarMissingService {
     }
     return "active"
   }
+
 }

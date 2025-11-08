@@ -1,0 +1,56 @@
+<div class="search-container">
+    <div class="search-header">
+        <h1 class="title">Discover New Creators</h1>
+        <p class="subtitle">
+            Explore a vibrant community of artists and find your next inspiration.<br>
+            Search for creators, browse trending profiles, and connect.
+        </p>
+
+        <div class="search-box">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" placeholder="Search for artists..." class="search-input"
+                (input)="filter($any($event.target).value)" />
+        </div>
+    </div>
+
+    <div class="users-grid">
+        @for (item of fillteredUsers; track item.user.id) {
+        <div class="user-card" routerLink="/profile/{{item.user.username}}">
+            <div class="avatar-container">
+                @if(item.user.profile){
+                <img class="profile-image" [ngClass]="missing.getImageClass(item.user)"
+                    [src]="missing.avatar_link(item.user.profile)" [alt]="item.user.username" />}@else {
+                <div class='no-avatar {{missing.getBackgroundColor(item.user.username)}}'>
+                    <div class="initials">
+                        {{ missing.getInitial(item.user.username)}}
+                    </div>
+                </div>
+                }
+            </div>
+
+            <h3 class="user-name">{{ item.user.name||item.user.username }}</h3>
+            <p class="user-handle">@{{ item.user.username }}</p>
+
+            <button class="btn-follow" (click)="follow(item.indexe);$event.stopPropagation()">
+                Follow
+            </button>
+        </div>
+        }
+    </div>
+
+    @if (fillteredUsers.length === 0) {
+    <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+        </svg>
+        <h3>No creators found</h3>
+        <p>Try adjusting your search terms</p>
+    </div>
+    }
+</div>

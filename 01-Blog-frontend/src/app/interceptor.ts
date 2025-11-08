@@ -1,8 +1,9 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { tap, catchError, map } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { EMPTY, throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { ToastService } from './service/toast-service';
+import { Location } from '@angular/common';
 
 const EXCLUDE_AUTH_PATH = '/access/admin';
 interface BackendResponse<T = any> {
@@ -13,7 +14,7 @@ interface BackendResponse<T = any> {
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const toastService = inject(ToastService);
   const authToken = localStorage.getItem('jwt');
-
+const loc = inject(Location)
   const authReq = authToken
     ? req.clone({ setHeaders: { Authorization: `Bearer ${authToken}` } })
     : req;

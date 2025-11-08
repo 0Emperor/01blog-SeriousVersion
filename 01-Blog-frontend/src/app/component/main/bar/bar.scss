@@ -1,163 +1,285 @@
 @use '../../../../variables' as *;
 
 .container {
-    justify-content: space-between;
-    .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 2rem;
-        margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1rem;
+  justify-content: space-between;
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: $primary;
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
 
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: $primary;
 
-        .user-info {
-            .name {
-                font-weight: 600;
-                color: $text-light;
-                font-size: 0.9375rem;
-            }
-
-            .username {
-                font-size: 0.875rem;
-                color: $muted-light;
-            }
-        }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
 
-    // Navigation Items
-    .nav-items {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+    .user-info {
+      .name {
+        font-weight: 600;
+        color: $text-light;
+        font-size: 0.9375rem;
+      }
 
-        .nav-item {
-            text-decoration: none; 
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: none;
-            background-color: transparent;
-            color: $text-light;
-            font-family: $font-family;
-            font-weight: 500;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            width: 100%;
-            transition: transform 0.25s ease, box-shadow 0.25s ease; 
-            .material-icons {
-                font-size: 20px;
-            }
-
-            &:hover {
-                // background-color: $background-light;
-                transform: scale(1.05); // grow slightly
-            }
-
-            &.active {
-                // background-color: $background-light;
-                // color: $primary;
-
-                size: 2;
-                .material-icons{
-                    color: $primary;
-                }
-                .label{
-                    color: $primary;
-
-                }
-            }
-        }
+      .username {
+        font-size: 0.875rem;
+        color: $muted-light;
+      }
     }
+  }
 
+  // Navigation Items
+  .nav-items {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    gap: 0.5rem;
 
-    .buttons {
-        margin-top: auto;
-        gap: 1rem;
+    .nav-item {
+      text-decoration: none;
+      display: block;
+      border-radius: 1rem;
+      border: none;
+      background-color: transparent;
+      color: $text-light;
+      font-family: $font-family;
+      font-weight: 500;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      .nav-content {
         display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        .logout .material-icons {
-            color: rgb(255, 255, 255);
-          }
-          .create-post .material-icons {
-            color: rgb(255, 255, 255);
-          }
-        .create-post,
-        .logout {
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        position: relative;
+      }
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: none;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);             color: white;
-            font-family: $font-family;
-            font-weight: 600;
-            font-size: 0.9375rem;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-            width: 100%;
+      .material-icons {
+        font-size: 24px;
+        transition: transform 0.3s ease;
+      }
 
-            .material-icons {
-                font-size: 20px;
-            }
+      .label {
+        transition: color 0.3s ease;
+      }
 
-            &:hover {
-                opacity: 0.8;
-            }
+      .badge {
+        position: absolute;
+        right: 1.25rem;
+        background: linear-gradient(135deg, #ec4899, #f43f5e);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        min-width: 1.25rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 1rem;
+      }
+
+      &:hover {
+        transform: translateX(4px);
+        
+        &::before {
+          opacity: 1;
         }
+
+        .material-icons {
+          transform: scale(1.1);
+        }
+      }
+
+      &.active {
+        background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+        
+        .material-icons {
+          color: $primary;
+          transform: scale(1.1);
+        }
+
+        .label {
+          color: $primary;
+          font-weight: 600;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 4px;
+          height: 60%;
+          background: linear-gradient(180deg, #8b5cf6, #ec4899);
+          border-radius: 0 4px 4px 0;
+        }
+      }
+    }
+  }
+
+  .buttons {
+    margin-top: auto;
+    gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+
+    .create-post,
+    .logout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      border: none;
+      font-family: $font-family;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+
+      .material-icons {
+        font-size: 22px;
+        transition: transform 0.3s ease;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+      }
+
+      &:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      &:hover .material-icons {
+        transform: rotate(90deg);
+      }
     }
 
+    .create-post {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: white;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+
+      .material-icons {
+        color: white;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(139, 92, 246, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    .logout {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      color: white;
+      box-shadow: 0 4px 16px rgba(107, 114, 128, 0.2);
+
+      .material-icons {
+        color: white;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(107, 114, 128, 0.3);
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+// Dark Theme Support
 :host-context(.dark-theme) .container {
-    .user-profile {
-        .user-info {
-            .name {
-                color: $muted-dark;
-            }
+  .user-profile {
+    .user-info {
+      .name {
+        color: $muted-dark;
+      }
 
-            .username {
-                color: $text-dark;
-            }
-        }
+      .username {
+        color: $text-dark;
+      }
     }
+  }
 
-    .nav-items {
-        .nav-item {
-            color: $text-dark;
+  .nav-items {
+    .nav-item {
+      color: $text-dark;
 
-            &:hover {
-                background-color: #2d2438;
-            }
-
-            &.active {
-                background-color: #2d2438;
-                color: $primary;
-            }
+      &:hover {
+        &::before {
+          background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
         }
+      }
+
+      &.active {
+        background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+      }
     }
+  }
 }

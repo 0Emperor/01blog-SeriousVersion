@@ -4,19 +4,25 @@
   <nav class="nav-items">
     <a *ngFor="let item of navItems()" class="nav-item" routerLink="{{ item.id }}" routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }">
-      <span class="material-icons">{{ item.icon }}</span>
-      <span class="label">{{ item.label }}</span>
+      <div class="nav-content">
+        <span class="material-icons">{{ item.icon }}</span>
+        <span class="label">{{ item.label }}</span>
+        @if(unreadCount() > 0 &&item.id ==='notifications') {<span class="badge">
+          {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+        </span>
+      }
+      </div>
     </a>
   </nav>
 
   <div class="buttons">
     <button class="create-post" routerLink="/create">
       <span class="material-icons">add</span>
-      Create Post
+      <span>Create Post</span>
     </button>
     <button class="logout" (click)="logout()">
       <span class="material-icons">logout</span>
-      Log Out
+      <span>Log Out</span>
     </button>
   </div>
 </div>

@@ -20,6 +20,11 @@
     }
   }
 
+  .avatar-container {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
   .table-container {
     overflow-x: auto;
   }
@@ -145,11 +150,7 @@
 
         .user-username {
           font-size: 0.75rem;
-          color: $muted-dark;
-
-          @media (prefers-color-scheme: light) {
-            color: $muted-light;
-          }
+          color: $primary
         }
       }
     }
