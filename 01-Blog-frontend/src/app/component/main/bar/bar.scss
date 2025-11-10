@@ -7,6 +7,52 @@
   padding: 1rem;
   justify-content: space-between;
 
+  .app-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1.5rem 0.5rem;
+    margin-bottom: 1.5rem;
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+
+      .material-icons {
+        font-size: 28px;
+        color: white;
+      }
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+
+      .app-name {
+        font-size: 1.375rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+      }
+
+      .app-tagline {
+        font-size: 0.75rem;
+        color: $muted-light;
+        font-weight: 500;
+      }
+    }
+  }
+
   .user-profile {
     display: flex;
     align-items: center;
@@ -72,6 +118,13 @@
         position: relative;
       }
 
+      .icon-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .material-icons {
         font-size: 24px;
         transition: transform 0.3s ease;
@@ -83,17 +136,26 @@
 
       .badge {
         position: absolute;
-        right: 1.25rem;
+        top: -8px;
+        right: -12px;
         background: linear-gradient(135deg, #ec4899, #f43f5e);
         color: white;
-        font-size: 0.75rem;
+        font-size: 0.5rem;
         font-weight: 700;
-        padding: 0.25rem 0.5rem;
-        border-radius: 1rem;
-        min-width: 1.25rem;
+        padding: 0.1rem 0.25rem;
+        border-radius: 8px;
+        // min-width: 0.75rem;
+        width: fit-content;
+        height: 0.85rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+        box-shadow: 0 2px 6px rgba(236, 72, 153, 0.6);
         animation: pulse 2s ease-in-out infinite;
+        border: 1.5px solid #1a1625;
+        z-index: 10;
       }
 
       &::before {
@@ -111,7 +173,7 @@
 
       &:hover {
         transform: translateX(4px);
-        
+
         &::before {
           opacity: 1;
         }
@@ -123,7 +185,7 @@
 
       &.active {
         background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
-        
+
         .material-icons {
           color: $primary;
           transform: scale(1.1);
@@ -157,6 +219,11 @@
 
     .create-post,
     .logout {
+      span {
+        color: white;
+      font-weight: 600;
+      }
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -243,10 +310,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.05);
     opacity: 0.9;
@@ -255,6 +325,14 @@
 
 // Dark Theme Support
 :host-context(.dark-theme) .container {
+  .app-logo {
+    .logo-text {
+      .app-tagline {
+        color: $text-dark;
+      }
+    }
+  }
+
   .user-profile {
     .user-info {
       .name {

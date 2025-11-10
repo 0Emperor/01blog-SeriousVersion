@@ -1,7 +1,7 @@
 <div class="comment-add-container">
     <div class="avatar-container">
         @if (userS.getUser&& userS.getUser.profile) {
-        <img [src]="'http://localhost:8080/api/files/' + userS.getUser.profile" alt="{{ userS.getUser.username }}'s profile picture"
+        <img [src]="userS.getUser.profile" alt="{{ userS.getUser.username }}'s profile picture"
             class="profile-img">
         } @else {
         <div class="initials-avatar" [style.background-color]="avatarBackgroundColor">

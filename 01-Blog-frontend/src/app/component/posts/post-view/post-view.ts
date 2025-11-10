@@ -11,26 +11,38 @@ import { UserStore } from '../../../service/user';
 import { AdminService } from '../../../service/admin-service';
 import { ReportPostComponent } from '../../report/report/report';
 import { ConfirmationModalComponent } from "../../admin/confirm/confirm";
+import { Like } from '../../../service/like';
 
 @Component({
   selector: 'app-post-view',
-  imports: [CommentArea, ReportPostComponent, MarkdownModule, UserHeaderComponent, TimeAgoPipe, RouterLink, ConfirmationModalComponent],
+  imports: [
+    CommentArea,
+    ReportPostComponent,
+    MarkdownModule,
+    UserHeaderComponent,
+    TimeAgoPipe,
+    RouterLink,
+    ConfirmationModalComponent
+  ],
   templateUrl: './post-view.html',
   styleUrl: './post-view.scss'
 })
 export class PostView {
   post: Post | null = null;
   loading = false;
-  httpPost = inject(PostService)
+  httpPost = inject(PostService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router)
-  current = inject(UserStore)
-  adminService= inject(AdminService)
+  private router = inject(Router);
+  current = inject(UserStore);
+  adminService = inject(AdminService);
+  likeService = inject(Like);
+  
   openReportModal: boolean = false;
   showConfirmModal: boolean = false;
   pendingAction: 'delete' | 'hide' | 'unhide' | null = null;
   confirmMessage: string = '';
   confirmButtonText: string = '';
+   isActionsMenuOpen = false;
   ngOnInit() {
     this.route.paramMap.pipe(
       tap(() => this.loading = true),
@@ -39,11 +51,13 @@ export class PostView {
         if (postId) {
           return this.httpPost.getPostById(postId);
         }
-        return new Promise(() => { });
+        return new Promise(() => {});
       })
     ).subscribe({
       next: (data: any) => {
         this.post = data;
+        console.log(this.post);
+        
         this.loading = false;
       },
       error: (err) => {
@@ -52,15 +66,38 @@ export class PostView {
     });
   }
 
-  editNavigate(){
-    this.router.navigate(["edit",this.post?.postId])
-
+  toggleLike() {
+    if (!this.post) return;
+    
+    const previousLikedState = this.post.isLiked;
+    const previousLikeCount = this.post.totalLikes;
+    
+    // Optimistic update
+    this.post.isLiked = !this.post.isLiked;
+    this.post.totalLikes += this.post.isLiked ? 1 : -1;
+    
+    this.likeService.aply(this.post.postId, previousLikedState).subscribe({
+      error: (err) => {
+        // Revert on error
+        if (this.post) {
+          this.post.isLiked = previousLikedState;
+          this.post.totalLikes = previousLikeCount;
+        }
+        console.error('Error toggling like:', err);
+      }
+    });
   }
+
+  editNavigate() {
+    this.router.navigate(["edit", this.post?.postId]);
+  }
+
   triggerAdminAction(action: 'delete' | 'hide' | 'unhide') {
     if (!this.post) return;
+    
     this.pendingAction = action;
     this.showConfirmModal = true;
-
+    
     switch (action) {
       case 'delete':
         this.confirmMessage = "Are you sure you want to permanently delete this post? This action cannot be undone.";
@@ -76,17 +113,17 @@ export class PostView {
         break;
     }
   }
-  onConfirmAction() {
-    this.showConfirmModal = false; // Close modal first
-    if (!this.post || !this.pendingAction) return;
 
+  onConfirmAction() {
+    this.showConfirmModal = false;
+    if (!this.post || !this.pendingAction) return;
+    
     const postId = this.post.postId;
     let apiCall;
     
-    // Choose API call based on pendingAction
     switch (this.pendingAction) {
       case 'delete':
-        apiCall = this.httpPost.deletePost(postId); // Assuming httpPost.delete handles post deletion
+        apiCall = this.httpPost.deletePost(postId);
         break;
       case 'hide':
         apiCall = this.adminService.hide(postId);
@@ -95,28 +132,29 @@ export class PostView {
         apiCall = this.adminService.unhide(postId);
         break;
     }
-
+    
     apiCall.subscribe({
-        next: () => {
-            // Update local state or navigate
-            if (this.pendingAction === 'delete') {
-                this.router.navigate(["home"]);
-            } else if (this.post) {
-                this.post.hidden = this.pendingAction === 'hide';
-            }
-        },
-        error: (err) => console.error(`Error performing ${this.pendingAction} action:`, err)
+      next: () => {
+        if (this.pendingAction === 'delete') {
+          this.router.navigate(["home"]);
+        } else if (this.post) {
+          this.post.hidden = this.pendingAction === 'hide';
+        }
+      },
+      error: (err) => console.error(`Error performing ${this.pendingAction} action:`, err)
     });
-
-    this.pendingAction = null; // Reset
+    
+    this.pendingAction = null;
   }
-  
+
   delete() {
     this.triggerAdminAction('delete');
   }
+
   hide() {
     this.triggerAdminAction('hide');
   }
+
   unHide() {
     this.triggerAdminAction('unhide');
   }

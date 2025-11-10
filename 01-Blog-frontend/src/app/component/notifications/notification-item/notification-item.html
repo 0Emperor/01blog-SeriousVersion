@@ -1,120 +1,79 @@
-<div class="notification-item" [class.unseen]="!notification.seen">
-  <!-- Header row -->
-  <div class="header-row">
-    <div class="sender">
+<div class="notification-card" [class.unread]="!notification.seen" (click)="onClick()">
+  <div class="notification-content">
+    <!-- Avatar Section -->
+    <div class="avatar-section">
       @if (notification.sender) {
-      <app-user-header [userr]="notification.sender"></app-user-header>
+        <a [routerLink]="['/profile', notification.sender.username]" class="avatar-link" (click)="$event.stopPropagation()">
+          @if (notification.sender.profile) {
+            <img [src]="missing.avatar_link(notification.sender.profile)" 
+                 [alt]="notification.sender.username" 
+                 class="avatar"
+                 [ngClass]="missing.getImageClass(notification.sender)">
+          } @else {
+            <div class="avatar no-avatar" [ngClass]="missing.getBackgroundColor(notification.sender.username)">
+              <span class="initials">{{ missing.getInitial(notification.sender.username) }}</span>
+            </div>
+          }
+        </a>
       } @else {
-      <div class="system-sender">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"
-          class="robot-icon">
-          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-          <g id="SVGRepo_iconCarrier">
-            <g id="Guides">
-              <g id="_x32_0_px_2_"> </g>
-              <g id="_x32_0px"> </g>
-              <g id="_x34_0px"> </g>
-              <g id="_x34_4_px"> </g>
-              <g id="_x34_8px">
-                <g id="_x31_6px"> </g>
-                <g id="square_4px">
-                  <g id="_x32_8_px">
-                    <g id="square_4px_2_"> </g>
-                    <g id="square_4px_3_"> </g>
-                    <g id="square_4px_1_"> </g>
-                    <g id="_x32_4_px_2_"> </g>
-                    <g id="_x31_2_px"> </g>
-                  </g>
-                </g>
-              </g>
-              <g id="Icons"> </g>
-              <g id="_x32_0_px"> </g>
-              <g id="square_6px">
-                <g id="_x31_2_PX"> </g>
-              </g>
-              <g id="_x33_6_px">
-                <g id="_x33_2_px">
-                  <g id="_x32_8_px_1_">
-                    <g id="square_6px_1_"> </g>
-                    <g id="_x32_0_px_1_">
-                      <g id="_x31_2_PX_2_"> </g>
-                      <g id="_x34_8_px">
-                        <g id="_x32_4_px"> </g>
-                        <g id="_x32_4_px_1_"> </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </g>
-              <g id="_x32_0_px_3_"> </g>
-              <g id="_x32_0_px_4_"> </g>
-              <g id="New_Symbol_8">
-                <g id="_x32_4_px_3_"> </g>
-              </g>
-            </g>
-            <g id="Artboard"> </g>
-            <g id="Free_Icons">
-              <g>
-                <polygon style="fill:none;stroke:#797373;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="10.5,6.5 9,7.5 7.5,6.5 7.5,5 9,4 10.5,5 "></polygon>
-                <line style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  x1="12" y1="0.5" x2="12" y2="1.5"></line>
-                <polygon
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="16,23.5 8,23.5 6.5,16 9,13.5 15,13.5 17.5,16 "></polygon>
-                <line style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  x1="12" y1="10.5" x2="12" y2="13.5"></line>
-                <line style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  x1="7.6" y1="21.5" x2="16.4" y2="21.5"></line>
-                <polyline
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="2.5,16 3,19 6.844,17.719 "></polyline>
-                <polyline
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="0.5,12 0.5,14 2.5,16 4.5,14 4.5,12 "></polyline>
-                <polygon
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="16,10.5 20.5,6 16,1.5 8,1.5 3.5,6 8,10.5 "></polygon>
-                <polygon style="fill:none;stroke:#797373;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="13.5,6.5 15,7.5 16.5,6.5 16.5,5 15,4 13.5,5 "></polygon>
-                <polyline
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="21.5,16 21,19 17.156,17.719 "></polyline>
-                <polyline
-                  style="fill:none;stroke:#797373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"
-                  points="23.5,12 23.5,14 21.5,16 19.5,14 19.5,12 "></polyline>
-              </g>
-            </g>
-          </g>
-        </svg>
-        <span class="system-name">System</span>
-      </div>
+        <div class="avatar system-avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="robot-icon">
+            <rect x="4" y="8" width="16" height="12" rx="2" stroke-width="2"/>
+            <circle cx="8.5" cy="12" r="1" fill="currentColor"/>
+            <circle cx="15.5" cy="12" r="1" fill="currentColor"/>
+            <path d="M9 16h6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 8V4M10 4h4" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
       }
     </div>
 
-    <div class="right-options">
+    <!-- Content Section -->
+    <div class="content-section">
+      <div class="header-line">
+        @if (notification.sender) {
+          <a [routerLink]="['/profile', notification.sender.username]" 
+             class="sender-name" 
+             (click)="$event.stopPropagation()">
+            {{ notification.sender.name || notification.sender.username }}
+          </a>
+          <span class="action-text">{{ getActionText() }}</span>
+        } @else {
+          <span class="sender-name system">System Update</span>
+          @if (notification.type === 'REMOVED' || notification.type === 'HIDDEN') {
+            <span class="important-badge">Important</span>
+          }
+        }
+        <span class="timestamp">{{ getRelativeTime() }}</span>
+      </div>
+
+      <p class="message">{{ getMessagePreview() }}</p>
+
       @if (notification.link) {
-      <a class="view-link" [routerLink]="notification.link" (click)="$event.stopPropagation()">
-        <h3> View</h3>
-      </a>
+        <a [routerLink]="notification.link" 
+           class="view-link" 
+           (click)="$event.stopPropagation()">
+          View Post →
+        </a>
       }
     </div>
+
+    <!-- Action Button -->
+    <button class="mark-btn" 
+            [class.read]="notification.seen"
+            [class.unread]="!notification.seen"
+            (click)="toggleReadStatus($event)">
+      {{ notification.seen ? 'Mark as Unread' : 'Mark as Read' }}
+    </button>
+
+    <!-- Delete Button (Mobile only in flow) -->
+    <button class="delete-btn" (click)="onDelete($event)" title="Delete notification">
+      <span class="material-icons">close</span>
+    </button>
   </div>
 
-  <!-- Notification body -->
-  <div class="notification-body" [class.unseen]="!notification.seen">
-    <div class="message">
-      <h4>
-        {{ verboseMessage }}
-      </h4>
-    </div>
-
-    <div class="bottom-row">
-      <div class="actions">
-        <button class="delete" (click)="onDelete()">delete</button>
-      </div>
-      <span class="timestamp">{{ formattedDate }}</span>
-    </div>
-  </div>
+  <!-- Delete Button (Desktop - absolute positioned) -->
+  <button class="delete-btn desktop-delete" (click)="onDelete($event)" title="Delete notification">
+    <span class="material-icons">close</span>
+  </button>
 </div>

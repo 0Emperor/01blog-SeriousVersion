@@ -7,15 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-    // @Autowired
-    // JwtInterceptor jwtInterceptor;
-
-    // @Override
-    // public void addInterceptors(InterceptorRegistry registry) {
-    // registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/users/register")
-    // .excludePathPatterns("/api/users/login");
-    // }
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

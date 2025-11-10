@@ -11,8 +11,44 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { PostService } from '../../../service/post'; // Adjust path
 
-// Define a placeholder prefix for new media
+import Quill from 'quill';
+
 const NEW_MEDIA_PLACEHOLDER = 'NEW_MEDIA_PLACEHOLDER_';
+
+// --- NEW: Define and Register Custom Video Blot ---
+
+// 1. Get the base class for "block-level" embeds
+const BlockEmbed = Quill.import('blots/block/embed') as any;
+
+// 2. Create our new custom video blot
+class VideoBlot extends BlockEmbed {
+  
+  // This 'create' method is called when inserting the blot
+  static create(value: string) {
+    // 'node' is the DOM element we want to insert
+    const node = super.create() as HTMLElement;
+    
+    // Set the attributes for a <video> tag
+    node.setAttribute('src', value);
+    node.setAttribute('controls', 'true'); // Add player controls
+    node.setAttribute('width', '100%');   // Make it responsive
+    node.setAttribute('style', 'max-height: 500px; display: block;'); // Constrain height and fix display
+    
+    return node;
+  }
+
+  // This 'value' method returns the blot's "data"
+  static value(node: HTMLElement): string|null {
+    return node.getAttribute('src');
+  }
+}
+
+// 3. Define the blot's "name" and HTML tag
+VideoBlot['blotName'] = 'video';
+VideoBlot['tagName'] = 'video'; // We want it to create a <video> tag
+
+// 4. Register our new blot, overwriting the old 'video' handler
+Quill.register('formats/video', VideoBlot, true);
 
 @Component({
   selector: 'app-create-post',
@@ -45,10 +81,10 @@ export class PostCompose implements OnInit {
   postForm!: FormGroup;
   
   /**
-   * Stores a map of Base64 URLs to the
-   * actual File object selected by the user.
+   * RENAMED: Stores a map of preview URLs (Base64 or Blob)
+   * to the actual File object selected by the user.
    */
-  private base64ToFileMap = new Map<string, File>(); 
+  private fileUrlMap = new Map<string, File>(); 
   
   uploadProgress = 0;
   isSubmitting = false;
@@ -77,7 +113,10 @@ export class PostCompose implements OnInit {
   constructor(
     private fb: FormBuilder,
     private postService: PostService
-  ) {}
+  ) {
+    // Note: The Quill.register call is now done outside the class,
+    // so it's registered globally before the component is even constructed.
+  }
 
   ngOnInit(): void {
     this.isEditMode = !!this.edit;
@@ -102,28 +141,39 @@ export class PostCompose implements OnInit {
     input.setAttribute('type', 'file');
     input.setAttribute('accept', accept);
     input.click();
-
+  
     input.onchange = () => {
       const file = input.files?.[0];
       if (file) {
-        // 1. Use FileReader to get Base64 (data:) URL
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-          const base64Url = e.target?.result as string;
+        const quill = this.quillEditor.quillEditor;
+        const range = quill.getSelection(true);
+        const embedType = accept.startsWith('image/') ? 'image' : 'video';
+  
+        if (embedType === 'image') {
+          // --- IMAGE LOGIC ---
+          const reader = new FileReader();
+          reader.onload = (e: ProgressEvent<FileReader>) => {
+            const base64Url = e.target?.result as string;
+            
+            // Use the renamed fileUrlMap
+            this.fileUrlMap.set(base64Url, file);
+            
+            quill.insertEmbed(range.index, 'image', base64Url, 'user');
+            quill.setSelection(range.index + 1, 0);
+          };
+          reader.readAsDataURL(file);
+  
+        } else {
+          // --- VIDEO LOGIC ---
+          const blobUrl = URL.createObjectURL(file);
+  
+          // Use the renamed fileUrlMap
+          this.fileUrlMap.set(blobUrl, file);
           
-          // 2. Store the file, mapping it by its Base64 URL
-          this.base64ToFileMap.set(base64Url, file);
-          
-          // 3. Insert the Base64 URL into the editor
-          const quill = this.quillEditor.quillEditor;
-          const range = quill.getSelection(true);
-          const embedType = accept.startsWith('image/') ? 'image' : 'video';
-          
-          quill.insertEmbed(range.index, embedType, base64Url, 'user');
+          // This will now work because 'CustomVideo' whitelists 'blob:'
+          quill.insertEmbed(range.index, 'video', blobUrl, 'user');
           quill.setSelection(range.index + 1, 0);
-        };
-        
-        reader.readAsDataURL(file);
+        }
       }
     };
   }
@@ -174,9 +224,9 @@ export class PostCompose implements OnInit {
 
   /**
    * Parses the editor's HTML content.
-   * - Finds all new (data:) media and adds their *File* to `formData`.
+   * - Finds all new (data: or blob:) media and adds their *File* to `formData`.
    * - Finds all existing (server) media and adds them to a 'keep' list.
-   * - Replaces data: URLs in the HTML with placeholders for the backend.
+   * - Replaces data:/blob: URLs in the HTML with placeholders for the backend.
    */
   private processHtmlContent(html: string, formData: FormData): { finalHtml: string, keepMediaUrls: string[] } {
     const parser = new DOMParser();
@@ -190,9 +240,10 @@ export class PostCompose implements OnInit {
       const src = el.getAttribute('src');
       if (!src) return;
 
-      if (src.startsWith('data:')) {
-        // This is a NEW file (Base64)
-        const file = this.base64ToFileMap.get(src);
+      // --- UPDATED: Now checks for 'blob:' as well ---
+      if (src.startsWith('data:') || src.startsWith('blob:')) {
+        // This is a NEW file (Base64 for image, or Blob for video)
+        const file = this.fileUrlMap.get(src);
         if (file) {
           // Add the *File* to FormData
           formData.append('newMedia', file, file.name);
@@ -238,7 +289,7 @@ export class PostCompose implements OnInit {
 
   resetForm(): void {
     this.postForm.reset();
-    this.base64ToFileMap.clear(); // Clean up the map
+    this.fileUrlMap.clear(); // Clean up the map
     this.uploadProgress = 0;
     
     if (this.quillEditor?.quillEditor) {

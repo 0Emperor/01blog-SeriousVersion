@@ -1,49 +1,102 @@
-
 <div class="container">
-    @if (post!=null){
-    <div class="Header">
+    @if (post != null) {
+      <div class="Header">
         <div class="meta">
-            <app-user-header [userr]="post.user"></app-user-header>
-            <div class="time">{{post.createdAt|timeAgo}}</div>
+          <app-user-header [userr]="post.user"></app-user-header>
+          <div class="time">{{ post.createdAt | timeAgo }}</div>
         </div>
         <div class="actions">
-            @if(post.isOwn){
-            <button class="edit" routerLink="/edit/{{post.postId}}">Edit</button>
-            <button class="delete" (click)="delete()">Delete</button>
-            }@else if(current.getUser?.role =="ADMIN"){
-            @if(post.hidden){
-            <button class="hide" (click)="unHide()">UnHide</button>
-            }@else {
-            <button class="hide" (click)="hide()">Hide</button>
+            <button class="more-actions-btn" (click)="isActionsMenuOpen = !isActionsMenuOpen; $event.stopPropagation()">
+              <span class="material-icons">more_vert</span>
+            </button>
+          
+            @if (isActionsMenuOpen) {
+              <div class="actions-menu-backdrop" (click)="isActionsMenuOpen = false"></div>
+          
+              <div class="actions-menu" (click)="$event.stopPropagation()">
+                
+                @if(post.isOwn) {
+                  <button class="edit" routerLink="/edit/{{post.postId}}" (click)="isActionsMenuOpen = false">
+                    <span class="material-icons">edit</span>
+                    Edit
+                  </button>
+                  <button class="delete" (click)="delete(); isActionsMenuOpen = false">
+                    <span class="material-icons">delete</span>
+                    Delete
+                  </button>
+                } @else if(current.getUser?.role == "ADMIN") {
+                  @if(post.hidden) {
+                    <button class="hide" (click)="unHide(); isActionsMenuOpen = false">
+                      <span class="material-icons">visibility</span>
+                      UnHide
+                    </button>
+                  } @else {
+                    <button class="hide" (click)="hide(); isActionsMenuOpen = false">
+                      <span class="material-icons">visibility_off</span>
+                      Hide
+                    </button>
+                  }
+                  <button class="delete" (click)="delete(); isActionsMenuOpen = false">
+                    <span class="material-icons">delete</span>
+                    Delete
+                  </button>
+                } @else if(post.user.role != "ADMIN") {
+                  <button class="report" (click)="openReportModal = true; isActionsMenuOpen = false">
+                    <span class="material-icons">flag</span>
+                    Report
+                  </button>
+                }
+              </div>
             }
-            <button class="delete" (click)="delete()">Delete</button>
-            }@else if(post.user.role!="ADMIN"){
-                <button class="report" (click)="openReportModal = true">Report</button>            }
-        </div>
+          </div>
+        
         @if (showConfirmModal) {
-            <app-confirmation-modal
-                [message]="confirmMessage"
-                [confirmText]="confirmButtonText"
-                (confirm)="onConfirmAction()"
-                (cancel)="showConfirmModal = false"
-            ></app-confirmation-modal>
+          <app-confirmation-modal
+            [message]="confirmMessage"
+            [confirmText]="confirmButtonText"
+            (confirm)="onConfirmAction()"
+            (cancel)="showConfirmModal = false"
+          ></app-confirmation-modal>
         }
+        
         @if (openReportModal && post) {
-            <div class="modal-backdrop" (click)="openReportModal = false"> 
-              <app-report-post 
-                [postId]="post.postId" 
-                (close)="openReportModal = false"
-                (click)="$event.stopPropagation()" ></app-report-post>
-            </div>
-          }
-
-    </div>
-    <div class="preview">
-        <h1>{{post.title}}</h1>
+          <div class="modal-backdrop" (click)="openReportModal = false">
+            <app-report-post
+              [postId]="post.postId"
+              (close)="openReportModal = false"
+              (click)="$event.stopPropagation()"
+            ></app-report-post>
+          </div>
+        }
+      </div>
+  
+      <div class="preview">
+        <h1>{{ post.title }}</h1>
+        
         <div class="content">
-            <markdown [data]="post.description" class="text"></markdown>
+          <markdown [data]="post.description" class="text"></markdown>
         </div>
+  
+        <div class="engagement-bar">
+          <button 
+            class="engagement-btn like-btn" 
+            [class.liked]="post.isLiked"
+            (click)="toggleLike()">
+            <span class="material-icons">{{ post.isLiked ? 'favorite' : 'favorite_border' }}</span>
+            <span class="count">{{ post.totalLikes }}</span>
+          </button>
+  
+          <button class="engagement-btn comment-btn">
+            <span class="material-icons">chat_bubble_outline</span>
+            <span class="count">{{ post.commentsCount }}</span>
+          </button>
+  
+          <button class="engagement-btn share-btn">
+            <span class="material-icons">share</span>
+          </button>
+        </div>
+  
         <app-comment-area [pid]="post.postId"></app-comment-area>
-    </div>
+      </div>
     }
-</div>
+  </div>

@@ -7,7 +7,6 @@ import { User } from '../dto/dto';
 export class AvatarMissingService {
   readonly profile_base = "http://localhost:8080/api/files/"
   public avatar_link(avatar: string) {
-    
     return  avatar;
   }
   private colors = [
@@ -21,7 +20,6 @@ export class AvatarMissingService {
    * Extracts the first letter of the username for the avatar placeholder.
    */
   public getInitial(name: string): string {
-    console.log(name);
 
     if (!name) return "";
 

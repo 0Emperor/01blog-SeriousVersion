@@ -1,28 +1,24 @@
 <div class="notifications-container">
   <div class="notifications-header">
     <h1 class="title">Notifications</h1>
-    
     <div class="header-actions">
       <button 
         class="btn-clear" 
         (click)="clearAll()"
-        [disabled]="isClearing() || notifications().length === 0"
-      >
+        [disabled]="isClearing() || notifications().length === 0">
         @if (isClearing()) {
           <span class="spinner"></span>
         }
-        Clear
+        Clear All
       </button>
-      
       <button 
-        class="btn-view-all" 
+        class="btn-mark-read" 
         (click)="markAllAsRead()"
-        [disabled]="isMarkingAllRead() || notifications().length === 0"
-      >
+        [disabled]="isMarkingAllRead() || notifications().length === 0">
         @if (isMarkingAllRead()) {
           <span class="spinner"></span>
         }
-        View All
+        Mark All Read
       </button>
     </div>
   </div>
@@ -44,58 +40,13 @@
       </div>
     } @else {
       @for (notification of notifications(); track notification.id) {
-        <div 
-          class="notification-item" 
-          [class.unread]="!notification.seen"
-          [class.clickable]="notification.link !== null"
-          (click)="handleNotificationClick(notification)"
-        >
-          <div class="notification-avatar">
-            @if (isSystemNotification(notification)) {
-              <div class="system-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                  <path d="M2 17l10 5 10-5"/>
-                  <path d="M2 12l10 5 10-5"/>
-                </svg>
-              </div>
-            } @else {
-              <app-user-header [userr]="notification.sender"></app-user-header>
-            }
-          </div>
-
-          <div class="notification-content">
-            <div class="notification-header">
-              <span class="username">{{ getNotificationTitle(notification) }}</span>
-              <span class="subtitle">{{ getNotificationSubtitle(notification) }}</span>
-            </div>
-            
-            <p class="timestamp">{{ getTimeAgo(notification.createdAt) }}</p>
-            
-            @if (getNotificationDetail(notification)) {
-              <p class="detail">{{ getNotificationDetail(notification) }}</p>
-            }
-          </div>
-
-          <div class="notification-actions">
-            @if (notification.link) {
-              <button class="btn-view">
-                View
-              </button>
-            }
-            
-            <button 
-              class="btn-delete" 
-              (click)="deleteNotification($event, notification.id)"
-              title="Delete notification"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
-        </div>
+        <app-notification-item
+          [notification]="notification"
+          (clicked)="handleNotificationClick($event)"
+          (deleted)="handleNotificationDelete($event)"
+          (markRead)="handleMarkAsRead($event)"
+          (markUnread)="handleMarkAsUnread($event)">
+        </app-notification-item>
       }
     }
   </div>

@@ -5,6 +5,7 @@ export interface NotificationDto {
     link: string | null;
     seen: boolean;
     type: 'FOLLOW' | 'POST' | 'LINK' | 'REMOVED' | 'HIDDEN';
+    extra:string;
     createdAt: string;
 }
 
@@ -27,7 +28,7 @@ export interface Post {
     createdAt: Date;
     user: User;
     totalLikes: number | 0;
-    totalComments: number | 0;
+    commentsCount: number | 0;
     isLiked: boolean;
     isOwn: boolean;
     hidden: boolean;

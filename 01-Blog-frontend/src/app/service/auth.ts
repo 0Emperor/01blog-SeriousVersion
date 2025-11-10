@@ -18,7 +18,6 @@ export class Auth {
     if (bio) formData.append('bio', bio);
     if (file) formData.append('profile', file);
     if (name) formData.append('name', name)
-console.log(formData);
 
     return this.http.post(Auth.registerApi, formData);
   }

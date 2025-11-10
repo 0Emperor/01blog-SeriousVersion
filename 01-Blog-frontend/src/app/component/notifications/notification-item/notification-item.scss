@@ -1,146 +1,405 @@
 @use '../../../../variables' as *;
-@use "sass:color";
 
-.notification-item {
+.notification-card {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: $space-sm;
+  align-items: flex-start;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  background: $surface-light;
+  border: 1px solid $border-light;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: $font-family;
-  padding: $space-sm 0;
 
-  .header-row {
+  @media (max-width: 640px) {
+    flex-direction: column;
+    padding: $space-md;
+  }
+
+  &:hover {
+    background: rgba(139, 92, 246, 0.03);
+    border-color: rgba(139, 92, 246, 0.2);
+    transform: translateX(4px);
+
+    .delete-btn {
+      opacity: 1;
+    }
+  }
+
+  &.unread {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.05));
+    border-color: rgba(139, 92, 246, 0.3);
+    border-left: 4px solid #8b5cf6;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: $space-md;
+      right: $space-md;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+      animation: pulse 2s ease-in-out infinite;
+    }
+  }
+
+  .notification-content {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 $space-md;
+    align-items: flex-start;
+    gap: $space-md;
+    flex: 1;
+    min-width: 0;
 
-    .sender {
-      display: flex;
-      align-items: center;
+    @media (max-width: 640px) {
+      width: 100%;
+    }
+  }
 
-      .system-sender {
+  .avatar-section {
+    flex-shrink: 0;
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+
+    .avatar-link {
+      display: block;
+      text-decoration: none;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(139, 92, 246, 0.2);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #8b5cf6;
+      }
+
+      &.no-avatar {
         display: flex;
         align-items: center;
-        gap: $space-sm;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: white;
+        border: none;
+
+        .initials {
+          user-select: none;
+        }
+      }
+
+      &.system-avatar {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         .robot-icon {
           width: 24px;
           height: 24px;
-          color: $muted-light;
+          color: white;
         }
-
-        .system-name {
-          font-size: 0.95rem;
-          font-weight: 500;
-          color: $muted-light;
-        }
-      }
-    }
-
-    .right-options {
-      .view-link {
-        text-decoration: none;
-
-        h3 {
-          &:hover {
-            color: $primary;
-          }
-        }
-
       }
     }
   }
 
-  .notification-body {
-    background-color: $surface-light;
-    border: 1px solid $border-light;
-    border-radius: $border-radius-sm;
-    padding: $space-md;
-    transition: background-color 0.3s, border-color 0.3s;
+  .content-section {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: $space-xs;
+    min-width: 0;
 
-    &.unseen {
-      border-color: $primary;
-      background-color: color.adjust($primary-light, $lightness: 45%);
+    @media (max-width: 640px) {
+      width: 100%;
+    }
+
+    .header-line {
+      display: flex;
+      align-items: center;
+      gap: $space-xs;
+      flex-wrap: wrap;
+      font-size: 0.9375rem;
+
+      @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
+
+      .sender-name {
+        font-weight: 700;
+        color: $text-light;
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #8b5cf6;
+        }
+
+        &.system {
+          color: #6b7280;
+        }
+      }
+
+      .action-text {
+        color: $text-light;
+        font-weight: 400;
+      }
+
+      .important-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.125rem 0.5rem;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .timestamp {
+        margin-left: auto;
+        color: $muted-light;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        white-space: nowrap;
+
+        @media (max-width: 640px) {
+          margin-left: 0;
+        }
+      }
     }
 
     .message {
-      font-size: 0.95rem;
-      color: $text-light;
-      margin-bottom: $space-sm;
+      color: $muted-light;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
-    .bottom-row {
-      display: flex;
-      flex-direction: column;
-      gap: $space-md;
+    .view-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #8b5cf6;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      width: fit-content;
 
-      justify-content: flex-end;
-      align-items: flex-end;
-      font-size: 0.8rem;
-      color: $muted-light;
-
-      .delete {
-        background: transparent;
-        border: 1px solid $error-light;
-        color: $error-light;
-        cursor: pointer;
-        padding: $space-xs $space-sm;
-        border-radius: $border-radius-sm;
-        font-size: 0.8rem;
-        transition: background-color 0.2s, color 0.2s;
-
-        &:hover {
-          background-color: $error-light;
-          color: $button-text-light;
-        }
+      &:hover {
+        color: #7c3aed;
+        transform: translateX(2px);
       }
     }
   }
 
-  // DARK MODE
-  @media (prefers-color-scheme: dark) {
-    .notification-body {
-      background-color: $surface-dark;
-      border-color: $border-dark;
+  .mark-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-family: $font-family;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin-left: auto;
 
-      &.unseen {
-        background-color: color.adjust($primary-dark, $lightness: -15%);
-        border-color: $primary;
+    @media (max-width: 640px) {
+      margin-left: 0;
+      margin-top: $space-sm;
+    }
+
+    &.read {
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      color: white;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &.unread {
+      background: rgba(139, 92, 246, 0.1);
+      color: #7c3aed;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: rgba(139, 92, 246, 0.3);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .delete-btn {
+    position: absolute;
+    top: -1.5*$space-md;
+    right: -1.75*$space-md;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+
+    @media (max-width: 640px) {
+      width: 28px;
+      height: 28px;
+    }
+
+    .material-icons {
+      font-size: 18px;
+      color: #ef4444;
+    }
+
+    &:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+      transform: scale(1.1);
+
+      .material-icons {
+        color: white;
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+// Avatar background colors
+.bg-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.bg-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+.bg-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.bg-green { background: linear-gradient(135deg, #10b981, #059669); }
+.bg-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.bg-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.bg-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+.bg-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+
+// Dark Mode
+@media (prefers-color-scheme: dark) {
+  .notification-card {
+    background: $surface-dark;
+    border-color: $border-dark;
+
+    &:hover {
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    &.unread {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.1));
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .content-section {
+      .header-line {
+        .sender-name {
+          color: $text-dark;
+
+          &:hover {
+            color: #a78bfa;
+          }
+
+          &.system {
+            color: #9ca3af;
+          }
+        }
+
+        .action-text {
+          color: $text-dark;
+        }
+
+        .timestamp {
+          color: $muted-dark;
+        }
       }
 
       .message {
-        color: $text-dark;
+        color: $muted-dark;
       }
 
-      .bottom-row {
-        color: $muted-dark;
+      .view-link {
+        color: #a78bfa;
 
-        .delete {
-          border-color: $error-dark;
-          color: $error-dark;
-
-          &:hover {
-            background-color: $error-dark;
-            color: $button-text-dark;
-          }
+        &:hover {
+          color: #c4b5fd;
         }
       }
     }
 
-    .right-options .view-link {
-      color: $primary-light;
+    .mark-btn {
+      &.unread {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd;
+        border-color: rgba(139, 92, 246, 0.3);
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.2);
+        }
+      }
     }
+  }
+}
 
-    .system-sender {
-      .robot-icon {
-        color: $muted-dark;
-      }
-
-      .system-name {
-        color: $muted-dark;
-      }
+// Responsive
+@media (max-width: 48rem) {
+  .notification-card {
+    .avatar-section .avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
     }
   }
 }

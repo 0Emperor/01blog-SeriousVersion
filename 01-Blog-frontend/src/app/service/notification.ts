@@ -13,7 +13,7 @@ export class NotificationService {
 
   private baseUrl = 'http://localhost:8080/api/notifications';
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.fetchUnreadCount();
   }
   private static unreadCountState = signal(0);
@@ -26,13 +26,11 @@ export class NotificationService {
 
   // Mark a single notification as seen
   markAsSeen(id: number): Observable<void> {
-
     return this.http.post<void>(`${this.baseUrl}/${id}/seen`, {});
   }
 
   // Mark all notifications as seen
   markAllAsSeen(): Observable<void> {
-    NotificationService.unreadCountState.set(0);
     return this.http.post<void>(`${this.baseUrl}/seen-all`, {});
   }
   delete(id: number): Observable<void> {
@@ -41,14 +39,27 @@ export class NotificationService {
   clear(): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}`);
   }
-
+  plus() {    
+    NotificationService.unreadCountState.set(NotificationService.unreadCount()+1);
+  }
+  minus() {
+    let n = NotificationService.unreadCount()
+    let res = (n > 0) ? n - 1 : n
+    console.log("n=",n);
+    console.log("res=",res);
+    
+    NotificationService.unreadCountState.set(res)
+  }
+  reset(){
+   NotificationService.unreadCountState.set(0) 
+  }
   public fetchUnreadCount(): void {
     this.http.get<number>(`${this.baseUrl}/unread-count`).subscribe({
       next: (count) => {
         NotificationService.unreadCountState.set(count);
       },
       error: (err) => {
-       
+
       }
     });
   }

@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../service/notification';
 import { NotificationDto } from '../../../dto/dto';
-import { UserHeaderComponent } from "../../users/user-header/user-header";
+import { NotificationItemComponent } from '../notification-item/notification-item';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, UserHeaderComponent],
+  imports: [CommonModule, NotificationItemComponent],
   templateUrl: './notification-section.html',
   styleUrls: ['./notification-section.scss']
 })
@@ -27,13 +27,13 @@ export class NotificationsComponent implements OnInit {
     this.loadNotifications();
   }
 
-  async loadNotifications() {
+  public async loadNotifications() {
     this.isLoading.set(true);
     try {
       const data = await this.notificationService
         .getNotifications(this.currentPage(), this.pageSize)
         .toPromise();
-      
+
       if (data) {
         this.notifications.set(data);
       }
@@ -45,18 +45,9 @@ export class NotificationsComponent implements OnInit {
   }
 
   async handleNotificationClick(notification: NotificationDto) {
-    // Mark as seen
+    // Mark as seen if not already
     if (!notification.seen) {
-      try {
-        await this.notificationService.markAsSeen(notification.id).toPromise();
-        // Update local state
-        const updated = this.notifications().map(n => 
-          n.id === notification.id ? { ...n, seen: true } : n
-        );
-        this.notifications.set(updated);
-      } catch (error) {
-        console.error('Error marking notification as seen:', error);
-      }
+      await this.handleMarkAsRead(notification);
     }
 
     // Navigate if there's a link
@@ -65,16 +56,47 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  async deleteNotification(event: Event, id: number) {
-    event.stopPropagation();
-    
+  async handleNotificationDelete(notification: NotificationDto) {
     try {
-      await this.notificationService.delete(id).toPromise();
+      await this.notificationService.delete(notification.id).toPromise();
       // Remove from local state
-      const updated = this.notifications().filter(n => n.id !== id);
+      const updated = this.notifications().filter(n => n.id !== notification.id);
       this.notifications.set(updated);
+      if (!notification.seen) {
+        this.notificationService.minus()
+      }
     } catch (error) {
       console.error('Error deleting notification:', error);
+    }
+  }
+
+  async handleMarkAsRead(notification: NotificationDto) {
+    try {
+      await this.notificationService.markAsSeen(notification.id).toPromise();
+      // Update local state
+      const updated = this.notifications().map(n =>
+        n.id === notification.id ? { ...n, seen: true } : n
+      );
+      this.notificationService.minus()
+      console.log("after=",NotificationService.unreadCount());
+      
+      this.notifications.set(updated);
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  }
+
+  async handleMarkAsUnread(notification: NotificationDto) {
+    try {
+      await this.notificationService.markAsSeen(notification.id).toPromise();
+      // Update local state
+      const updated = this.notifications().map(n =>
+        n.id === notification.id ? { ...n, seen: false } : n
+      );
+      this.notificationService.plus()
+      this.notifications.set(updated);
+    } catch (error) {
+      console.error('Error marking notification as unread:', error);
     }
   }
 
@@ -86,7 +108,7 @@ export class NotificationsComponent implements OnInit {
     this.isClearing.set(true);
     try {
       await this.notificationService.clear().toPromise();
-      this.notifications.set([]);
+      this.notifications.update(b => b.filter(n => !n.seen));
     } catch (error) {
       console.error('Error clearing notifications:', error);
     } finally {
@@ -98,95 +120,13 @@ export class NotificationsComponent implements OnInit {
     this.isMarkingAllRead.set(true);
     try {
       await this.notificationService.markAllAsSeen().toPromise();
-      // Update all notifications to seen
       const updated = this.notifications().map(n => ({ ...n, seen: true }));
       this.notifications.set(updated);
+      this.notificationService.reset()
     } catch (error) {
       console.error('Error marking all as read:', error);
     } finally {
       this.isMarkingAllRead.set(false);
     }
-  }
-
-  getNotificationMessage(notification: NotificationDto): string {
-    const username = notification.sender?.username || 'System';
-    
-    switch (notification.type) {
-      case 'FOLLOW':
-        return `${username} just started following you`;
-      case 'POST':
-        return `${username} posted something you might like`;
-      case 'LINK':
-        return `${username} wants you to see a post you might like`;
-      case 'REMOVED':
-        return `One of your posts got removed — careful, you might be next!`;
-      case 'HIDDEN':
-        return `One of your posts was hidden by an admin`;
-      default:
-        return 'You have a new notification';
-    }
-  }
-
-  getNotificationTitle(notification: NotificationDto): string {
-    if (notification.sender) {
-      return notification.sender.username;
-    }
-    return 'System';
-  }
-
-  getNotificationSubtitle(notification: NotificationDto): string {
-    switch (notification.type) {
-      case 'FOLLOW':
-        return 'just started following you.';
-      case 'POST':
-        return 'just shared a new post.';
-      case 'LINK':
-        return 'shared a link with you.';
-      case 'REMOVED':
-        return 'Your post has been removed.';
-      case 'HIDDEN':
-        return 'Your post has been hidden.';
-      default:
-        return 'New notification';
-    }
-  }
-
-  getNotificationDetail(notification: NotificationDto): string {
-    switch (notification.type) {
-      case 'POST':
-        return 'A glimpse into the latest artistic trends';
-      case 'LINK':
-        return 'Check out this amazing content!';
-      case 'REMOVED':
-        return 'Carefull, u might be next';
-      case 'HIDDEN':
-        return 'Contact support if you believe this was a mistake';
-      default:
-        return '';
-    }
-  }
-
-  getTimeAgo(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (seconds < 60) return 'Just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hour${Math.floor(seconds / 3600) > 1 ? 's' : ''} ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} day${Math.floor(seconds / 86400) > 1 ? 's' : ''} ago`;
-    
-    return date.toLocaleDateString();
-  }
-
-  isSystemNotification(notification: NotificationDto): boolean {
-    return notification.sender === null;
-  }
-
-  getAvatarOrIcon(notification: NotificationDto): string {
-    if (this.isSystemNotification(notification)) {
-      return 'system'; // We'll use this to show an icon
-    }
-    return notification.sender?.profile || '';
   }
 }

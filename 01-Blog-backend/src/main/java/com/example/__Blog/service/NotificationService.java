@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException; 
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -41,7 +41,7 @@ public class NotificationService {
         @Transactional
         public void deleteNotification(UUID uid, Integer nId) {
                 Notification notification = notificationRepository.findById(nId)
-                                .orElseThrow(() -> new RuntimeException("Notification not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("Notification not found with id: " + nId));
                 if (!notification.getToNotify().getId().equals(uid)) {
                         throw new AccessDeniedException("U can't delete other s notifications");
                 }
@@ -54,7 +54,7 @@ public class NotificationService {
 
         public List<Notificationdto> getNotifications(UUID userId, int page, int size) {
                 User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId)); // <-- Already correct
 
                 Page<Notification> notificationsPage = notificationRepository.findByToNotifyOrderByCreatedAtDesc(user,
                                 PageRequest.of(page, size));
@@ -66,27 +66,27 @@ public class NotificationService {
 
         public long countUnread(UUID userId) {
                 User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
                 return notificationRepository.countByToNotifyAndSeenFalse(user);
         }
 
         @Transactional
         public void markAsSeen(Integer notificationId, UUID userId) {
                 Notification notification = notificationRepository.findById(notificationId)
-                                .orElseThrow(() -> new RuntimeException("Notification not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("Notification not found with id: " + notificationId));
 
                 if (!notification.getToNotify().getId().equals(userId)) {
-                        throw new RuntimeException("Cannot mark another user's notification as seen");
+                        throw new AccessDeniedException("Cannot mark another user's notification as seen");
                 }
 
-                notification.setSeen(true);
+                notification.setSeen(!notification.isSeen()); 
                 notificationRepository.save(notification);
         }
 
         @Transactional
         public void markAllAsSeen(UUID userId) {
                 User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
                 List<Notification> notifications = notificationRepository
                                 .findByToNotifyOrderByCreatedAtDesc(user, PageRequest.of(0, Integer.MAX_VALUE))

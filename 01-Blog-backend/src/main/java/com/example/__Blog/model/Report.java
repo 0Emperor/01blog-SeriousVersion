@@ -62,8 +62,6 @@ public class Report {
         this.state = state;
     }
 
-    private boolean resolved; // handled by admin
-
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -78,14 +76,6 @@ public class Report {
 
     public Post getReportedPostreportedPost() {
         return reportedPost;
-    }
-
-    public void setResolved(boolean resolved) {
-        this.resolved = resolved;
-    }
-
-    public boolean getResolved() {
-        return resolved;
     }
 
     public Integer getId() {

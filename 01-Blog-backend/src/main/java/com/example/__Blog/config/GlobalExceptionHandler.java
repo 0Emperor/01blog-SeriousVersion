@@ -81,6 +81,7 @@ public class GlobalExceptionHandler {
     /* 404 - not found */
     @ExceptionHandler({ NotFoundException.class, ResourceNotFoundException.class, NoHandlerFoundException.class })
     public ResponseEntity<Map<String, Object>> handleNotFound(Exception ex) {
+        System.out.println("chabach");
         return toastResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Not Found", "warning", null);
     }
 
