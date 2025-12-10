@@ -12,6 +12,8 @@ import com.example.__Blog.model.User;
 import com.example.__Blog.repository.FollowRepository;
 import com.example.__Blog.repository.UserRepository;
 
+import com.example.__Blog.exception.ResourceNotFoundException;
+
 @Service
 @Transactional
 public class ProfileService {
@@ -33,10 +35,10 @@ public class ProfileService {
      */
     public ProfileDto getProfile(String username, UUID currentUserId) {
         User profileUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Current user not found"));
 
         Long followersCount = FollowRepository.countBySubscribedTo(profileUser);
         Long followingCount = FollowRepository.countBySubscriber(profileUser);

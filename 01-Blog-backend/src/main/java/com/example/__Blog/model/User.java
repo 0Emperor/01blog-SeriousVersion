@@ -30,6 +30,7 @@ public class User {
     @CreationTimestamp
     private Timestamp created_at;
     private boolean isBaned = false;
+    @Column(columnDefinition = "VARCHAR(255)")
     private String name;
 
     public String getName() {

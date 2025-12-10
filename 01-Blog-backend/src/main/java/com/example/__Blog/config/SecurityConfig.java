@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.example.__Blog.filter.RateLimitFilter;
 
 import com.example.__Blog.helper.JwtAuthFilter;
 
@@ -40,6 +41,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .anonymous(anonymous -> anonymous.disable());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new RateLimitFilter(), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(exception -> exception
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entry));

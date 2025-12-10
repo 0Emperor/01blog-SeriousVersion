@@ -3,7 +3,7 @@ package com.example.__Blog.config;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.velocity.exception.ResourceNotFoundException;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.*;
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     }
 
     /* 404 - not found */
-    @ExceptionHandler({ NotFoundException.class, ResourceNotFoundException.class, NoHandlerFoundException.class })
+    @ExceptionHandler({ NotFoundException.class, NoHandlerFoundException.class })
     public ResponseEntity<Map<String, Object>> handleNotFound(Exception ex) {
         System.out.println("chabach");
         return toastResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Not Found", "warning", null);
@@ -96,7 +96,28 @@ public class GlobalExceptionHandler {
     /* 413 - file too large */
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Map<String, Object>> handleMaxSize(MaxUploadSizeExceededException ex) {
-        return toastResponse(HttpStatus.PAYLOAD_TOO_LARGE, "File size exceeds maximum allowed", "File Too Large", "error", null);
+        return toastResponse(HttpStatus.PAYLOAD_TOO_LARGE, "File size exceeds maximum allowed", "File Too Large",
+                "error", null);
+    }
+
+    /* 400 - Invalid File */
+    @ExceptionHandler(com.example.__Blog.exception.InvalidFileException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidFile(com.example.__Blog.exception.InvalidFileException ex) {
+        return toastResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Invalid File", "warning", null);
+    }
+
+    /* 500 - File Storage Error */
+    @ExceptionHandler(com.example.__Blog.exception.FileStorageException.class)
+    public ResponseEntity<Map<String, Object>> handleFileStorage(com.example.__Blog.exception.FileStorageException ex) {
+        log.error("File storage error: {}", ex.getMessage());
+        return toastResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Could not store file", "Storage Error", "error", null);
+    }
+
+    /* 404 - Resource Not Found (Custom) */
+    @ExceptionHandler(com.example.__Blog.exception.ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleResourceNotFound(
+            com.example.__Blog.exception.ResourceNotFoundException ex) {
+        return toastResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Not Found", "warning", null);
     }
 
     /* ================= 5xx SERVER ERRORS ================= */
@@ -109,16 +130,15 @@ public class GlobalExceptionHandler {
 
     /* ================= helper methods ================= */
 
-    private ResponseEntity<Map<String, Object>> toastResponse(HttpStatus status, String message, String title, String type, Map<String, Object> details) {
+    private ResponseEntity<Map<String, Object>> toastResponse(HttpStatus status, String message, String title,
+            String type, Map<String, Object> details) {
         Map<String, Object> toast = Map.of(
                 "message", message,
                 "title", title,
-                "type", type
-        );
+                "type", type);
         Map<String, Object> body = Map.of(
                 "toast", toast,
-                "details", details != null ? details : Map.of()
-        );
+                "details", details != null ? details : Map.of());
         return ResponseEntity.status(status).body(body);
     }
 
@@ -127,10 +147,10 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().toString(),
                 status,
                 message,
-                details
-        ));
+                details));
     }
 
     /* ================= lightweight DTO ================= */
-    public record ErrorResponse(String timestamp, HttpStatus status, String message, Object details) {}
+    public record ErrorResponse(String timestamp, HttpStatus status, String message, Object details) {
+    }
 }

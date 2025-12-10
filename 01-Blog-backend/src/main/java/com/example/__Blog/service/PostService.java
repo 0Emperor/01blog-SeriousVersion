@@ -12,7 +12,7 @@ import com.example.__Blog.specification.PostSpecifications;
 
 import jakarta.transaction.Transactional;
 
-import org.apache.velocity.exception.ResourceNotFoundException;
+import com.example.__Blog.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
@@ -55,29 +55,6 @@ public class PostService {
         }
         return post;
     }
-
-    // public Post createPost(String description, String title, User user, String[]
-    // media) {
-    // Post post = new Post();
-    // post.setTitle(title);
-    // post.setDescription(description);
-    // post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-    // post.setUser(user);
-    // return post;
-    // }
-
-    // public Post ediPost(UUID uId, Integer pID, String description, String title,
-    // String[] media) {
-    // Post toEdit = postRepository.findById(pID).orElseThrow(
-    // () -> new ResourceNotFoundException("Post not found"));
-    // if (!toEdit.getUser().getId().equals(uId)) {
-    // throw new AccessDeniedException("U can only edit your own posts");
-    // }
-    // toEdit.setDescription(description);
-    // toEdit.setMedia(media);
-    // toEdit.setTitle(title);
-    // return postRepository.save(toEdit);
-    // }
 
     public void deletePost(UUID uId, Integer pID, String role) {
         Post toDelete = postRepository.findById(pID).orElseThrow(
@@ -143,34 +120,24 @@ public class PostService {
 
     private final FileService fileService;
 
-    // --- CREATE POST ---
     @Transactional
     public Post createPostWithMedia(String description, String title, User user, List<MultipartFile> mediaFiles) {
 
-        // 1. Save all new media files and get their URLs
         List<String> newMediaUrls = new ArrayList<>();
         if (mediaFiles != null) {
             for (MultipartFile file : mediaFiles) {
                 String url = fileService.save(file);
-                System.out.println(url);
                 newMediaUrls.add(url);
             }
         }
 
-        // 2. Replace placeholders in the description HTML
         String finalDescription = replacePlaceholders(description, newMediaUrls);
 
-        // 3. Create and save the post
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(finalDescription);
         post.setUser(user);
-
-        // **IMPORTANT**: Assuming Post has a way to store media URLs
-        // If you have a @OneToMany Set<Media> media, you would create
-        // Media entities here and add them to the post.
-        // For this example, let's assume Post has a List<String> mediaUrls
-        post.setMedia(newMediaUrls); // Or add to a Set<Media>
+        post.setMedia(newMediaUrls);
         System.out.println(newMediaUrls);
 
         return postRepository.save(post);
@@ -183,7 +150,7 @@ public class PostService {
 
         // 1. Get post and verify ownership
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found")); // Use custom exception
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found")); // Use custom exception
 
         if (!post.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("You can only edit your own posts");

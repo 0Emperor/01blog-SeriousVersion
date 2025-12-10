@@ -3,6 +3,7 @@ package com.example.__Blog.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 User user = userRepository.findByUsername(username)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+                if (user.getBaned() == true) {
+                        System.out.println("op opaa");
+                        throw new AccessDeniedException("you are baned");
+                }
                 return new CustomUserDetails(
                                 user.getId(),
                                 user.getUsername(),
