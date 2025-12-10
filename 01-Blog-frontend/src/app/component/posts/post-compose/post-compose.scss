@@ -1,243 +1,386 @@
 @use "sass:color";
-// Make sure this path is correct for your project structure
-@import '../../../../variables'; 
+@import '../../../../variables';
 
-.create-post-container {
-  // This is the main page background
-  background-color: $background-dark;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  // Padding for the whole page
-  padding: $space-lg $space-md;
+// --- Mixins ---
+@mixin theme-styles($bg, $panel, $input, $text-main, $text-muted, $primary-color, $btn-text) {
+  background-color: $bg;
+
+  .post-panel {
+    background-color: $panel;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .post-header h2 {
+    color: $text-main;
+  }
+
+  .input-group label {
+    color: $text-main;
+    font-weight: 700; // Bolder labels
+    opacity: 1; // Ensure full opacity
+  }
+
+  .custom-input-wrapper {
+    background-color: $input;
+    border: 1px solid transparent;
+
+    &:focus-within {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+
+    .custom-input {
+      color: $text-main;
+
+      &::placeholder {
+        color: $text-muted;
+      }
+    }
+  }
+
+  // Quill Editor
+  .editor-wrapper ::ng-deep {
+    .ql-toolbar.ql-snow {
+      background-color: $input;
+      border-color: transparent;
+
+      button {
+        color: $text-muted;
+
+        &.ql-active,
+        &:hover {
+          color: $primary-color;
+
+          .ql-stroke {
+            stroke: $primary-color;
+          }
+
+          .ql-fill {
+            fill: $primary-color;
+          }
+        }
+
+        .ql-stroke {
+          stroke: $text-muted;
+        }
+
+        .ql-fill {
+          fill: $text-muted;
+        }
+
+        .ql-picker {
+          color: $text-muted;
+        }
+
+        .ql-picker-label:hover {
+          color: $primary-color;
+
+          .ql-stroke {
+            stroke: $primary-color;
+          }
+        }
+      }
+
+      // Dropdown styling
+      .ql-picker-options {
+        background-color: $panel !important;
+        border: 1px solid rgba($text-main, 0.1) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+
+        .ql-picker-item {
+          color: $text-main !important;
+
+          &:hover {
+            color: $primary-color !important;
+            background-color: rgba($primary-color, 0.1);
+          }
+        }
+      }
+    }
+
+    .ql-container.ql-snow {
+      background-color: $input;
+      border-color: transparent;
+
+      .ql-editor {
+        // Use bright white for editor text in dark mode for readability
+        color: if($bg ==$background-dark, #ffffff, $text-main);
+
+        &.ql-blank::before {
+          color: $text-muted;
+        }
+
+        // Ensure headings and other elements inherit the bright color
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        li,
+        strong,
+        em {
+          color: if($bg ==$background-dark, #ffffff, $text-main);
+        }
+      }
+    }
+  }
+
+  // Buttons
+  .post-actions {
+    .cancel-button {
+      color: $text-muted;
+      border-color: rgba($text-muted, 0.3);
+
+      &:hover:not([disabled]) {
+        background-color: rgba($text-muted, 0.1);
+        color: $text-main;
+      }
+    }
+
+    .submit-button {
+      background-color: $primary-color;
+      color: $btn-text !important; // Force text color to ensure visibility
+
+      &:hover:not([disabled]) {
+        background-color: color.adjust($primary-color, $lightness: -5%);
+      }
+
+      &[disabled] {
+        background-color: $input;
+        color: $text-muted !important;
+      }
+    }
+  }
+
+  .progress-container {
+    background-color: $input;
+
+    .progress-text {
+      color: $primary-color;
+    }
+  }
 }
 
-// This is the "card" wrapper
+.create-post-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1rem;
+
+  // Default (Dark Mode) - Using Global Variables
+  // $background-dark (#191022), $panel-bg-dark (#231a2f), $input-bg (#444455), $text-dark (#b7b1be), $muted-dark, $primary
+  // Note: We use $text-dark for labels/inputs, but the editor text is forced to white inside the mixin for readability.
+  @include theme-styles($background-dark, $panel-bg-dark, $input-bg, $text-dark, $muted-dark, $primary, $button-text-light);
+
+  // Light Mode Support
+  @media (prefers-color-scheme: light) {
+    // $background-light, $panel-bg-light, $input-bg-light, $text-light, $muted-light, $primary
+    @include theme-styles($background-light, $panel-bg-light, $input-bg-light, $text-light, $muted-light, $primary, $button-text-light);
+  }
+}
+
 .post-panel {
   width: 100%;
-  max-width: 600px;
-  // Use the panel background for contrast
-  background-color: $panel-bg-dark;
-  // Use your border radius
-  border-radius: $border-radius-lg;
-  // Add padding inside the card
-  padding: $space-lg;
-  // Add a subtle shadow
-  box-shadow: $shadow;
+  max-width: 700px;
+  border-radius: 16px;
+  padding: 3rem;
+  transition: transform 0.3s ease;
 }
 
 .post-header {
-  width: 100%;
-  // Reduced padding since the panel has its own
-  padding: 0 0 $space-md;
   text-align: center;
-  
+  margin-bottom: 2.5rem;
+
   h2 {
     font-size: 2rem;
-    font-weight: $heading-font-weight;
-    color: $text-dark;
+    font-weight: 700;
     margin: 0;
+    letter-spacing: -0.02em;
   }
 }
 
 .post-form-content {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; // Increased spacing
 }
 
 .input-group {
-  margin-bottom: $space-lg;
-  
   label {
     display: block;
-    font-size: 1rem;
-    font-weight: $heading-font-weight;
-    color: $text-dark;
-    margin-bottom: $space-sm;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
   }
 }
 
 .custom-input-wrapper {
-  background-color: $input-bg; 
-  border-radius: $border-radius-sm;
-  height: 48px;
-  
+  border-radius: 8px;
+  height: 52px;
+  transition: all 0.2s ease;
+
   .custom-input {
     width: 100%;
     height: 100%;
     border: none;
     outline: none;
     background: transparent;
-    color: $text-dark;
-    padding: 0 $space-md;
+    padding: 0 1rem;
     font-size: 1rem;
-    
-    &::placeholder {
-      color: $muted-dark;
-      opacity: 0.8;
-    }
   }
 }
 
-// --- Quill Editor Overrides ---
+// Quill Editor Styles
 .editor-wrapper {
-  
-  // Force Quill editor to take full width
-  quill-editor {
+  ::ng-deep {
+    .ql-toolbar.ql-snow {
+      border-radius: 8px 8px 0 0;
+      padding: 0.75rem;
+    }
+
+    .ql-container.ql-snow {
+      border-radius: 0 0 8px 8px;
+      min-height: 250px;
+      font-family: 'Inter', sans-serif;
+
+      .ql-editor {
+        padding: 1.5rem;
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+.progress-container {
+  padding: 1rem;
+  border-radius: 8px;
+
+  .progress-text {
     display: block;
-    width: 100%;
+    text-align: right;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
   }
 }
 
-::ng-deep {
-  .ql-container.ql-snow,
-  .ql-toolbar.ql-snow {
-    background-color: $input-bg;
-    border: none;
-  }
-  
-  .ql-toolbar.ql-snow {
-    border-radius: $border-radius-sm $border-radius-sm 0 0;
-    padding: $space-sm;
-    
-    .ql-formats {
-      margin-right: $space-sm;
-    }
-
-    button {
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      background-color: transparent; 
-      border-radius: $border-radius-sm;
-      border: 1px solid transparent;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      
-      &:hover {
-        background-color: color.adjust($input-bg, $lightness: 15%);
-        border-color: color.adjust($input-bg, $lightness: 20%);
-        stroke: $text-dark;
-        transform: translateY(-1px);
-      }
-      
-      .ql-stroke, .ql-fill {
-        stroke: $text-dark;
-        transition: all 0.2s ease;
-      }
-      &:hover {
-        .ql-stroke, .ql-fill {
-          stroke: $text-dark;
-          transition: all 0.2s ease;
-        }
-      }
-      &.ql-active {
-        background-color: $primary;
-        border-color: $primary;
-        
-        .ql-stroke, .ql-fill {
-          stroke: $button-text-dark; 
-        }
-        
-        &:hover {
-          background-color: $primary-dark;
-          border-color: $primary-dark;
-        }
-      }
-    }
-
-    .ql-picker-label {
-        color: $text-dark;
-        &:hover {
-          color: $text-dark;
-        }
-    }
-  }
-  
-  .ql-container.ql-snow {
-    border-radius: 0 0 $border-radius-sm $border-radius-sm;
-    min-height: 150px;
-    
-    .ql-editor {
-      min-height: 150px;
-      color: $text-dark;
-      font-size: 1rem;
-      padding: $space-md;
-      
-      &.ql-blank::before {
-        color: $muted-dark;
-        opacity: 0.8;
-        left: $space-md;
-      }
-    }
-  }
-}
-
-// --- Action Buttons (Bottom) ---
 .post-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: $space-lg; // Only need padding on top
-  
-  ::ng-deep .mat-mdc-button-base {
-    height: 45px;
-    padding: 0 $space-lg;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    height: 48px;
+    padding: 0 2rem;
+    border-radius: 24px;
+    font-weight: 600;
     font-size: 1rem;
-    font-weight: 500;
-    border-radius: $border-radius-sm;
+    border: 1px solid transparent;
     transition: all 0.2s ease;
-  }
 
-  .cancel-button {
-    background-color: $input-bg !important;
-    color: $button-text-dark !important; 
-    
-    &:hover:not([disabled]) {
-      background-color: color.adjust($input-bg, $lightness: 5%) !important;
-    }
-  }
-  
-  .submit-button {
-    background-color: $primary !important;
-    color: $button-text-dark !important;
-    
-    &:hover:not([disabled]) {
-      background-color: $primary-dark !important;
+    &.cancel-button {
+      background: transparent;
     }
 
-    &[disabled] {
-        background-color: $muted-dark !important;
-        color: $background-dark !important;
+    &.submit-button {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      &:hover:not([disabled]) {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active:not([disabled]) {
+        transform: translateY(0);
+      }
     }
   }
 }
 
 // Mobile Responsiveness
-@media (max-width: $mobile-breakpoint) {
+@media (max-width: 768px) {
   .create-post-container {
-    padding: $space-sm; // Less padding on mobile screen
+    padding: 1rem;
   }
 
   .post-panel {
-    padding: $space-md; // Less padding inside panel on mobile
+    padding: 1.5rem;
   }
 
-  .post-header {
-    h2 {
-      font-size: 1.5rem;
+  .post-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .post-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
     }
   }
-  
-  .post-actions {
-    flex-direction: column-reverse; 
-    gap: $space-md;
-    
-    .cancel-button,
-    .submit-button {
-      width: 100%;
+}
+
+// Media Hover-Delete Styles - Overlay Approach
+::ng-deep .ql-editor {
+  position: relative;
+
+  img,
+  video {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    margin: 8px 0;
+    border-radius: 8px;
+
+    // Show delete button when hovering over the media
+    &:hover+.media-delete-btn-overlay {
+      opacity: 1;
+    }
+  }
+
+  .media-delete-btn-overlay {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(239, 68, 68, 0.95);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    pointer-events: auto;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: rgba(248, 113, 113, 0.95);
+    }
+
+    &:hover {
+      opacity: 1 !important;
+      background-color: rgba(220, 38, 38, 1);
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+
+      @media (prefers-color-scheme: dark) {
+        background-color: rgba(239, 68, 68, 1);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 }
