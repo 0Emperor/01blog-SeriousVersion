@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Auth } from '../../../service/auth';
 import { Router, RouterLink } from '@angular/router';
-import { catchError } from 'rxjs';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';

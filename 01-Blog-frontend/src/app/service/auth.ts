@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { inject, Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Auth {
-  static baseApi = "http://localhost:8080/auth"
-  static accessApi = "http://localhost:8080/access"
+  static baseApi = environment.apiUrl + "/auth"
+  static accessApi = environment.apiUrl + "/access"
   static adminApi = Auth.accessApi + "/admin"
   static loginApi = Auth.baseApi + "/login"
   static registerApi = Auth.baseApi + "/register"

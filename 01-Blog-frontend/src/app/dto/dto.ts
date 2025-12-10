@@ -1,11 +1,11 @@
 
 export interface NotificationDto {
-    sender?: User ;
+    sender?: User;
     id: number,
     link: string | null;
     seen: boolean;
     type: 'FOLLOW' | 'POST' | 'LINK' | 'REMOVED' | 'HIDDEN';
-    extra:string;
+    extra: string;
     createdAt: string;
 }
 
@@ -81,4 +81,11 @@ export interface DashboardData {
     ReportsStats: { totalNumber: number, percentageChange: number },
     PostsStats: { totalNumber: number, percentageChange: number },
     UsersStats: { totalNumber: number, percentageChange: number }
+}
+
+export interface UserFollowDto {
+    userId: string;
+    username: string;
+    profilePictureUrl: string;
+    isFollowing: boolean;
 }

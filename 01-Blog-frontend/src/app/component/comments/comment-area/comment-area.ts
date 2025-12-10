@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, inject, Input, OnInit, OnDestroy, HostListener, Output, EventEmitter } from '@angular/core';
 import { CommentAdd } from "../comment-add/comment-add";
 import { CommentCard } from '../comment-card/comment-card';
 import { Comment, Post, User } from '../../../dto/dto';
@@ -15,6 +15,7 @@ import { CommentS } from '../../../service/comment';
 })
 export class CommentArea implements OnInit, OnDestroy {
   @Input() pid!: string;
+  @Output() commentChange = new EventEmitter<number>();
 
   private commentSvc = inject(CommentS);
   private commentReceive = inject(CommentShare);
@@ -36,7 +37,7 @@ export class CommentArea implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadPage(): void {    
+  private loadPage(): void {
     this.loading = true;
     this.commentSvc
       .getCommentsPerPost(this.page, this.size, this.pid)
@@ -45,9 +46,9 @@ export class CommentArea implements OnInit, OnDestroy {
         finalize(() => this.loading = false)
       )
       .subscribe(({ comment, hasNext }) => {
-        this.comments.push(...comment);   
+        this.comments.push(...comment);
         console.log(hasNext);
-        
+
         this.finished = !hasNext;         // boolean from backend
         if (!this.finished) this.page++;  // only advance when more exists
       });
@@ -59,6 +60,7 @@ export class CommentArea implements OnInit, OnDestroy {
       .subscribe(cmt => {
         if (!cmt) return;
         this.comments = [cmt, ...this.comments];
+        this.commentChange.emit(1); // Increment count
         this.commentReceive.changeMessage(null)
       });
   }
@@ -67,10 +69,10 @@ export class CommentArea implements OnInit, OnDestroy {
     // Check if the user is near the bottom of the page (e.g., within 200px)
     const tolerance = 200;
     const scrollPosition = window.scrollY + window.innerHeight;
-    const totalHeight = document.documentElement.scrollHeight;    
+    const totalHeight = document.documentElement.scrollHeight;
     // Trigger next page if near bottom AND not currently loading AND not finished
     if (scrollPosition > totalHeight - tolerance && !this.loading && !this.finished) {
-    this.loadPage()
+      this.loadPage()
     }
   }
   onEdit(comment: Comment, newText: string) {
@@ -78,10 +80,11 @@ export class CommentArea implements OnInit, OnDestroy {
       comment.content = newText;
     });
   }
-  
+
   onDelete(comment: Comment) {
     this.commentSvc.deleteComment(comment.id).subscribe(() => {
       this.comments = this.comments.filter(c => c.id !== comment.id);
+      this.commentChange.emit(-1); // Decrement count
     });
   }
 }
