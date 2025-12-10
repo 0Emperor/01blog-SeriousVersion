@@ -1,5 +1,8 @@
-@if(arrived){
-    <div class="container">
-    <app-search [users]="usersWithIndex" (followed)="follow($event)"></app-search>
+@if(arrived())
+{
+<div class="container">
+    <app-search [users]="usersWithIndex" [loading]="loading()" [hasMore]="hasMore()" (followed)="follow($event)"
+        (searched)="onSearch($event)" (loadMore)="loadUsers()">
+    </app-search>
 </div>
 }

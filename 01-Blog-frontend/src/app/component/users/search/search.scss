@@ -215,6 +215,7 @@
     }
 }
 
+
 // Empty State
 .empty-state {
     display: flex;
@@ -248,5 +249,41 @@
     p {
         margin: 0;
         font-size: 0.875rem;
+    }
+}
+
+// Load More
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: $space-xl;
+}
+
+.load-more {
+    padding: $space-md $space-xl;
+    background: transparent;
+    border: 2px solid $border;
+    color: $text-light;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    font-family: $font-family;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    @media (prefers-color-scheme: dark) {
+        border-color: $border-dark;
+        color: $text-dark;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: $primary;
+        color: $primary;
+        transform: translateY(-2px);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 }
