@@ -1,32 +1,30 @@
+@use '../../../../variables' as *;
+
 // Define a primary color for accents
 $like-color: #ef4444; // Red
 $edit-color: #ff9800; // Orange for edit action
-$primary: #7f13ec;
-$background-light: #f7f6f8;
-$background-dark: #191022;
-$text-light: #4c4851;
-$text-dark: #7c7488;
-$surface-light: #ffffff;
-$surface-dark: #231a2f;
-$muted-light: #a199ab;
-$muted-dark: #b7b1be;
-$font-family: 'Spline Sans', sans-serif;
+
 .post-card {
     // Defines the card container
     background-color: $surface-light;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 1px 10px $background-dark;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
     transition: box-shadow 0.3s ease-in-out;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    cursor: pointer; /* Makes the entire card feel clickable for navigation */
+    cursor: pointer;
+    /* Makes the entire card feel clickable for navigation */
+    border: 1px solid $border;
+
     @media (prefers-color-scheme: dark) {
         background-color: $surface-dark;
-        box-shadow: $background-light;
+        box-shadow: none;
+        border-color: $border-dark;
     }
+
     &:hover {
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     }
@@ -35,15 +33,21 @@ $font-family: 'Spline Sans', sans-serif;
 .post-title {
     font-size: 1.4em;
     font-weight: 700;
-    color:$text-light;
+    color: $text-light;
     margin-bottom: 15px;
     /* Ensure the title doesn't affect the card's hover state */
     transition: color 0.2s;
+
     @media (prefers-color-scheme: dark) {
-    color:$text-dark;
+        color: $text-dark;
     }
+
     .post-card:hover & {
-        color: $primary; 
+        color: $primary;
+
+        @media (prefers-color-scheme: dark) {
+            color: $primary-light;
+        }
     }
 }
 
@@ -54,7 +58,11 @@ $font-family: 'Spline Sans', sans-serif;
     justify-content: space-between;
     align-items: center;
     padding-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid $border;
+
+    @media (prefers-color-scheme: dark) {
+        border-color: $border-dark;
+    }
 }
 
 .left-actions {
@@ -80,13 +88,17 @@ $font-family: 'Spline Sans', sans-serif;
 .like-icon {
     width: 24px;
     height: 24px;
-    stroke: #999;
+    stroke: $muted-light;
     transition: stroke 0.2s, fill 0.2s;
+
+    @media (prefers-color-scheme: dark) {
+        stroke: $muted-dark;
+    }
 
     &:hover {
         stroke: $like-color;
     }
-    
+
     &.liked {
         fill: $like-color;
         stroke: $like-color;
@@ -95,7 +107,12 @@ $font-family: 'Spline Sans', sans-serif;
 
 .like-count {
     font-weight: 500;
-    color: #666;
+    color: $muted-light;
+
+    @media (prefers-color-scheme: dark) {
+        color: $muted-dark;
+    }
+
     &.liked {
         color: $like-color;
     }
@@ -103,7 +120,11 @@ $font-family: 'Spline Sans', sans-serif;
 
 .timestamp {
     font-size: 0.8em;
-    color: #999;
+    color: $muted-light;
+
+    @media (prefers-color-scheme: dark) {
+        color: $muted-dark;
+    }
 }
 
 /* --- EDIT BUTTON STYLES --- */
@@ -122,5 +143,15 @@ $font-family: 'Spline Sans', sans-serif;
     &:hover {
         background-color: $primary;
         color: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: $primary-light;
+        border-color: $primary-light;
+
+        &:hover {
+            background-color: $primary-light;
+            color: $background-dark;
+        }
     }
 }

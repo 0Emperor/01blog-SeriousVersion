@@ -221,7 +221,7 @@
     .logout {
       span {
         color: white;
-      font-weight: 600;
+        font-weight: 600;
       }
 
       display: flex;
@@ -324,39 +324,42 @@
 }
 
 // Dark Theme Support
-:host-context(.dark-theme) .container {
-  .app-logo {
-    .logo-text {
-      .app-tagline {
-        color: $text-dark;
-      }
-    }
-  }
-
-  .user-profile {
-    .user-info {
-      .name {
-        color: $muted-dark;
-      }
-
-      .username {
-        color: $text-dark;
-      }
-    }
-  }
-
-  .nav-items {
-    .nav-item {
-      color: $text-dark;
-
-      &:hover {
-        &::before {
-          background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+// Dark Theme Support
+@media (prefers-color-scheme: dark) {
+  .container {
+    .app-logo {
+      .logo-text {
+        .app-tagline {
+          color: $text-dark;
         }
       }
+    }
 
-      &.active {
-        background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+    .user-profile {
+      .user-info {
+        .name {
+          color: $muted-dark;
+        }
+
+        .username {
+          color: $text-dark;
+        }
+      }
+    }
+
+    .nav-items {
+      .nav-item {
+        color: $text-dark;
+
+        &:hover {
+          &::before {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+          }
+        }
+
+        &.active {
+          background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+        }
       }
     }
   }

@@ -99,6 +99,16 @@ button {
       background-color: $primary;
       color: white;
     }
+
+    @media (prefers-color-scheme: dark) {
+      color: $primary-light;
+      border-color: $primary-light;
+
+      &:hover {
+        background-color: $primary-light;
+        color: $background-dark;
+      }
+    }
   }
 
   .delete {
@@ -177,6 +187,13 @@ button {
 
       .initials {
         color: #212121;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .initials {
+        color: #e0e0e0;
+        /* Light grey text for visibility on dark background */
       }
     }
   }
