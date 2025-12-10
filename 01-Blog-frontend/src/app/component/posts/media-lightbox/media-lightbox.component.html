@@ -1,0 +1,33 @@
+<div class="lightbox-container" (keydown)="onKeyDown($event)" tabindex="0">
+    <button mat-icon-button class="close-button" (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="media-container">
+        @if (hasPrevious) {
+        <button mat-icon-button class="nav-button nav-previous" (click)="previous()">
+            <mat-icon>chevron_left</mat-icon>
+        </button>
+        }
+
+        <div class="media-content">
+            @if (currentMedia.type === 'image') {
+            <img [src]="currentMedia.url" alt="Media" class="media-image">
+            } @else if (currentMedia.type === 'video') {
+            <video [src]="currentMedia.url" controls class="media-video"></video>
+            }
+        </div>
+
+        @if (hasNext) {
+        <button mat-icon-button class="nav-button nav-next" (click)="next()">
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+        }
+    </div>
+
+    @if (media.length > 1) {
+    <div class="counter">
+        {{ currentIndex + 1 }} / {{ media.length }}
+    </div>
+    }
+</div>
