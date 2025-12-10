@@ -1,0 +1,59 @@
+<div class="user-list-container">
+    <div class="search-header">
+        <h1 class="title">{{ type === 'following' ? 'Following' : 'Followers' }}</h1>
+
+        <div class="search-box">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" placeholder="Search users..." class="search-input"
+                (input)="onSearch($any($event.target).value)" />
+        </div>
+    </div>
+
+    <div class="users-grid">
+        @for (user of users(); track user.userId) {
+        <div class="user-card" [routerLink]="['/profile', user.username]">
+            <div class="avatar-container">
+                @if (user.profilePictureUrl) {
+                <img class="profile-image" [src]="missing.avatar_link(user.profilePictureUrl)" [alt]="user.username">
+                } @else {
+                <div class='no-avatar {{missing.getBackgroundColor(user.username)}}'>
+                    <div class="initials">
+                        {{ missing.getInitial(user.username)}}
+                    </div>
+                </div>
+                }
+            </div>
+
+            <h3 class="user-name">{{ user.username }}</h3>
+            <p class="user-handle">@{{ user.username }}</p>
+
+            <button class="btn-follow" [class.following]="user.isFollowing"
+                (click)="toggleFollow(user);$event.stopPropagation()">
+                {{ user.isFollowing ? 'Unfollow' : 'Follow' }}
+            </button>
+        </div>
+        } @empty {
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <h3>No users found</h3>
+            <p>Try adjusting your search terms</p>
+        </div>
+        }
+    </div>
+
+    @if (hasMore()) {
+    <div class="load-more-container">
+        <button class="load-more" (click)="loadUsers()" [disabled]="loading()">
+            {{ loading() ? 'Loading...' : 'Load More' }}
+        </button>
+    </div>
+    }
+</div>

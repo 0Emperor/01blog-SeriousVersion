@@ -5,7 +5,8 @@
       <div class="avatar-container">
         @if (profileData.user.profile) {
         <img [src]="previewUrl() ||missing.avatar_link(profileData.user.profile)"
-          alt="{{ profileData.user.username }}'s profile picture" class="profile-image" [ngClass]="missing.getImageClass(profileData.user.role =='ADMIN' ,profileData.user.isBaned)">
+          alt="{{ profileData.user.username }}'s profile picture" class="profile-image"
+          [ngClass]="missing.getImageClass(profileData.user.role =='ADMIN' ,profileData.user.isBaned)">
         } @else {
         <div class='no-avatar {{missing.getBackgroundColor(profileData.user.username)}}'>
           <div class="initials profile-image">
@@ -108,11 +109,11 @@
 
       <!-- Stats Section -->
       <div class="stats">
-        <div class="stat">
+        <div class="stat" [routerLink]="['/profile', profileData.user.username, 'followers']" style="cursor: pointer">
           <span class="stat-number">{{ profileData.followersCount | number }}</span>
           <span class="stat-label">Followers</span>
         </div>
-        <div class="stat">
+        <div class="stat" [routerLink]="['/profile', profileData.user.username, 'following']" style="cursor: pointer">
           <span class="stat-number">{{ profileData.followingCount | number }}</span>
           <span class="stat-label">Following</span>
         </div>
