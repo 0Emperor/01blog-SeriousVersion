@@ -1,6 +1,6 @@
 package com.example.__Blog.service;
 
-import org.apache.velocity.exception.ResourceNotFoundException;
+import com.example.__Blog.exception.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -63,6 +63,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public org.springframework.data.domain.Page<User> getAllUsers(org.springframework.data.domain.Pageable pageable,
+            String query, UUID currentUserId) {
+        if (currentUserId != null) {
+            return userRepository.findUsersNotFollowedBy(currentUserId, query, pageable);
+        }
+        return userRepository.findAllUsers(query, pageable);
+    }
+
     public List<User> get3RecentUsers() {
         return userRepository.findLast3Users(PageRequest.of(0, 3));
     }
@@ -91,7 +99,7 @@ public class UserService {
             throws IOException {
         User currentUser = userRepository.findById(uid)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found"));
-        
+
         if (username != null && !username.isBlank()) {
             currentUser.setUsername(username);
         }

@@ -39,8 +39,32 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Transactional
     @Query("UPDATE User u SET isBaned = true WHERE u.id = :id")
     void banUser(@Param("id") UUID uid);
+
     @Modifying
     @Transactional
     @Query("UPDATE User u SET isBaned = false WHERE u.id = :id")
     void unbanUser(@Param("id") UUID uid);
+
+    @Query(value = "SELECT * FROM users u WHERE (:query IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(CAST(u.name AS TEXT)) LIKE LOWER(CONCAT('%', :query, '%')))", countQuery = "SELECT COUNT(*) FROM users u WHERE (:query IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(CAST(u.name AS TEXT)) LIKE LOWER(CONCAT('%', :query, '%')))", nativeQuery = true)
+    org.springframework.data.domain.Page<User> findAllUsers(@Param("query") String query,
+            org.springframework.data.domain.Pageable pageable);
+
+    @Query(value = """
+            SELECT * FROM users u
+            WHERE u.id <> :currentUserId
+            AND u.id NOT IN (
+                SELECT s.subscribed_to_id FROM subscriptions s WHERE s.subscriber_id = :currentUserId
+            )
+            AND (:query IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(CAST(u.name AS TEXT)) LIKE LOWER(CONCAT('%', :query, '%')))
+            """, countQuery = """
+            SELECT COUNT(*) FROM users u
+            WHERE u.id <> :currentUserId
+            AND u.id NOT IN (
+                SELECT s.subscribed_to_id FROM subscriptions s WHERE s.subscriber_id = :currentUserId
+            )
+            AND (:query IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(CAST(u.name AS TEXT)) LIKE LOWER(CONCAT('%', :query, '%')))
+            """, nativeQuery = true)
+    org.springframework.data.domain.Page<User> findUsersNotFollowedBy(@Param("currentUserId") UUID currentUserId,
+            @Param("query") String query,
+            org.springframework.data.domain.Pageable pageable);
 }

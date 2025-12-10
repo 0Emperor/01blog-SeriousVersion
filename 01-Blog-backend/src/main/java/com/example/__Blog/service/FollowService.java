@@ -43,11 +43,15 @@ public class FollowService {
 
     @Transactional
     public void follow(UUID followerId, UUID followedID) {
+        if (followerId.equals(followedID)) {
+            throw new IllegalArgumentException("You cannot follow yourself");
+        }
+
         User followed = userRepository.findById(followedID).orElseThrow(
                 () -> new ResourceNotFoundException("no such user"));
         User follower = userRepository.findById(followerId).orElseThrow(
                 () -> new ResourceNotFoundException("no such user"));
-        
+
         Subscription follow = new Subscription();
         follow.setSubscribedTo(followed);
         follow.setSubscriber(follower);
@@ -61,6 +65,10 @@ public class FollowService {
 
     @Transactional
     public void unfollow(UUID followerId, UUID followedID) {
+        if (followerId.equals(followedID)) {
+            throw new IllegalArgumentException("You cannot unfollow yourself");
+        }
+
         if (followRepository.deleteBySubscriberIdAndSubscribedToId(followerId, followedID) == 0) {
             throw new ResourceNotFoundException("u can't unfollow without following");
         }
