@@ -30,6 +30,14 @@ public class RateLimitFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        String requestPath = httpRequest.getRequestURI();
+
+        // Skip rate limiting for static file endpoints
+        if (requestPath.startsWith("/api/files/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String ip = getClientIp(httpRequest);
         String method = httpRequest.getMethod();
 
