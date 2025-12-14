@@ -51,7 +51,7 @@ public class PostService {
             notificationService.createNotification(
                     post.getUser(),
                     follower,
-                    "/" + post.getId(),
+                    "/post/" + post.getId(),
                     NotificationType.POST);
         }
         return post;
@@ -69,7 +69,7 @@ public class PostService {
             notificationService.createNotification(
                     null,
                     toDelete.getUser(),
-                    "/" + toDelete.getId(),
+                    "/post/" + toDelete.getId(),
                     NotificationType.REMOVED);
         }
     }
@@ -81,7 +81,7 @@ public class PostService {
         notificationService.createNotification(
                 null,
                 toDelete.getUser(),
-                "/" + toDelete.getId(),
+                "/post/" + toDelete.getId(),
                 NotificationType.REMOVED);
     }
 
