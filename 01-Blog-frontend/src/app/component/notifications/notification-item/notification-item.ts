@@ -53,7 +53,7 @@ export class NotificationItemComponent {
   getActionText(): string {
     switch (this.notification.type) {
       case 'FOLLOW':
-        return 'just shared a new post.';
+        return 'new follower';
       case 'POST':
         return 'posted something you might like';
       case 'LINK':

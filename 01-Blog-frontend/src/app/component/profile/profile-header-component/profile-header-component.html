@@ -125,7 +125,7 @@
         <div class="avatars">
           @for (person of profileData.people.slice(0, 3); track person.id) {
           <a [routerLink]="'/profile/' + person.username" class="avatar-link" [title]="person.username">
-            <img [src]="person.profile" [alt]="person.username" class="avatar" />
+            <img [src]="missing.avatar_link(person.profile)" [alt]="person.username" class="avatar" />
           </a>
           }
         </div>

@@ -1,4 +1,5 @@
 import { Component, inject, Input, AfterViewInit, ElementRef } from '@angular/core';
+import { Location } from '@angular/common';
 import { CommentArea } from '../../comments/comment-area/comment-area';
 import { MarkdownModule } from 'ngx-markdown';
 import { Post } from '../../../dto/dto';
@@ -12,7 +13,7 @@ import { AdminService } from '../../../service/admin-service';
 import { ReportPostComponent } from '../../report/report/report';
 import { ConfirmationModalComponent } from "../../admin/confirm/confirm";
 import { Like } from '../../../service/like';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { MatDialog } from '@angular/material/dialog';
 import { MediaLightboxComponent, MediaItem } from '../media-lightbox/media-lightbox.component';
 
@@ -39,9 +40,10 @@ export class PostView implements AfterViewInit {
   current = inject(UserStore);
   adminService = inject(AdminService);
   likeService = inject(Like);
-  private snackBar = inject(MatSnackBar);
+
   private dialog = inject(MatDialog);
   private elementRef = inject(ElementRef);
+  private location = inject(Location);
 
   openReportModal: boolean = false;
   showConfirmModal: boolean = false;
@@ -183,10 +185,11 @@ export class PostView implements AfterViewInit {
     this.showConfirmModal = false;
     if (!this.post || !this.pendingAction) return;
 
+    const action = this.pendingAction;
     const postId = this.post.postId;
     let apiCall;
 
-    switch (this.pendingAction) {
+    switch (action) {
       case 'delete':
         apiCall = this.httpPost.deletePost(postId);
         break;
@@ -198,16 +201,18 @@ export class PostView implements AfterViewInit {
         break;
     }
 
-    apiCall.subscribe({
-      next: () => {
-        if (this.pendingAction === 'delete') {
-          this.router.navigate(["home"]);
-        } else if (this.post) {
-          this.post.hidden = this.pendingAction === 'hide';
-        }
-      },
-      error: (err) => console.error(`Error performing ${this.pendingAction} action:`, err)
-    });
+    if (apiCall) {
+      apiCall.subscribe({
+        next: () => {
+          if (action === 'delete') {
+            this.location.back();
+          } else if (this.post) {
+            this.post.hidden = action === 'hide';
+          }
+        },
+        error: (err) => console.error(`Error performing ${action} action:`, err)
+      });
+    }
 
     this.pendingAction = null;
   }
@@ -224,14 +229,7 @@ export class PostView implements AfterViewInit {
     this.triggerAdminAction('unhide');
   }
 
-  share() {
-    // Placeholder for share functionality
-    this.snackBar.open('Share not implemented', 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
+
 
   updateCommentCount(delta: number) {
     if (this.post) {

@@ -1,8 +1,8 @@
 <div class="post-feed">
 
   @for (post of posts; track post.postId) {
-    
-  <app-post-feed [post]="post"></app-post-feed>
+
+  <app-post-feed [post]="post" (postDeleted)="onPostDeleted($event)"></app-post-feed>
   }
 
   @if (loading && !finished) {

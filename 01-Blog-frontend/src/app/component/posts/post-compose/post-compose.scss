@@ -164,7 +164,7 @@
 }
 
 .create-post-container {
-  min-height: 100vh;
+  // min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 4rem 1rem;
@@ -234,6 +234,13 @@
 
 // Quill Editor Styles
 .editor-wrapper {
+  width: 100%;
+
+  quill-editor {
+    display: block;
+    width: 100%;
+  }
+
   ::ng-deep {
     .ql-toolbar.ql-snow {
       border-radius: 8px 8px 0 0;

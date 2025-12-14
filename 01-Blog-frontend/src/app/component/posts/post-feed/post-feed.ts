@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { Post } from '../../../dto/dto';
 import { Router, RouterLink } from '@angular/router';
 import { UserHeaderComponent } from '../../users/user-header/user-header';
@@ -6,17 +6,28 @@ import { DatePipe } from '@angular/common';
 import { Like } from '../../../service/like';
 import { FormatCountsPipe } from '../../../pipe/format-counts-pipe';
 import { MarkdownComponent } from "ngx-markdown";
+import { PostService } from '../../../service/post';
+import { ConfirmationModalComponent } from '../../admin/confirm/confirm';
 
 @Component({
   selector: 'app-post-feed',
-  imports: [ UserHeaderComponent, DatePipe, FormatCountsPipe],
+  imports: [UserHeaderComponent, DatePipe, FormatCountsPipe, ConfirmationModalComponent],
   templateUrl: './post-feed.html',
   styleUrl: './post-feed.scss'
 })
 export class PostFeed {
   @Input() post!: Post;
+  @Output() postDeleted = new EventEmitter<string>();
+
   like = inject(Like);
+  httpPost = inject(PostService);
+
+  showConfirmModal: boolean = false;
+  confirmMessage: string = '';
+  confirmButtonText: string = '';
+
   constructor(private router: Router) { }
+
   likeClicked() {
     this.like.aply(this.post.postId, this.post.isLiked).subscribe({
       next: (v) => {
@@ -30,11 +41,30 @@ export class PostFeed {
       }
     });
   }
-  navigate(){
+
+  navigate() {
     this.router.navigate([this.post.postId])
   }
-  editNavigate(){
-    this.router.navigate(["edit",this.post.postId])
 
+  editNavigate() {
+    this.router.navigate(["edit", this.post.postId])
+  }
+
+  delete() {
+    this.confirmMessage = "Are you sure you want to permanently delete this post? This action cannot be undone.";
+    this.confirmButtonText = "Delete Permanently";
+    this.showConfirmModal = true;
+  }
+
+  onConfirmDelete() {
+    this.showConfirmModal = false;
+    if (!this.post) return;
+
+    this.httpPost.deletePost(this.post.postId).subscribe({
+      next: () => {
+        this.postDeleted.emit(this.post.postId);
+      },
+      error: (err) => console.error('Error deleting post:', err)
+    });
   }
 }

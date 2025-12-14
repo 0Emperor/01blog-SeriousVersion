@@ -381,10 +381,10 @@ export class PostCompose implements OnInit, AfterViewInit {
   // --- Submission Logic ---
 
   async onSubmit(): Promise<void> {
-    if (this.postForm.invalid) {
-      this.postForm.markAllAsTouched();
-      return;
-    }
+    // if (this.postForm.invalid) {
+    //   this.postForm.markAllAsTouched();
+    //   return;
+    // }
 
     this.isSubmitting = true;
     this.uploadProgress = 0;

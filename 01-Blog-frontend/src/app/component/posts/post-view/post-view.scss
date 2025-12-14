@@ -23,6 +23,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -59,7 +60,7 @@
     border-bottom: 2px solid transparent;
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.03), rgba(236, 72, 153, 0.03));
     position: relative;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -88,7 +89,7 @@
         align-items: center;
         gap: 0.25rem;
         border: 1px solid rgba(139, 92, 246, 0.15);
-        
+
         &::before {
           content: '•';
           color: #8b5cf6;
@@ -100,7 +101,8 @@
       display: flex;
       gap: $space-md;
       flex-shrink: 0;
-      position: relative; 
+      position: relative;
+
       // --- NEW: Styles for the "more" button ---
       .more-actions-btn {
         background: none;
@@ -122,7 +124,7 @@
           background-color: rgba(139, 92, 246, 0.08);
         }
       }
-      
+
       // --- NEW: Styles for the backdrop ---
       .actions-menu-backdrop {
         position: fixed;
@@ -157,7 +159,7 @@
         button {
           display: flex;
           align-items: center;
-          gap:$space-sm;
+          gap: $space-sm;
           padding: 0.625rem 1.25rem;
           border-radius: 1rem;
           border: none;
@@ -207,7 +209,7 @@
               transform: translateY(-3px);
               box-shadow: 0 6px 24px rgba(167, 139, 250, 0.35);
               background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-              
+
               .material-icons {
                 transform: rotate(15deg) scale(1.1);
               }
@@ -224,7 +226,7 @@
               transform: translateY(-3px);
               box-shadow: 0 6px 24px rgba(252, 165, 165, 0.35);
               background: linear-gradient(135deg, #f87171, #fca5a5);
-              
+
               .material-icons {
                 animation: shake 0.5s ease;
               }
@@ -241,7 +243,7 @@
               transform: translateY(-3px);
               box-shadow: 0 6px 24px rgba(252, 211, 77, 0.35);
               background: linear-gradient(135deg, #fbbf24, #fcd34d);
-              
+
               .material-icons {
                 transform: scale(1.1);
               }
@@ -259,20 +261,26 @@
               box-shadow: 0 6px 24px rgba(209, 213, 219, 0.35);
               background: linear-gradient(135deg, #fca5a5, #fbb6b6);
               color: #7f1d1d;
-              
-              .material-icons {
-                animation: wave 0.5s ease;
-              }
+
+
             }
           }
 
           &:active {
             transform: translateY(0);
           }
-        } // --- End of nested button block ---
-      } // --- End of .actions-menu ---
-    } // --- End of .actions ---
-  } // --- End of .Header ---
+        }
+
+        // --- End of nested button block ---
+      }
+
+      // --- End of .actions-menu ---
+    }
+
+    // --- End of .actions ---
+  }
+
+  // --- End of .Header ---
 
   .preview {
     padding: $space-xl;
@@ -305,7 +313,8 @@
             margin-bottom: 1.25rem;
           }
 
-          h2, h3 {
+          h2,
+          h3 {
             margin-top: 2rem;
             margin-bottom: 1rem;
             font-weight: 700;
@@ -333,7 +342,8 @@
             box-shadow: 0 2px 12px rgba(139, 92, 246, 0.06);
           }
 
-          ul, ol {
+          ul,
+          ol {
             padding-left: 1.5rem;
             margin-bottom: 1rem;
           }
@@ -419,15 +429,6 @@
           }
         }
 
-        &.share-btn {
-          margin-left: auto;
-
-          &:hover {
-            color: #059669;
-            background: rgba(5, 150, 105, 0.06);
-          }
-        }
-
         &:active {
           transform: scale(0.95);
         }
@@ -447,6 +448,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0px);
@@ -458,6 +460,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -465,63 +468,68 @@
 }
 
 @keyframes heartBeat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   15% {
     transform: scale(1.3);
   }
+
   30% {
     transform: scale(1);
   }
+
   45% {
     transform: scale(1.2);
   }
+
   60% {
     transform: scale(1);
   }
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
 }
 
-@keyframes shareRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes shake {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
+
   25% {
     transform: translateX(-3px);
   }
+
   75% {
     transform: translateX(3px);
   }
 }
 
 @keyframes wave {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg);
   }
+
   25% {
     transform: rotate(-15deg);
   }
+
   75% {
     transform: rotate(15deg);
   }
@@ -540,7 +548,7 @@
 
     .Header {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
-      
+
       &::after {
         background: linear-gradient(90deg, #8b5cf6, #ec4899, #8b5cf6);
         opacity: 0.5;
@@ -557,6 +565,7 @@
         // --- NEW: Dark mode for the "more" button ---
         .more-actions-btn {
           color: #c4b5fd;
+
           &:hover {
             background-color: rgba(139, 92, 246, 0.2);
           }
@@ -636,7 +645,9 @@
         color: $text-dark;
 
         ::ng-deep {
-          h2, h3 {
+
+          h2,
+          h3 {
             background: linear-gradient(135deg, #a78bfa, #f0abfc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -665,7 +676,7 @@
 
       .engagement-bar {
         background: linear-gradient($panel-bg-dark, $panel-bg-dark) padding-box,
-                    linear-gradient(90deg, #8b5cf6, #ec4899) border-box;
+          linear-gradient(90deg, #8b5cf6, #ec4899) border-box;
 
         .engagement-btn {
           color: #c4b5fd;
@@ -699,15 +710,7 @@
             }
           }
 
-          &.share-btn {
-            &::before {
-              background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-            }
 
-            &:hover {
-              color: #34d399;
-            }
-          }
         }
       }
     }

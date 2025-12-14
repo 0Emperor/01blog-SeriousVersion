@@ -7,6 +7,9 @@ import { User } from '../dto/dto';
 export class AvatarMissingService {
   readonly profile_base = "http://localhost:8080/api/files/"
   public avatar_link(avatar: string) {
+    if (!avatar.startsWith(this.profile_base)) {
+      return this.profile_base + avatar;
+    }
     return  avatar;
   }
   private colors = [

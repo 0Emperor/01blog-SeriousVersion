@@ -21,7 +21,7 @@ export class Feed implements OnInit {
   // State Management for Infinite Scroll
   private page$ = new BehaviorSubject<number>(1);
   @Input() forUser?: string | null = null
-  @Input() admin?:boolean =false
+  @Input() admin?: boolean = false
   posts: Post[] = [];
   loading = false;
   finished = false; // Flag to stop loading when all data is fetched
@@ -41,8 +41,8 @@ export class Feed implements OnInit {
       tap(() => this.loading = true), // Start loading state
 
       // 2. Fetch data: switchMap cancels previous requests if page$ fires quickly
-     
-      switchMap(page => this.postService.getPostsFeed(page, this.limit,this.forUser,this.admin)),
+
+      switchMap(page => this.postService.getPostsFeed(page, this.limit, this.forUser, this.admin)),
 
       // 3. Accumulate data: scan combines results from previous pages (acc) with new results (currentChunk)
       scan((acc: Post[], currentChunk: any) => {
@@ -84,5 +84,9 @@ export class Feed implements OnInit {
    */
   loadNextPage() {
     this.page$.next(this.page$.value + 1);
+  }
+
+  onPostDeleted(postId: string) {
+    this.posts = this.posts.filter(p => p.postId !== postId);
   }
 }

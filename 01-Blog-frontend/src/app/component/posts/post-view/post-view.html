@@ -81,9 +81,7 @@
         <span class="count">{{ post.commentsCount }}</span>
       </button>
 
-      <button class="engagement-btn share-btn" (click)="share()">
-        <span class="material-icons">share</span>
-      </button>
+
     </div>
 
     <app-comment-area [pid]="post.postId" (commentChange)="updateCommentCount($event)"></app-comment-area>

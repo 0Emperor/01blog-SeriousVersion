@@ -31,10 +31,19 @@
             <button class="edit-button" (click)="$event.stopPropagation(); editNavigate()">
                 Edit Post
             </button>
+            <button class="delete-button" (click)="$event.stopPropagation(); delete()">
+                Delete Post
+            </button>
             }
 
         </div>
         <span class="timestamp">{{ post.createdAt | date: 'short' }}</span>
     </div>
+
+    @if (showConfirmModal) {
+    <app-confirmation-modal [message]="confirmMessage" [confirmText]="confirmButtonText" (confirm)="onConfirmDelete()"
+        (cancel)="showConfirmModal = false">
+    </app-confirmation-modal>
+    }
 
 </div>

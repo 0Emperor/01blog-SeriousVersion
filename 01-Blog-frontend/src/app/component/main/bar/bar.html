@@ -4,34 +4,32 @@
       <span class="material-icons">auto_stories</span>
     </div>
     <div class="logo-text">
-      <span class="app-name">Inkwell</span>
+      <span class="app-name">01Blog</span>
       <span class="app-tagline">Share Your Stories</span>
     </div>
   </div>
-  
- <nav class="nav-items">
-  @for (item of navItems(); track item.id) {
-    <a class="nav-item" 
-    (click)="handleNavClick(item)"
-       routerLink="{{ (item.id ==='profile')?`profile/`+getUsername():item.id}}" 
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }">
+
+  <nav class="nav-items">
+    @for (item of navItems(); track item.id) {
+    <a class="nav-item" (click)="handleNavClick(item)"
+      routerLink="{{ (item.id ==='profile')?`profile/`+getUsername():item.id}}" routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
       <div class="nav-content">
         <div class="icon-wrapper">
           <span class="material-icons">{{ item.icon }}</span>
-          
+
           @if (item.id === 'notifications' && unreadCount() > 0) {
-            <span class="badge">
-              {{ unreadCount() > 99 ? '99+' : unreadCount() }}
-            </span>
+          <span class="badge">
+            {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+          </span>
           }
 
         </div>
         <span class="label">{{ item.label }}</span>
       </div>
     </a>
-  }
-</nav>
+    }
+  </nav>
   <div class="buttons">
     <button class="create-post" routerLink="/create">
       <span class="material-icons">add</span>

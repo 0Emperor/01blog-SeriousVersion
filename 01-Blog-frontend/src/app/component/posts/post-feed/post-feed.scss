@@ -155,3 +155,29 @@ $edit-color: #ff9800; // Orange for edit action
         }
     }
 }
+.delete-button {
+    background-color: transparent;
+    border: 1px solid $error-light;
+    color: $error-light;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+        background-color: $error-light;
+        color: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: $error-light;
+        border-color: $error-light;
+
+        &:hover {
+            background-color: $error-light;
+            color: $background-dark;
+        }
+    }
+}
