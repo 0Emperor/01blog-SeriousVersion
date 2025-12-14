@@ -60,8 +60,12 @@ public class AuthController {
             savedUser = userService.createUser(userRegister, encodedPassword);
 
         } catch (DataIntegrityViolationException ex) {
+            Map<String, String> toast = new HashMap<>();
+            toast.put("message", "Username is already taken");
+            toast.put("type", "error");
+            toast.put("title", "Registration Failed");
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "Username is already taken"));
+                    .body(Map.of("toast", toast));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Something went wrong"));

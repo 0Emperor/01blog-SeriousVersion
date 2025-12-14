@@ -3,6 +3,7 @@ package com.example.__Blog.controller;
 import com.example.__Blog.dto.PostCreateDto;
 import com.example.__Blog.dto.PostUpdateDto;
 import com.example.__Blog.dto.Postdto;
+import com.example.__Blog.exception.ResourceNotFoundException;
 import com.example.__Blog.helper.CustomUserDetails;
 import com.example.__Blog.model.Post;
 import com.example.__Blog.model.User;
@@ -37,6 +38,7 @@ public class PostController {
         private final UserService userService;
         private final LikeService likeService;
         private final CommentService commentService;
+
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<Postdto> createPostWithMedia(
                         @AuthenticationPrincipal CustomUserDetails jwt,
@@ -107,7 +109,9 @@ public class PostController {
                         @RequestParam(defaultValue = "10") int size) {
                 PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-                Page<Post> postsPage = postService.getByUser(pageable, name);
+                User currentUser = userService.getUser(jwt.getId());
+                boolean includeHidden = currentUser.getRole().equals("ADMIN") || jwt.getUsername().equals(name);
+                Page<Post> postsPage = postService.getByUser(pageable, name, includeHidden);
 
                 List<Postdto> dtos = postsPage.stream()
                                 .map(i -> Postdto.from(i, jwt.getId(), likeService.getLikeCount(i.getId()),
@@ -127,15 +131,13 @@ public class PostController {
                         @PathVariable Integer id) {
                 Post post = postService.getById(id);
                 User cUser = userService.getUser(jwt.getId());
-                if (post != null && post.getHidden() && cUser.getRole() != "ADMIN") {
+                if ((post != null && post.getHidden() && cUser.getRole() != "ADMIN") || post == null) {
 
-                        throw new AccessDeniedException("u cannot view this post");
+                        throw new ResourceNotFoundException("post not found");
                 }
-                return (post != null)
-                                ? ResponseEntity.ok(Postdto.from(post, jwt.getId(), likeService.getLikeCount(id),
-                                                commentService.CountComment(id),
-                                                likeService.didUserLikePost(jwt.getId(), id)))
-                                : ResponseEntity.notFound().build();
+                return ResponseEntity.ok(Postdto.from(post, jwt.getId(), likeService.getLikeCount(id),
+                                commentService.CountComment(id),
+                                likeService.didUserLikePost(jwt.getId(), id)));
         }
 
         @GetMapping("/edit/{id}")
@@ -150,7 +152,6 @@ public class PostController {
                                 likeService.didUserLikePost(jwt.getId(), id)));
         }
 
-      
         @DeleteMapping("/{id}")
         public ResponseEntity<Object> deletePost(
                         @AuthenticationPrincipal CustomUserDetails cUserDetails,

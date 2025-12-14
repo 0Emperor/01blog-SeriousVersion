@@ -39,12 +39,10 @@ public class FileController {
 
     @GetMapping("/{filename:.+}")
     public ResponseEntity<?> getFile(@PathVariable String filename) {
-        System.out.println("hello");
         try {
             // Resolve path
             Path filePath = Paths.get(staticDir).resolve(filename).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());
-            System.err.println(resource.toString());
             // ‣ If file not found → fallback
             if (!resource.exists() || !resource.isReadable()) {
                 String fallback = chooseFallback(filename);

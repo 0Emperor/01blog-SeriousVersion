@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import com.example.__Blog.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -225,12 +226,20 @@ public class PostService {
         return postRepository.findPostsFromSubscribedUsersAndNotHidden(id, pageable);
     }
 
-    public Page<Post> getByUser(PageRequest pageable, UUID id) {
-        return postRepository.findAll(PostSpecifications.byUserId(id), pageable);
+    public Page<Post> getByUser(PageRequest pageable, UUID id, boolean includeHidden) {
+        Specification<Post> spec = PostSpecifications.byUserId(id);
+        if (!includeHidden) {
+            spec = spec.and(PostSpecifications.notHidden());
+        }
+        return postRepository.findAll(spec, pageable);
     }
 
-    public Page<Post> getByUser(PageRequest pageable, String name) {
-        return postRepository.findAll(PostSpecifications.byUserName(name), pageable);
+    public Page<Post> getByUser(PageRequest pageable, String name, boolean includeHidden) {
+        Specification<Post> spec = PostSpecifications.byUserName(name);
+        if (!includeHidden) {
+            spec = spec.and(PostSpecifications.notHidden());
+        }
+        return postRepository.findAll(spec, pageable);
     }
 
     public Post getById(Integer id) {

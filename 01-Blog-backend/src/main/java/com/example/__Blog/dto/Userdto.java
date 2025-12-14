@@ -9,7 +9,8 @@ public record Userdto(
         String role,
         String bio,
         String profile,
-        boolean isBaned) {
+        boolean isBaned,
+        java.sql.Timestamp createdAt) {
     public static Userdto from(User user) {
         return new Userdto(
                 user.getId().toString(),
@@ -18,6 +19,7 @@ public record Userdto(
                 user.getRole(),
                 user.getBio(),
                 user.getProfile(),
-                user.getBaned());
+                user.getBaned(),
+                user.getCreated_at());
     }
 }

@@ -3,6 +3,7 @@ package com.example.__Blog.service;
 import java.util.UUID;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.example.__Blog.model.Like;
@@ -36,6 +37,9 @@ public class LikeService {
                 () -> new ResourceNotFoundException("no such user"));
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResourceNotFoundException("post not found"));
+        if (post.getHidden() && !post.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Cannot like a hidden post");
+        }
         if (!likeRepository.existsByUserIdAndPostId(userId, postId)) {
             Like like = new Like();
             like.setUser(user);

@@ -75,6 +75,10 @@ public class UserService {
         return userRepository.findLast3Users(PageRequest.of(0, 3));
     }
 
+    public List<User> getMostReportedUsers() {
+        return userRepository.findMostReportedUsers(PageRequest.of(0, 3));
+    }
+
     public Stat counts() {
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
         Long all = userRepository.count();

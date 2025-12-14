@@ -32,6 +32,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u ORDER BY u.created_at DESC")
     List<User> findLast3Users(PageRequest pageable);
 
+    @Query("SELECT r.reportedUser FROM Report r GROUP BY r.reportedUser ORDER BY COUNT(r) DESC")
+    List<User> findMostReportedUsers(PageRequest pageable);
+
     @Query("SELECT COUNT(u) FROM User u WHERE u.created_at > :time")
     long countByCreatedAtAfter(@Param("time") LocalDateTime date);
 

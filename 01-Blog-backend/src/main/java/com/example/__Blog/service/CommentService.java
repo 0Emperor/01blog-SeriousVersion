@@ -64,6 +64,10 @@ public class CommentService {
                 () -> new ResourceNotFoundException("no such user"));
         Post post = pRepository.findById(pId).orElseThrow(
                 () -> new ResourceNotFoundException("post not found"));
+
+        if (post.getHidden() && !post.getUser().getId().equals(uID)) {
+            throw new AccessDeniedException("Cannot comment on a hidden post");
+        }
         ;
         Comment comment = new Comment();
         comment.setText(content);
