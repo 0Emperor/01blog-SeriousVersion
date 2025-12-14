@@ -1,5 +1,5 @@
 @use "sass:color";
-@import '../../../../variables';
+@use '../../../../variables' as *;
 
 // --- Mixins ---
 @mixin theme-styles($bg, $panel, $input, $text-main, $text-muted, $primary-color, $btn-text) {

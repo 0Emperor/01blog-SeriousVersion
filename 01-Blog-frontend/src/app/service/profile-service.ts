@@ -19,4 +19,8 @@ export class ProfileService {
     if (name) formData.append('name', name)
     return this.http.put<{ user: User, jwt: string }>(`${this.API}/me`, formData);
   }
+
+  reportUser(userId: string, reason: string) {
+    return this.http.post(`http://localhost:8080/api/report/user/${userId}`, { reason });
+  }
 }

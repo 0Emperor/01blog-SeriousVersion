@@ -1,4 +1,5 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { tap, catchError, map } from 'rxjs/operators';
 import { EMPTY, throwError } from 'rxjs';
 import { inject } from '@angular/core';
@@ -15,7 +16,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const toastService = inject(ToastService);
   const authToken = localStorage.getItem('jwt');
   const loc = inject(Location)
+  const router = inject(Router);
   const authReq = authToken
+  
     ? req.clone({ setHeaders: { Authorization: `Bearer ${authToken}` } })
     : req;
   if (req.url.includes(EXCLUDE_AUTH_PATH)) {
@@ -40,11 +43,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       let message = 'Something went wrong!';
       let title = 'Error'
       let type: "success" | "error" | "info" | "warning" = 'error'
+
+      
+
       if (error.error?.toast) {
         message = error.error.toast.message;
         title = error.error.toast.title;
         type = error.error.toast.type;
         toastService.show(message, title, type);
+        if (error.status === 401 || error.status === 401 || error.status === 403) {
+        router.navigate(['/login']);
+        console.log("hello");
+        
+      }
+      if (error.status === 404) {
+        loc.back();
+      }
         return EMPTY;
       }
 

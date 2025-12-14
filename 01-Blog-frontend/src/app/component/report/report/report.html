@@ -11,7 +11,11 @@
     <div class="reason-options">
       @for (r of reasonKeys; track $index) {
         <label [for]="r" class="reason-option">
-          <input type="radio" [id]="r" [value]="reasonEnum[$index]" name="reportReason" [(ngModel)]="selectedReason" /> <span>{{ getReasonText(r) }}</span>
+          <input 
+          type="radio" 
+          [id]="r" [value]="reasonEnum[$index]" 
+          name="reportReason" 
+          [(ngModel)]="selectedReason" /> <span>{{ getReasonText(r) }}</span>
         </label>
       }
     </div>

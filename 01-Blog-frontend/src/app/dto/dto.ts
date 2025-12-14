@@ -60,12 +60,14 @@ export interface User {
     bio: string;
     profile: string;
     isBaned: boolean;
+    createdAt?: string;
 }
 export interface report {
     id: string,
     createdAt: Date,
     user: User,
     post: Post,
+    reportedUser?: User,
     reason: reason;
     state: state
 }
