@@ -1,4 +1,5 @@
-@import '../../../../variables';
+@use "sass:color";
+@use '../../../../variables' as *;
 
 .profile-header {
   background: $panel-bg-light;
@@ -198,6 +199,8 @@
   margin: 0;
   line-height: 1.6;
   max-width: 600px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 
   @media (prefers-color-scheme: dark) {
     color: $text-dark;
@@ -516,5 +519,170 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+
+// Use mixins/vars from styles.scss if possible, adapting manually here
+@mixin report-modal-theme {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $panel-bg-light;
+  color: $text-light;
+  border-radius: $border-radius-lg;
+  padding: $space-lg;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 90%;
+  max-width: 450px;
+  animation: scaleIn 0.3s ease-out;
+  border: 1px solid $border;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $panel-bg-dark;
+    color: $text-dark;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    border-color: rgba(127, 19, 236, 0.3);
+  }
+}
+
+// Report Modal
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.report-modal {
+  @include report-modal-theme;
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-lg;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: $primary;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: $muted-light;
+      cursor: pointer;
+      padding: $space-sm;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #ef4444;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        color: $muted-dark;
+      }
+    }
+  }
+
+  p {
+    margin-bottom: $space-lg;
+    color: $muted-light;
+
+    @media (prefers-color-scheme: dark) {
+      color: $muted-dark;
+    }
+  }
+
+  .reason-options {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+    margin-bottom: $space-lg;
+
+    .reason-option {
+      display: flex;
+      align-items: center;
+      padding: $space-md;
+      border-radius: $border-radius-sm;
+      cursor: pointer;
+      transition: background-color 0.2s, border 0.2s;
+
+      border: 1px solid $border;
+
+      @media (prefers-color-scheme: dark) {
+        border-color: $border-dark;
+      }
+
+      &:hover {
+        background-color: rgba(127, 19, 236, 0.1);
+        border-color: $primary;
+      }
+
+      input[type="radio"] {
+        margin-right: $space-md;
+        accent-color: $primary;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+
+      span {
+        font-size: 1rem;
+        color: $text-light;
+
+        @media (prefers-color-scheme: dark) {
+          color: $text-dark;
+        }
+      }
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: $space-md;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    font-weight: $heading-font-weight;
+    transition: background-color 0.2s;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($primary, $lightness: -10%);
+    }
+
+    &:disabled {
+      background-color: $muted-light;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  .message {
+    text-align: center;
+    margin-top: $space-md;
+    color: #22c55e;
+    font-weight: 500;
   }
 }

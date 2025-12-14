@@ -91,7 +91,7 @@
       <!-- Bio Section -->
       <div class="bio-section">
         @if (isViewingOwnProfile && isEditingBio()&&!isAdmin) {
-        <textarea [(ngModel)]="editedBio" class="edit-input bio-input" [disabled]="isSaving()" maxlength="200"
+        <textarea [(ngModel)]="editedBio" class="edit-input bio-input" [disabled]="isSaving()" maxlength="67"
           rows="3"></textarea>
         } @else {
         <p class="bio">{{ profileData.user.bio }}</p>
@@ -218,7 +218,56 @@
           {{ profileData.isFollowing ? 'Unfollow' : 'Follow' }}
         </button>
         }
+        @if (!isViewingOwnProfile && !isAdmin && profileData.user.role !== 'ADMIN') {
+        <button class="btn btn-warning" (click)="showReportModal.set(true)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" y1="22" x2="4" y2="15" />
+          </svg>
+          Report
+        </button>
+        }
       </div>
     </div>
   </div>
 </div>
+
+@if (showReportModal()) {
+<div class="modal-overlay">
+  <div class="report-modal">
+
+    <div class="report-header">
+      <h3>Report User</h3>
+      <button class="close-btn" (click)="showReportModal.set(false)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <p>Please select the reason for reporting this user:</p>
+
+    <div class="reason-options">
+      @for (r of reportReasons; track r) {
+      <label class="reason-option" (click)="settt($index)">
+        <input type="radio" name="profileReportReason" [value]="r" [(ngModel)]="selectedReason" />
+        <span>{{ getReasonText(r) }}</span>
+      </label>
+      }
+    </div>
+
+
+    <button class="submit-btn" (click)="submitReport()" [disabled]="selectedReason === null">
+      Submit Report
+    </button>
+
+    @if (reportMessage) {
+    <p class="message">{{ reportMessage }}</p>
+    }
+
+  </div>
+</div>
+}

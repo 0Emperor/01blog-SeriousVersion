@@ -8,6 +8,8 @@ import { AdminService } from '../../../service/admin-service';
 import { RouterLink } from "@angular/router";
 import { UserStore } from '../../../service/user';
 import { AvatarMissingService } from '../../../service/avatar-missing-service';
+import { Toast } from '../../toast/toast/toast';
+import { ToastService } from '../../../service/toast-service';
 
 @Component({
   selector: 'app-profile-header',
@@ -25,7 +27,7 @@ export class ProfileHeaderComponent {
   adminService = inject(AdminService);
   usersStore = inject(UserStore)
   location = inject(Location)
-
+toast = inject(ToastService)
   @Output() banToggle = new EventEmitter<void>();
   @Output() followToggle = new EventEmitter<void>();
   @Output() deleteUser = new EventEmitter<void>();
@@ -170,4 +172,46 @@ export class ProfileHeaderComponent {
   async delete() {
     this.deleteUser.emit()
   }
+
+  showReportModal = signal(false);
+  reportReason = "SPAM";
+ reportReasons = [
+  'SPAM',
+  'HATE_SPEECH',
+  'INAPPROPRIATE_CONTENT',
+  'BULLYING_HARASSMENT',
+  'INTELLECTUAL_PROPERTY'
+] as const;
+
+selectedReason: (typeof this.reportReasons)[number] | null = null;
+
+reportMessage = '';
+getReasonText(reason: string): string {
+  switch (reason) {
+    case 'SPAM': return 'Spam';
+    case 'HATE_SPEECH': return 'Hate Speech';
+    case 'INAPPROPRIATE_CONTENT': return 'Inappropriate Content';
+    case 'BULLYING_HARASSMENT': return 'Bullying or Harassment';
+    case 'INTELLECTUAL_PROPERTY': return 'Intellectual Property Violation';
+    default: return reason;
+  }
+}
+settt(i : number){
+  this.selectedReason = this.reportReasons[i]
+}
+
+submitReport() {
+  if (!this.selectedReason) return;
+
+  this.profileService
+    .reportUser(this.profileData.user.id, this.selectedReason)
+    .subscribe(() => {
+      this.reportMessage = 'Report submitted successfully.';
+        this.showReportModal.set(false);
+        this.selectedReason = null;
+        this.reportMessage = '';
+        this.toast.show('thank you for helping.', 'Report made', 'success')
+    });
+}
+
 }
