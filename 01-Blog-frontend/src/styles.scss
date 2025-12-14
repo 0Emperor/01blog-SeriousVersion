@@ -16,20 +16,31 @@ img {
   max-width: 100%;
 }
 
+/* Hide scrollbars globally while keeping scroll functionality */
+* {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
 body {
   font-family: $font-family;
   background-color: $background-light;
-
   color: $text-light;
+  margin: 0;
+  padding: 0;
 
   @media (prefers-color-scheme: dark) {
     color: $text-dark;
     background-color: $background-dark;
 
   }
-
-  margin: 0;
-  padding: 0;
 }
 
 h1,
@@ -65,16 +76,15 @@ button {
 
 .card {
   background-color: $surface-light;
+  padding: $space-md;
+  border: 1px solid $border-light;
+  border-radius: 8px;
 
   @media (prefers-color-scheme: dark) {
     background-color: $surface-dark;
     border: 1px solid $border-dark;
 
   }
-
-  padding: $space-md;
-  border: 1px solid $border-light;
-  border-radius: 8px;
 }
 
 .actions {

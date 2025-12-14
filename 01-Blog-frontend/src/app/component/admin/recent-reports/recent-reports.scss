@@ -4,7 +4,8 @@
   background-color: $panel-bg-dark;
   border-radius: $border-radius-lg;
   padding: $space-lg;
-  
+  margin: $space-md;
+
   @media (prefers-color-scheme: light) {
     background-color: $panel-bg-light;
   }
@@ -14,7 +15,7 @@
     font-weight: $heading-font-weight;
     color: $text-dark;
     margin: 0 0 $space-lg 0;
-    
+
     @media (prefers-color-scheme: light) {
       color: $text-light;
     }
@@ -31,7 +32,7 @@
     thead {
       tr {
         border-bottom: 1px solid $border-dark;
-        
+
         @media (prefers-color-scheme: light) {
           border-bottom-color: $border;
         }
@@ -44,7 +45,7 @@
           color: $muted-dark;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          
+
           @media (prefers-color-scheme: light) {
             color: $muted-light;
           }
@@ -73,14 +74,14 @@
           padding: $space-md $space-sm;
           font-size: 0.875rem;
           color: $text-dark;
-          
+
           @media (prefers-color-scheme: light) {
             color: $text-light;
           }
 
           &.date {
             color: $muted-dark;
-            
+
             @media (prefers-color-scheme: light) {
               color: $muted-light;
             }
@@ -92,10 +93,11 @@
     .reported-item {
       display: flex;
       align-items: center;
+
       .item-type {
         font-weight: $heading-font-weight;
         color: $text-dark;
-        
+
         @media (prefers-color-scheme: light) {
           color: $text-light;
         }
@@ -105,7 +107,7 @@
     .user {
       color: $muted-dark;
       font-size: 0.875rem;
-      
+
       @media (prefers-color-scheme: light) {
         color: $muted-light;
       }
