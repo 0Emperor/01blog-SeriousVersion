@@ -24,17 +24,24 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "reported_user_id")
+    private User reportedUser;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "reported_id")
     private Post reportedPost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "reported_by_id")
     private User reportedBy;
 
     private reason reason;
+    private String description;
     private Timestamp createdAt;
     private state state;
 
@@ -44,6 +51,10 @@ public class Report {
 
     public void setReason(reason reason) {
         this.reason = reason;
+    }
+
+    public void setReportedUser(User reportedUser) {
+        this.reportedUser = reportedUser;
     }
 
     public void setReportedBy(User reportedBy) {
@@ -70,12 +81,24 @@ public class Report {
         return reason;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public User getReportedBy() {
         return reportedBy;
     }
 
     public Post getReportedPostreportedPost() {
         return reportedPost;
+    }
+
+    public User getReportedUser() {
+        return reportedUser;
     }
 
     public Integer getId() {

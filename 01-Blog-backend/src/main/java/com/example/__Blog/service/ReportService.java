@@ -55,6 +55,34 @@ public class ReportService {
     }
 
     @Transactional
+    public void createReport(reason reason, String description, UUID reportedUserId, UUID reporterId) {
+        User reportedUser = userRepository.findById(reportedUserId).orElseThrow(() -> {
+            throw new ResourceNotFoundException("User not found");
+        });
+        User reporter = userRepository.findById(reporterId).orElseThrow(() -> {
+            throw new ResourceNotFoundException("Reporter not found");
+        });
+
+        if (reportedUser.getId().equals(reporterId)) {
+            throw new AccessDeniedException("You can't report yourself");
+        }
+
+        if (reportedUser.getRole().equals("ADMIN")) {
+            throw new AccessDeniedException("You cannot report an admin");
+        }
+
+        Report report = new Report();
+        report.setState(state.PENDING);
+        report.setReason(reason);
+        if (description != null && description.length() <= 33) {
+            report.setDescription(description);
+        }
+        report.setReportedBy(reporter);
+        report.setReportedUser(reportedUser);
+        reportRepository.save(report);
+    }
+
+    @Transactional
     public void dismissReport(Integer rId) {
         Report report = reportRepository.findById(rId).orElseThrow(() -> {
             throw new ResourceNotFoundException("Report not found (somehow)");
@@ -83,7 +111,8 @@ public class ReportService {
     }
 
     public List<ReportDto> getLast3Reports() {
-        return reportRepository.findTop3ByStateOrderByCreatedAtDesc(state.PENDING).stream().map(ReportDto::from)
+        return reportRepository.findTop3ByStateOrderByCreatedAtDesc(state.PENDING).stream()
+                .map(ReportDto::from)
                 .toList();
     }
 
@@ -94,7 +123,7 @@ public class ReportService {
         long prec = 0;
         if (all != 0) {
             prec = lastWeek / all * 100;
-        }           
+        }
 
         return new Stat(all, prec);
     }

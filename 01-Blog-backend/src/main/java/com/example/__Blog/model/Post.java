@@ -24,7 +24,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
@@ -33,7 +33,7 @@ public class Post {
     private String description;
     private String title;
     private Timestamp createdAt;
-    private List<String>  media;
+    private List<String> media;
     private boolean hidden;
 
     public void setHidden(boolean hidden) {
@@ -44,7 +44,7 @@ public class Post {
         return hidden;
     }
 
-    public List<String>  getMedia() {
+    public List<String> getMedia() {
         return media;
     }
 

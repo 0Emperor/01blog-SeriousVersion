@@ -17,12 +17,12 @@ public class Notification {
 
     private boolean seen = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "to_notify_id", nullable = false)
     private User toNotify;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sender_id")
     private User sender;
@@ -31,9 +31,10 @@ public class Notification {
 
     @CreationTimestamp
     private Instant createdAt;
-public void setCreatedAt(Instant createdAt) {
-    this.createdAt = createdAt;
-}
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
