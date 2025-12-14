@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { StatsCardComponent } from '../stats-card/stats-card';
 import { RecentUsersComponent } from '../recent-users/recent-users';
-import { DashboardData} from '../../../dto/dto';
+import { DashboardData } from '../../../dto/dto';
 import { AdminService } from '../../../service/admin-service';
 import { RecentreportsComponent } from '../recent-reports/recent-reports';
 import { RouterLink } from "@angular/router";
@@ -19,7 +19,8 @@ export class AdminDashboardComponent {
 
   ngOnInit() {
     this.adminService.getDashboardData().subscribe({
-      next: (d) =>{ (this.dashboardData = d);console.log(d);
+      next: (d) => {
+        (this.dashboardData = d);
       }
     });
   }

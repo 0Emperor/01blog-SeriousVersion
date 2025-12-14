@@ -45,12 +45,11 @@
     font-size: 2.5rem;
     font-weight: 700;
     color: $text-light;
+    margin-bottom: 0.5rem;
 
     @media (prefers-color-scheme: dark) {
       color: $text-dark;
     }
-
-    margin-bottom: 0.5rem;
   }
 
   .subtitle {

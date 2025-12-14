@@ -18,9 +18,17 @@
                 <tr>
                     <td>
                         <div class="reported-item">
+                            @if (report.post) {
                             <h4 [routerLink]="['/'+report.post.postId]" class="item-link">
                                 Post #{{ report.post.postId.substring(0, 6) }}
                             </h4>
+                            } @else if (report.reportedUser) {
+                            <h4 [routerLink]="['/profile/'+report.reportedUser.username]" class="item-link">
+                                User: @{{ report.reportedUser.username }}
+                            </h4>
+                            } @else {
+                            <h4 class="item-link">Unknown Item</h4>
+                            }
                         </div>
                     </td>
                     <td>
@@ -60,12 +68,8 @@
                             </button>
                         </div>
                         @if (showConfirmModal) {
-                            <app-confirmation-modal
-                                [message]="confirmMessage"
-                                [confirmText]="confirmButtonText"
-                                (confirm)="onConfirmAction()"
-                                (cancel)="showConfirmModal = false"
-                            ></app-confirmation-modal>
+                        <app-confirmation-modal [message]="confirmMessage" [confirmText]="confirmButtonText"
+                            (confirm)="onConfirmAction()" (cancel)="showConfirmModal = false"></app-confirmation-modal>
                         }
                     </td>
                 </tr>

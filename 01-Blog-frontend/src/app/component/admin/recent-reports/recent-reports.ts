@@ -61,10 +61,7 @@ export class RecentreportsComponent {
   }
 
   onTakeAction(report: report): void {
-    // You should navigate to a report-specific view, typically using the postId or report ID.
-    // Since we don't have a report.id in your DTO, I'll use the postId for navigation for now.
-    // The provided route was /reported.id, I'll use a more standard route:
-    this.router.navigate([report.post.postId]);
+    this.router.navigate([report.post?.postId||"/profile/"+report.user?.username]);
   }
 
   // 👇 Dismiss Action: Calls the API (or uses a helper in AdminService) to dismiss the report

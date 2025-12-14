@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-register',
   templateUrl: './register.html',
   styleUrl: './register.scss',
-  standalone: true, 
+  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,
@@ -27,14 +27,14 @@ export class Register {
   password = signal("")
   register = () => {
     try {
-        this.auth.register(this.username(), this.password())
+      this.auth.register(this.username(), this.password())
       .subscribe((e: any) => {
-        window.localStorage.setItem("jwt", e["jwt"]);
-        this.router.navigate(['/home']);
-      })
+            window.localStorage.setItem("jwt", e["jwt"]);
+            this.router.navigate(['/home']);
+        })
     } catch (error) {
-      
+
     }
-  
+
   }
 }

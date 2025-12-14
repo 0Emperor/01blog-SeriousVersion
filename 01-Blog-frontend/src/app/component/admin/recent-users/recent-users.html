@@ -6,6 +6,7 @@
       <thead>
         <tr>
           <th>User</th>
+          <th>Created At</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -18,20 +19,23 @@
               <div class="avatar-container">
                 @if (user.profile) {
                 <img [src]=" missing.avatar_link(user.profile)" alt="{{ user.username }}'s profile picture"
-                    class="profile-image" [ngClass]="missing.getImageClass(user)">
+                  class="profile-image" [ngClass]="missing.getImageClass(user)">
                 } @else {
                 <div class='no-avatar {{missing.getBackgroundColor(user.username)}}'>
-                    <div class="initials">
-                        {{ missing.getInitial(user.username)}}
-                    </div>
+                  <div class="initials">
+                    {{ missing.getInitial(user.username)}}
+                  </div>
                 </div>
                 }
-            </div>
+              </div>
               <div class="user-details">
                 <span class="user-name">{{ user.name||user.username }}</span>
                 <span class="user-username">{{ '@' +user.username }}</span>
               </div>
             </div>
+          </td>
+          <td>
+            <span class="user-date">{{ user.createdAt | date:'mediumDate' }}</span>
           </td>
           <td>
             <span class="status-badge" [ngClass]="getStatusClass(user)">

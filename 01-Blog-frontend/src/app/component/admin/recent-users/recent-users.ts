@@ -18,7 +18,7 @@ import { AvatarMissingService } from '../../../service/avatar-missing-service';
 
 export class RecentUsersComponent {
   @Input() recentUser: User[] = [];
-  @Input() title? ="Recent Users"
+  @Input() title? = "Most Reported Users"
   missing = inject(AvatarMissingService)
   showConfirmModal: boolean = false;
   pendingAction: 'ban' | 'unban' | 'delete' | null = null;
@@ -80,7 +80,7 @@ export class RecentUsersComponent {
     if (!user || !action) return;
 
     let apiCall;
-    
+
     switch (action) {
       case 'delete':
         apiCall = this.adminService.deleteUser(user.id);
@@ -94,15 +94,15 @@ export class RecentUsersComponent {
     }
 
     apiCall.subscribe({
-        next: () => {
-            if (action === 'delete') {
-                this.recentUser = this.recentUser.filter(u => u.id !== user.id);
-            } else {
-                user.isBaned = (action === 'ban'); // Update local state
-            }
-            console.log(`User ${user.username} ${action}ned successfully.`);
-        },
-        error: (err) => console.error(`Error ${action}ning user:`, err)
+      next: () => {
+        if (action === 'delete') {
+          this.recentUser = this.recentUser.filter(u => u.id !== user.id);
+        } else {
+          user.isBaned = (action === 'ban'); // Update local state
+        }
+        console.log(`User ${user.username} ${action}ned successfully.`);
+      },
+      error: (err) => console.error(`Error ${action}ning user:`, err)
     });
 
     this.userToActOn = null;

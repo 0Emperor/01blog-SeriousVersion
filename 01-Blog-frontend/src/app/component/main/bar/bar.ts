@@ -43,6 +43,7 @@ export class Bar {
     return this.userStore.getUser?.username || "chob"
   }
   ngOnInit() {
+  
     this.auth.checkAdmin().subscribe({
       next: () => {
         this.navItems.update((l) => [...l, {
@@ -51,6 +52,9 @@ export class Bar {
           label: 'Admin panel'
         }]);
       },
+      error: () => {
+        console.log("Admin check failed");
+      }
     });
 
   }
