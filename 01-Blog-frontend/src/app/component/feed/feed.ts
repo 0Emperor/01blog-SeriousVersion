@@ -55,7 +55,11 @@ export class Feed implements OnInit {
         }
 
         this.loading = false;
-        return [...acc, ...newPosts]; // Accumulate all posts
+
+        // Deduplicate: only add posts that don't already exist in the accumulator
+        const existingIds = new Set(acc.map(p => p.postId));
+        const uniqueNewPosts = newPosts.filter(p => !existingIds.has(p.postId));
+        return [...acc, ...uniqueNewPosts];
       }, []) // Initial accumulator value is an empty array
     ).subscribe(allPosts => {
       this.posts = allPosts;
