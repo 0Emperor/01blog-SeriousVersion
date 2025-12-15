@@ -64,7 +64,7 @@ export class PostView implements AfterViewInit {
     ).subscribe({
       next: (data: any) => {
         this.post = data;
-        console.log(this.post);
+
 
         this.loading = false;
       },

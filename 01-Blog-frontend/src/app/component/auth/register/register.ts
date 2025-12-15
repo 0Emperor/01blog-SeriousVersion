@@ -28,9 +28,9 @@ export class Register {
   register = () => {
     try {
       this.auth.register(this.username(), this.password())
-      .subscribe((e: any) => {
-            window.localStorage.setItem("jwt", e["jwt"]);
-            this.router.navigate(['/home']);
+        .subscribe((e: any) => {
+          window.localStorage.setItem("jwt", e["jwt"]);
+          this.router.navigate(['/home']);
         })
     } catch (error) {
 

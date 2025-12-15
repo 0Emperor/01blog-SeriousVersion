@@ -31,7 +31,7 @@ export class PostFeed {
   likeClicked() {
     this.like.aply(this.post.postId, this.post.isLiked).subscribe({
       next: (v) => {
-        console.log(v);
+
         this.post.isLiked = v;
         if (v === true) {
           this.post.totalLikes++;
@@ -43,7 +43,7 @@ export class PostFeed {
   }
 
   navigate() {
-    this.router.navigate([this.post.postId])
+    this.router.navigate(['post', this.post.postId])
   }
 
   editNavigate() {

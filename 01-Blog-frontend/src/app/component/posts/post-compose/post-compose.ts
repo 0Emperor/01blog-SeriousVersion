@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule, QuillEditorComponent } from 'ngx-quill';
@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { PostService } from '../../../service/post'; // Adjust path
 
 import Quill from 'quill';
+import { ToastService } from '../../../service/toast-service';
 
 const NEW_MEDIA_PLACEHOLDER = 'NEW_MEDIA_PLACEHOLDER_';
 
@@ -79,7 +80,7 @@ export class PostCompose implements OnInit, AfterViewInit {
   @ViewChild(QuillEditorComponent, { static: false }) quillEditor!: QuillEditorComponent;
 
   postForm!: FormGroup;
-
+toastService: ToastService=inject(ToastService);
   /**
    * RENAMED: Stores a map of preview URLs (Base64 or Blob)
    * to the actual File object selected by the user.
@@ -474,15 +475,16 @@ export class PostCompose implements OnInit, AfterViewInit {
       this.isSubmitting = false;
       if (isEdit) {
         this.postUpdated.emit(event.body);
+        this.toastService.show("Post updated successfully", "Success", "success")
       } else {
         this.postCreated.emit(event.body);
+        this.toastService.show("Post created successfully", "Success", "success")
       }
       this.resetForm();
     }
   }
 
   private handleError(error: any): void {
-    console.error('Error with post:', error);
     this.isSubmitting = false;
     this.uploadProgress = 0;
   }

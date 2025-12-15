@@ -22,7 +22,9 @@ export const routes: Routes = [
     { path: "register", component: Register },
     { path: "login", component: Login },
     {
-        path: "", component: Home, canActivate: [AuthGuard], children: [{ path: "home", component: Feed },
+        path: "", component: Home,canActivate: [AuthGuard], children: [
+        { path: "", redirectTo: "home", pathMatch: "full" },
+        { path: "home", component: Feed },
         { path: "admin", component: AdminDashboardComponent, canActivate: [AdminGuard] },
         { path: "admin/posts", component: AllPosts, canActivate: [AdminGuard] },
         { path: "admin/reports", component: AllReports, canActivate: [AdminGuard] },
@@ -36,9 +38,10 @@ export const routes: Routes = [
         { path: "explore", component: Explore },
         { path: "notifications", component: NotificationsComponent },
         { path: "edit/:id", component: PostEdit },
-        { path: ":id", component: PostView },
+        { path: "post/:id", component: PostView },
         ]
     },
+          { path: "**", redirectTo: "home" }
 
 
 ];
