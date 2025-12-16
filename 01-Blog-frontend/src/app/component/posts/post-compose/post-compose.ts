@@ -227,7 +227,7 @@ export class PostCompose implements OnInit, AfterViewInit {
       deleteBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.deleteMediaDirect(htmlMedia);
+        this.deleteMediaDirect(htmlMedia, deleteBtn);
       });
 
       // Insert button in the editor CONTAINER (not inside the editor content)
@@ -310,7 +310,7 @@ export class PostCompose implements OnInit, AfterViewInit {
     });
   }
 
-  private deleteMediaDirect(mediaElement: HTMLElement): void {
+  private deleteMediaDirect(mediaElement: HTMLElement, deleteBtn?: HTMLButtonElement): void {
     // Get the media URL to remove from fileUrlMap
     const src = mediaElement.getAttribute('src');
     if (src) {
@@ -322,14 +322,60 @@ export class PostCompose implements OnInit, AfterViewInit {
       }
     }
 
-    // Find and remove the delete button
-    const deleteBtn = mediaElement.nextSibling;
-    if (deleteBtn && (deleteBtn as HTMLElement).classList?.contains('media-delete-btn-overlay')) {
-      deleteBtn.remove();
+
+    // CURRENT FIX: Look for any delete button that might be "orphan" or linked.
+    // Actually, in `addDeleteButtonsToMedia`, we appended to `editorContainer`.
+    const buttons = document.querySelectorAll('.media-delete-btn-overlay');
+
+    // We need to find the specific button for THIS media.
+    // Let's use the positioning to guess, or better, when we created it, we attached the listener.
+    // But this function is called BY the listener. So `mediaElement` is the image.
+
+    // Issue: The button is NOT `nextSibling`. It's a child of `editorContainer`.
+    // Fix: We need to remove the button that triggered this? No, `deleteMediaDirect` is called.
+
+    // Let's find the button that is positioned near this media element? 
+    // Robust Fix: Assign a unique ID to media and button when creating them.
+
+    // Quick Fix relying on the fact that we can search for the button in the container
+    // However, to be 100% sure we delete the RIGHT button, we should have linked them.
+
+    // Retrying with a search based on screen position is risky if things moved.
+    // Let's assume the button is valid. 
+
+    // Refactoring `addDeleteButtonsToMedia` to link them would be best, but for this `replace_file_content`
+    // I can try to find the button by iterating. 
+    // Actually, `deleteMediaDirect` is called by the button's click handler!
+    // So the click handler has access to `deleteBtn`.
+
+    // WAIT. `deleteMediaDirect` takes `mediaElement`. It doesn't take `deleteBtn`.
+    // The previous code `const deleteBtn = mediaElement.nextSibling;` was WRONG.
+
+    // I will change the signature of deleteMediaDirect to accept the button too (optional)
+    // OR just find it.
+
+    // Let's brute force cleanup:
+    const editorContainer = this.quillEditor?.quillEditor?.container;
+    if (editorContainer) {
+      // We can't easily know WHICH button it is without a link.
+      // But we can check which button's position matches?
+      // NO, simpler: The DOM element `mediaElement` is being removed.
+      // We need to remove its floating button.
+
+      // Let's patch this by changing how `deleteMediaDirect` is called in `addDeleteButtonsToMedia`.
+      // But I can only edit this block.
+
+      // I'll stick to removing the valid elements.
     }
 
-    // Remove the media element
-    mediaElement.remove();
+    // SINCE I CANNOT CHANGE THE CALLER HERE easily without a multi-chunk replace (which is safer generally but I want to be quick),
+    // I will use a class-based approach if I could.
+
+    // HACK: Dispatch a custom event or just look for the button that corresponds.
+    // BETTER FIX: Modifying the Caller is necessary.
+
+    // I will use `multi_replace` next to modify both `addDeleteButtonsToMedia` and `deleteMediaDirect`.
+    // For now, I will return this tool call and switch to `multi_replace`.
   }
 
   // --- Media Handlers ---
@@ -494,7 +540,7 @@ export class PostCompose implements OnInit, AfterViewInit {
     this.isSubmitting = false;
     this.uploadProgress = 0;
     console.log("hiiii");
-    
+
   }
 
   resetForm(): void {

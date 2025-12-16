@@ -10,7 +10,7 @@
   min-height: 140px;
   display: flex;
   flex-direction: column;
-  
+
   // Shadow for depth
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
@@ -159,40 +159,58 @@
 
   // Responsive adjustments - MOBILE FIRST
   @media (max-width: 420px) {
-    padding: $space-md;
-    min-height: 110px;
-    flex: 1 1 100%;
-    width: 90%;
+    padding: $space-sm; // Reduce padding to save space
+    min-height: auto;
+    flex: 1; // Distribute space equally
+    width: auto; // Remove fixed percentage width
+
+    // Ensure shadow/border doesn't get cut off
+    margin: 2px;
+
+    .card-content {
+      flex-direction: row-reverse; // Number left, Icon right
+      align-items: center;
+      justify-content: space-between; // Push matches to edges or center with gap?
+      gap: 1rem;
+    }
 
     .card-header {
+      width: auto;
+
       .card-title {
-        font-size: 0.75rem;
+        display: none; // Hide title
       }
 
       .card-icon {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem; // Slightly smaller Icon
+        height: 2.5rem;
+        margin-right: 0;
+        background-color: rgba(255, 255, 255, 0.2); // Slightly more visible bg
 
         svg {
-          width: 1rem;
-          height: 1rem;
+          width: 1.25rem; // Slightly smaller SVG
+          height: 1.25rem;
         }
       }
     }
 
     .card-stats {
-      gap: 4px;
+      margin-top: 0;
+      width: auto;
 
       .stat-number {
         font-size: 1.5rem;
+        /* Slightly smaller Font */
+        opacity: 1;
+        width: auto;
+        overflow: visible;
+        white-space: normal;
+        margin-left: 0;
+        text-align: left;
       }
 
       .stat-change {
-        font-size: 0.625rem;
-        
-        .change-value {
-          padding: 1px 4px;
-        }
+        display: none;
       }
     }
   }
@@ -252,6 +270,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -263,6 +282,14 @@
 }
 
 // Stagger animation for multiple cards
-.stats-card:nth-child(1) { animation-delay: 0s; }
-.stats-card:nth-child(2) { animation-delay: 0.1s; }
-.stats-card:nth-child(3) { animation-delay: 0.2s; }
+.stats-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.stats-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.stats-card:nth-child(3) {
+  animation-delay: 0.2s;
+}

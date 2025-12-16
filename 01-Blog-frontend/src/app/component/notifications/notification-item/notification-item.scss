@@ -193,6 +193,10 @@
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
+
+      @media (max-width: 640px) {
+        display: none;
+      }
     }
 
     .view-link {
@@ -307,10 +311,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.7;
     transform: scale(1.1);
@@ -318,14 +325,37 @@
 }
 
 // Avatar background colors
-.bg-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.bg-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
-.bg-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.bg-green { background: linear-gradient(135deg, #10b981, #059669); }
-.bg-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.bg-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-.bg-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-.bg-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+.bg-purple {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.bg-pink {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+.bg-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.bg-green {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.bg-yellow {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.bg-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.bg-indigo {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.bg-teal {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+}
 
 // Dark Mode
 @media (prefers-color-scheme: dark) {

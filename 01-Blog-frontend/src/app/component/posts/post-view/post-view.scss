@@ -307,6 +307,8 @@
         color: $text-light;
         font-size: 1.0625rem;
         font-weight: 400;
+  overflow-wrap: break-word;
+  word-break: break-word;
 
         ::ng-deep {
           p {

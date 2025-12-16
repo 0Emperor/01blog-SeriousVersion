@@ -27,13 +27,27 @@
                 <span class="like-count" [class.liked]="post.isLiked">{{ post.totalLikes| count}}</span>
             </div>
 
+            <div class="comment-info"
+                style="display: flex; align-items: center; gap: 0.5rem; color: var(--muted-light);">
+                <span class="material-icons" style="font-size: 20px;">chat_bubble_outline</span>
+                <span>{{ post.commentsCount | count }}</span>
+            </div>
+
             @if(post.isOwn){
-            <button class="edit-button" (click)="$event.stopPropagation(); editNavigate()">
-                Edit Post
+            <!-- Three Dot Menu -->
+            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" class="menu-button">
+                <mat-icon>more_vert</mat-icon>
             </button>
-            <button class="delete-button" (click)="$event.stopPropagation(); delete()">
-                Delete Post
-            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="editNavigate()" class="edit-btn">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="delete()" class="delete-btn">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Delete</span>
+                </button>
+            </mat-menu>
             }
 
         </div>

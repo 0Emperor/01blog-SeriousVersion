@@ -1,17 +1,20 @@
 import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { Post } from '../../../dto/dto';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserHeaderComponent } from '../../users/user-header/user-header';
 import { DatePipe } from '@angular/common';
 import { Like } from '../../../service/like';
 import { FormatCountsPipe } from '../../../pipe/format-counts-pipe';
-import { MarkdownComponent } from "ngx-markdown";
 import { PostService } from '../../../service/post';
 import { ConfirmationModalComponent } from '../../admin/confirm/confirm';
 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-post-feed',
-  imports: [UserHeaderComponent, DatePipe, FormatCountsPipe, ConfirmationModalComponent],
+  imports: [UserHeaderComponent, DatePipe, FormatCountsPipe, ConfirmationModalComponent, MatMenuModule, MatButtonModule, MatIconModule],
   templateUrl: './post-feed.html',
   styleUrl: './post-feed.scss'
 })

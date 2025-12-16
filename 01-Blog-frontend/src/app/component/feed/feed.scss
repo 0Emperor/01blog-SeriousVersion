@@ -78,6 +78,8 @@
         margin-bottom: 1.5rem;
         // Allows long words to break rather than causing horizontal overflow
         word-wrap: break-word;
+        overflow-wrap: anywhere; // Forces break at any character if needed
+        word-break: break-word;
     }
 }
 

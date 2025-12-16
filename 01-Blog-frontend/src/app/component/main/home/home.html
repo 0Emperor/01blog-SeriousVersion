@@ -1,9 +1,17 @@
 <div class="home-container">
     <app-bar class="sidebar" [ngClass]="{'open': isSidebarOpen}"></app-bar>
     <div class="container" (click)="isSidebarOpen && toggleSidebar()">
-        <button class="menu-toggle-btn" (click)="toggleSidebar(); $event.stopPropagation()">
-            ☰
-        </button>
+        <div class="mobile-header">
+            <button class="menu-toggle-btn" (click)="toggleSidebar(); $event.stopPropagation()">
+                <span class="material-icons">menu</span>
+            </button>
+            <button class="mobile-btn create-btn" routerLink="/create">
+                <span class="material-icons">add_box</span>
+            </button>
+            <button class="mobile-btn logout-btn" (click)="logout()">
+                <span class="material-icons">logout</span>
+            </button>
+        </div>
         <router-outlet></router-outlet>
     </div>
 </div>
