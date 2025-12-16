@@ -1,4 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit, ElementRef, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule, QuillEditorComponent } from 'ngx-quill';
@@ -80,7 +82,7 @@ export class PostCompose implements OnInit, AfterViewInit {
   @ViewChild(QuillEditorComponent, { static: false }) quillEditor!: QuillEditorComponent;
 
   postForm!: FormGroup;
-toastService: ToastService=inject(ToastService);
+  toastService: ToastService = inject(ToastService);
   /**
    * RENAMED: Stores a map of preview URLs (Base64 or Blob)
    * to the actual File object selected by the user.
@@ -113,7 +115,9 @@ toastService: ToastService=inject(ToastService);
 
   constructor(
     private fb: FormBuilder,
-    private postService: PostService
+    private postService: PostService,
+    private router: Router,
+    private location: Location
   ) {
     // Note: The Quill.register call is now done outside the class,
     // so it's registered globally before the component is even constructed.
@@ -382,12 +386,7 @@ toastService: ToastService=inject(ToastService);
   // --- Submission Logic ---
 
   async onSubmit(): Promise<void> {
-    // if (this.postForm.invalid) {
-    //   this.postForm.markAllAsTouched();
-    //   return;
-    // }
 
-    this.isSubmitting = true;
     this.uploadProgress = 0;
 
     try {
@@ -475,10 +474,17 @@ toastService: ToastService=inject(ToastService);
       this.isSubmitting = false;
       if (isEdit) {
         this.postUpdated.emit(event.body);
-        this.toastService.show("Post updated successfully", "Success", "success")
+        this.toastService.show("Post updated successfully", "Success", "success");
+        this.location.back();
       } else {
         this.postCreated.emit(event.body);
-        this.toastService.show("Post created successfully", "Success", "success")
+        this.toastService.show("Post created successfully", "Success", "success");
+        const username = this.getUsernameFromToken();
+        if (username) {
+          this.router.navigate(['/profile', username]);
+        } else {
+          this.router.navigate(['/home']);
+        }
       }
       this.resetForm();
     }
@@ -487,6 +493,8 @@ toastService: ToastService=inject(ToastService);
   private handleError(error: any): void {
     this.isSubmitting = false;
     this.uploadProgress = 0;
+    console.log("hiiii");
+    
   }
 
   resetForm(): void {
@@ -502,6 +510,18 @@ toastService: ToastService=inject(ToastService);
   onCancel(): void {
     this.cancelled.emit();
     this.resetForm();
+    this.location.back();
+  }
+
+  private getUsernameFromToken(): string {
+    const token = window.localStorage.getItem('jwt');
+    if (!token) return '';
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub;
+    } catch (e) {
+      return '';
+    }
   }
 
   // ... getters (titleControl, descriptionControl) ...

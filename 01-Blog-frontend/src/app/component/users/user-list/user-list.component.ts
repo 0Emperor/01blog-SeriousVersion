@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Follow } from '../../../service/follow';
 import { UserFollowDto } from '../../../dto/dto';
 import { AvatarMissingService } from '../../../service/avatar-missing-service';
+import { ToastService } from '../../../service/toast-service';
 
 @Component({
     selector: 'app-user-list',
@@ -16,6 +17,7 @@ export class UserListComponent implements OnInit {
     route = inject(ActivatedRoute);
     followService = inject(Follow);
     missing = inject(AvatarMissingService);
+    toastService = inject(ToastService);
 
     type: 'followers' | 'following' = 'followers';
     username: string = '';
@@ -28,7 +30,7 @@ export class UserListComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             console.log(params);
-            
+
             this.username = params['username'];
             const path = this.route.snapshot.url[2]?.path;
             if (path === 'followers' || path === 'following') {
@@ -79,6 +81,11 @@ export class UserListComponent implements OnInit {
         apiCall.subscribe({
             next: () => {
                 user.isFollowing = !user.isFollowing;
+                if (user.isFollowing) {
+                    this.toastService.show("User followed successfully", "Success", "success");
+                } else {
+                    this.toastService.show("User unfollowed successfully", "Success", "success");
+                }
             },
             error: (err) => console.error(err)
         });

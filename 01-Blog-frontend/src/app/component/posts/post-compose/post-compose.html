@@ -1,64 +1,41 @@
 <div class="create-post-container">
-  
+
   <div class="post-panel">
     <header class="post-header">
       <h2>{{ isEditMode ? 'Edit Post' : 'Create New Post' }}</h2>
     </header>
 
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="post-form-content">
-      
+
       <div class="input-group">
         <label for="title-input">Title</label>
         <div class="custom-input-wrapper">
-          <input
-            id="title-input"
-            class="custom-input"
-            formControlName="title"
-            placeholder="Enter post title"
-            maxlength="17"
-          />
+          <input id="title-input" class="custom-input" formControlName="title" placeholder="Enter post title"
+            maxlength="17" />
         </div>
       </div>
 
       <div class="input-group editor-wrapper">
         <label class="editor-label" for="description-editor">Description</label>
-        <quill-editor
-          id="description-editor"
-          formControlName="description"
-          [modules]="quillModules"
-          placeholder="Enter post description"
-        ></quill-editor>
+        <quill-editor id="description-editor" formControlName="description" [modules]="quillModules"
+          placeholder="Enter post description"></quill-editor>
       </div>
 
       <div class="progress-container" *ngIf="isSubmitting && uploadProgress > 0">
-        <mat-progress-bar
-          mode="determinate"
-          [value]="uploadProgress"
-          color="primary"
-        ></mat-progress-bar>
+        <mat-progress-bar mode="determinate" [value]="uploadProgress" color="primary"></mat-progress-bar>
         <span class="progress-text">Uploading: {{ uploadProgress }}%</span>
       </div>
 
       <div class="post-actions">
-        <button
-          mat-flat-button
-          type="button"
-          (click)="onCancel()"
-          [disabled]="isSubmitting"
-          class="cancel-button"
-        >
+        <button mat-flat-button type="button" (click)="onCancel()" [disabled]="isSubmitting" class="cancel-button">
           Cancel
         </button>
-        
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          class="submit-button"
-          (click)="onSubmit()"
-        >
-          {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Post' : 'Create Post') }}
+
+        <button mat-flat-button color="primary" type="submit" class="submit-button" (click)="onSubmit()">
+          {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Post' : 'Create Post')
+          }}
         </button>
       </div>
     </form>
-  </div> </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { ExploreSrvs } from '../../../service/explore';
 import { User } from '../../../dto/dto';
 import { Follow } from '../../../service/follow';
 import { Search } from "../search/search";
+import { ToastService } from '../../../service/toast-service';
 
 @Component({
   selector: 'app-explore',
@@ -13,6 +14,7 @@ import { Search } from "../search/search";
 export class Explore {
   explore = inject(ExploreSrvs)
   followS = inject(Follow)
+  toastService = inject(ToastService)
 
   notFollowed = signal<{ user: User, indexe: number }[]>([])
   arrived = signal(false)
@@ -71,6 +73,7 @@ export class Explore {
     this.followS.follow(userToFollow.user.id).subscribe({
       next: () => {
         this.notFollowed.update(users => users.filter((_, i) => i !== index));
+        this.toastService.show("User followed successfully", "Success", "success");
       }
     });
   }

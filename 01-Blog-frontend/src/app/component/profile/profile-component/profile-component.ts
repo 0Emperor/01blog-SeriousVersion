@@ -6,6 +6,7 @@ import { ProfileService } from '../../../service/profile-service'; // Adjust pat
 import { Follow } from '../../../service/follow'; // Adjust path
 import { AdminService } from '../../../service/admin-service'; // Adjust path
 import { UserStore } from '../../../service/user'; // Adjust path
+import { ToastService } from '../../../service/toast-service';
 import { Observable } from 'rxjs';
 
 // Import the components this wrapper uses
@@ -19,8 +20,8 @@ import { ConfirmationModalComponent } from '../../admin/confirm/confirm';
   styleUrls: ['./profile-component.scss'],
   standalone: true,
   imports: [
-    CommonModule, 
-    ProfileHeaderComponent, 
+    CommonModule,
+    ProfileHeaderComponent,
     Feed,
     ConfirmationModalComponent
   ]
@@ -42,6 +43,7 @@ export class ProfileComponent implements OnInit {
   private followService = inject(Follow);
   private userStore = inject(UserStore);
   private adminService = inject(AdminService);
+  private toastService = inject(ToastService);
 
   ngOnInit(): void {
     // Subscribe to route changes to reload profile
@@ -72,13 +74,13 @@ export class ProfileComponent implements OnInit {
       if (this.profile) this.profile.user = user;
       localStorage.setItem("jwt", jwt);
       this.userStore.setUser(user);
-      
+
       // If username changed, navigate to new URL
       if (this.username !== user.username) {
         this.router.navigate(['profile', user.username]);
       } else {
         // Otherwise, just reload the data
-        this.loadProfile(); 
+        this.loadProfile();
       }
     });
   }
@@ -87,11 +89,11 @@ export class ProfileComponent implements OnInit {
   onFollowToggle() {
     if (!this.profile) return;
     const uid = this.profile.user.id;
-    
-    const apiCall = this.profile.isFollowing 
-      ? this.followService.unfollow(uid) 
+
+    const apiCall = this.profile.isFollowing
+      ? this.followService.unfollow(uid)
       : this.followService.follow(uid);
-      
+
     apiCall.subscribe({
       next: () => {
         if (this.profile) {
@@ -99,6 +101,12 @@ export class ProfileComponent implements OnInit {
           this.profile.isFollowing = !this.profile.isFollowing;
           // Optimistically update follower count
           this.profile.followersCount += this.profile.isFollowing ? 1 : -1;
+
+          if (this.profile.isFollowing) {
+            this.toastService.show("User followed successfully", "Success", "success");
+          } else {
+            this.toastService.show("User unfollowed successfully", "Success", "success");
+          }
         }
       },
       error: (err) => console.error(err)
@@ -123,7 +131,7 @@ export class ProfileComponent implements OnInit {
   triggerAdminAction(action: 'ban' | 'unban' | 'delete', user: User) {
     this.pendingAction = action;
     this.showConfirmModal = true;
-    
+
     switch (action) {
       case 'delete':
         this.confirmMessage = `Are you absolutely sure you want to PERMANENTLY delete user ${user.username}? This cannot be undone.`;
@@ -141,14 +149,14 @@ export class ProfileComponent implements OnInit {
   }
 
   onConfirmAction() {
-    this.showConfirmModal = false; 
+    this.showConfirmModal = false;
     const user = this.profile?.user;
     const action = this.pendingAction;
 
     if (!user || !action) return;
 
     let apiCall: Observable<any>;
-    
+
     // Use the user-provided AdminService methods
     switch (action) {
       case 'delete':
@@ -166,10 +174,10 @@ export class ProfileComponent implements OnInit {
       next: () => {
         if (action === 'delete') {
           // If user deleted, navigate away
-          this.router.navigate(['/']); 
+          this.router.navigate(['/']);
         } else if (this.profile) {
           // Just update the local state
-          this.profile.user.isBaned = (action === 'ban'); 
+          this.profile.user.isBaned = (action === 'ban');
         }
       },
       error: (err) => console.error(`Error ${action}ning user:`, err)
