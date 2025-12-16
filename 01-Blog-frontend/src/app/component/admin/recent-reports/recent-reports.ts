@@ -61,7 +61,7 @@ export class RecentreportsComponent {
   }
 
   onTakeAction(report: report): void {
-    this.router.navigate([report.post?.postId||"/profile/"+report.user?.username]);
+    this.router.navigate([report.post?.postId||"/profile/"+report.reportedUser?.username]);
   }
 
   // 👇 Dismiss Action: Calls the API (or uses a helper in AdminService) to dismiss the report
