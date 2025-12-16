@@ -4,7 +4,10 @@
         (deleteUser)="onDeleteUser()">
     </app-profile-header>
 
-    <app-feed [forUser]="profile.user.username"></app-feed>
+  <app-feed 
+      *ngIf="showFeed" 
+      [forUser]="profile.user">
+  </app-feed>
     }
 </div>
 

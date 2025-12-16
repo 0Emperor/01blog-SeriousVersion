@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, scan, switchMap, tap, filter } from 'rxjs';
 import { PostService } from '../../service/post';
-import { Post } from '../../dto/dto';
+import { Post, User } from '../../dto/dto';
 
 import { PostFeed } from "../posts/post-feed/post-feed";
 
@@ -20,7 +20,7 @@ export class Feed implements OnInit {
 
   // State Management for Infinite Scroll
   private page$ = new BehaviorSubject<number>(1);
-  @Input() forUser?: string | null = null
+  @Input() forUser?: string | null |User = null
   @Input() admin?: boolean = false
   posts: Post[] = [];
   loading = false;
@@ -35,14 +35,20 @@ export class Feed implements OnInit {
    * Sets up the RxJS pipeline to fetch and accumulate posts across multiple pages.
    */
   setupFeedSubscription() {
+    let s ="";
+    if (typeof this.forUser === 'string') {
+      s = this.forUser;
+    }else if (typeof this.forUser === 'object' && this.forUser !== null) {
+      s = this.forUser?.username||"";
+    }
     this.page$.pipe(
       // 1. Only fetch if we're not loading and haven't reached the end
       filter(page => page > 0 && !this.loading && !this.finished),
       tap(() => this.loading = true), // Start loading state
 
       // 2. Fetch data: switchMap cancels previous requests if page$ fires quickly
-
-      switchMap(page => this.postService.getPostsFeed(page, this.limit, this.forUser, this.admin)),
+      
+      switchMap(page => this.postService.getPostsFeed(page, this.limit, s, this.admin)),
 
       // 3. Accumulate data: scan combines results from previous pages (acc) with new results (currentChunk)
       scan((acc: Post[], currentChunk: any) => {

@@ -52,11 +52,13 @@ export class ProfileComponent implements OnInit {
       this.loadProfile();
     });
   }
-
+showFeed: boolean = false;
   loadProfile() {
     this.profileService.getProfile(this.username).subscribe({
-      next: (data) => this.profile = data,
-      error: (err) => console.error(err)
+      next: (data) => {this.profile = data
+        this.showFeed = false;
+      setTimeout(() => this.showFeed = true, 0);
+      }
     });
   }
 
