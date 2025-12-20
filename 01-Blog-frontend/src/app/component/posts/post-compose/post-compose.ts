@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { PostService } from '../../../service/post'; // Adjust path
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import Quill from 'quill';
 import { ToastService } from '../../../service/toast-service';
@@ -89,6 +90,14 @@ export class PostCompose implements OnInit, AfterViewInit {
    */
   private fileUrlMap = new Map<string, File>();
 
+  readonly maxContentLength = 4748;
+  readonly minContentLength = 10;
+  contentLength = 0;
+
+  readonly maxTitleLength = 17;
+  readonly minTitleLength = 3;
+  titleLength = 0;
+
   uploadProgress = 0;
   isSubmitting = false;
   isEditMode = false;
@@ -128,8 +137,22 @@ export class PostCompose implements OnInit, AfterViewInit {
 
     this.postForm = this.fb.group({
       title: [this.title, [Validators.required, Validators.minLength(3), Validators.maxLength(17)]],
-      description: [this.description, [Validators.required, Validators.minLength(10), Validators.maxLength(474800)]]
+      description: [this.description, [Validators.required, this.htmlContentLengthValidator(this.minContentLength, this.maxContentLength)]]
     });
+
+    // Subscribe to description changes to update character count
+    this.postForm.get('description')?.valueChanges.subscribe(value => {
+      this.contentLength = this.calculateContentLength(value);
+    });
+
+    // Subscribe to title changes
+    this.postForm.get('title')?.valueChanges.subscribe(value => {
+      this.titleLength = value ? value.length : 0;
+    });
+
+    // Initialize counts if editing
+    if (this.title) this.titleLength = this.title.length;
+    if (this.description) this.contentLength = this.calculateContentLength(this.description);
   }
 
   ngAfterViewInit(): void {
@@ -143,7 +166,7 @@ export class PostCompose implements OnInit, AfterViewInit {
 
     if (this.quillEditor?.quillEditor?.root) {
       this.attachMediaHoverListeners();
-    } 
+    }
   }
 
   private attachMediaHoverListeners(): void {
@@ -217,7 +240,7 @@ export class PostCompose implements OnInit, AfterViewInit {
       const editorContainer = this.quillEditor?.quillEditor?.container;
       if (editorContainer) {
         editorContainer.appendChild(deleteBtn);
-      } 
+      }
       // Position button fixed relative to viewport (not editor)
       const positionButton = () => {
         const rect = htmlMedia.getBoundingClientRect();
@@ -545,4 +568,29 @@ export class PostCompose implements OnInit, AfterViewInit {
   }
 
   // ... getters (titleControl, descriptionControl) ...
+
+  private calculateContentLength(html: string): number {
+    if (!html) return 0;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // 1. Get visible text content
+    const textContent = doc.body.textContent || "";
+    const textLength = textContent.length;
+
+    // 2. Count media elements (img, video, iframe)
+    const mediaCount = doc.querySelectorAll('img, video, iframe').length;
+
+    return textLength + mediaCount;
+  }
+
+  private htmlContentLengthValidator(min: number, max: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const length = this.calculateContentLength(control.value);
+      if (length < min || length > max) {
+        return { lengthError: { value: length, min, max } };
+      }
+      return null;
+    };
+  }
 }

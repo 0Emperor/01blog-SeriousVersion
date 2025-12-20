@@ -1,8 +1,8 @@
 @use "sass:color";
 @use '../../../../variables' as *;
 
-// --- Mixins ---
-@mixin theme-styles($bg, $panel, $input, $text-main, $text-muted, $primary-color, $btn-text) {
+
+@mixin theme-styles($bg, $panel, $input, $text-main, $text-muted, $primary-color, $btn-text, $error-color) {
   background-color: $bg;
 
   .post-panel {
@@ -18,6 +18,22 @@
     color: $text-main;
     font-weight: 700; // Bolder labels
     opacity: 1; // Ensure full opacity
+  }
+
+  .char-counter {
+    font-size: 0.85rem;
+    color: $text-muted;
+
+    &.invalid {
+      color: $error-color;
+      font-weight: bold;
+    }
+  }
+
+  .error-message {
+    color: $error-color;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
   }
 
   .custom-input-wrapper {
@@ -172,12 +188,14 @@
   // Default (Dark Mode) - Using Global Variables
   // $background-dark (#191022), $panel-bg-dark (#231a2f), $input-bg (#444455), $text-dark (#b7b1be), $muted-dark, $primary
   // Note: We use $text-dark for labels/inputs, but the editor text is forced to white inside the mixin for readability.
-  @include theme-styles($background-dark, $panel-bg-dark, $input-bg, $text-dark, $muted-dark, $primary, $button-text-light);
+  // $background-dark (#191022), $panel-bg-dark (#231a2f), $input-bg (#444455), $text-dark (#b7b1be), $muted-dark, $primary
+  // Note: We use $text-dark for labels/inputs, but the editor text is forced to white inside the mixin for readability.
+  @include theme-styles($background-dark, $panel-bg-dark, $input-bg, $text-dark, $muted-dark, $primary, $button-text-light, $danger-dark);
 
   // Light Mode Support
   @media (prefers-color-scheme: light) {
     // $background-light, $panel-bg-light, $input-bg-light, $text-light, $muted-light, $primary
-    @include theme-styles($background-light, $panel-bg-light, $input-bg-light, $text-light, $muted-light, $primary, $button-text-light);
+    @include theme-styles($background-light, $panel-bg-light, $input-bg-light, $text-light, $muted-light, $primary, $button-text-light, $danger-light);
   }
 }
 
@@ -239,6 +257,17 @@
   quill-editor {
     display: block;
     width: 100%;
+  }
+
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    label {
+      margin-bottom: 0; // Override default margin
+    }
   }
 
   ::ng-deep {
