@@ -3,9 +3,11 @@
         @if (userS.getUser&& userS.getUser.profile) {
         <img [src]="userS.getUser.profile" alt="{{ userS.getUser.username }}'s profile picture"
             class="profile-img">
-        } @else {
-        <div class="initials-avatar" [style.background-color]="avatarBackgroundColor">
-            {{ userInitial }}
+        } @else if (userS.getUser) {
+         <div class='no-avatar {{missing.getBackgroundColor(userS.getUser.username)}}'>
+          <div class="initials profile-image">
+            {{ missing.getInitial(userS.getUser.username)}}
+          </div>
         </div>
         }
     </div>

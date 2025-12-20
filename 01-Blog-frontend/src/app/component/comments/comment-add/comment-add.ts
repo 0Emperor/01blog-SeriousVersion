@@ -3,6 +3,7 @@ import { UserStore } from '../../../service/user';
 import { CommentS } from '../../../service/comment';
 import { CommentShare } from '../../../service/comment-share';
 import { ToastService } from '../../../service/toast-service';
+import { AvatarMissingService } from '../../../service/avatar-missing-service';
 
 @Component({
   selector: 'app-comment-add',
@@ -16,7 +17,7 @@ export class CommentAdd {
   commentService = inject(CommentS)
   cmmentPublish = inject(CommentShare)
   toastService = inject(ToastService);
-
+missing =inject(AvatarMissingService)
   @Input() pId!: string;
   submitComment() {
     if (this.commentText().trim()) {

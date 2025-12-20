@@ -7,8 +7,9 @@
   align-items: center;
   gap: $space-xs;
   font-family: $font-family;
-width: 10%;
-  
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .emoji-wrapper {
@@ -38,8 +39,13 @@ width: 10%;
   flex-direction: row;
   /* horizontal */
   gap: 6px;
-  white-space: nowrap;
-  /* stay on one line */
+  /* horizontal */
+  gap: 6px;
+  max-width: 85vw;
+  /* Prevent overflow on small screens */
+  flex-wrap: wrap;
+  /* Allow wrapping of emojis if needed */
+  justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
   pointer-events: none;
@@ -96,6 +102,7 @@ width: 10%;
 
 .input-wrapper {
   flex-grow: 1;
+  /* Take up available space */
   display: flex;
   align-items: center;
   background-color: $panel-bg-light;
@@ -103,10 +110,12 @@ width: 10%;
   border-radius: $border-radius-lg;
   padding: $space-sm $space-md;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-width: 0;
 }
 
 .comment-input {
   flex-grow: 1;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
