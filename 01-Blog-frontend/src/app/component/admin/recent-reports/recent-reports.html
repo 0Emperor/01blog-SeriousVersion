@@ -19,11 +19,11 @@
                     <td>
                         <div class="reported-item">
                             @if (report.post) {
-                            <h4 [routerLink]="['/post/'+report.post.postId]" class="item-link">
+                            <h4 [routerLink]="['/post/',report.post.postId]" class="item-link">
                                 Post #{{ report.post.postId.substring(0, 6) }}
                             </h4>
                             } @else if (report.reportedUser) {
-                            <h4 [routerLink]="['/profile/'+report.reportedUser.username]" class="item-link">
+                            <h4 [routerLink]="['/profile/',report.reportedUser.username]" class="item-link">
                                 User: @{{ report.reportedUser.username }}
                             </h4>
                             } @else {
