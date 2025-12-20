@@ -46,7 +46,6 @@ export class ReportPostComponent {
       },
       error: (err) => {
         this.reportMessage = 'An error occurred while submitting the report.';
-        // console.error(err);
       }
     });
   }

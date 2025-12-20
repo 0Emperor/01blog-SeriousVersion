@@ -53,7 +53,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         toastService.show(message, title, type);
         if (error.status === 401 || error.status === 401 || error.status === 403) {
         router.navigate(['/login']);
-        console.log("hello");
         
       }
       if (error.status === 404) {

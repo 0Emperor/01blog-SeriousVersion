@@ -52,9 +52,6 @@ export class Bar {
           label: 'Admin panel'
         }]);
       },
-      error: () => {
-        console.log("Admin check failed");
-      }
     });
 
   }

@@ -40,9 +40,7 @@ export class NotificationItemComponent {
   }
 
   toggleReadStatus(event: Event): void {
-    event.stopPropagation();
-    console.log("chob");
-    
+    event.stopPropagation();    
     if (this.notification.seen) {
       this.markUnread.emit(this.notification);
     } else {

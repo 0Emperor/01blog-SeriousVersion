@@ -17,7 +17,6 @@ export class Profile {
         this.name.set(d["name"])
       },
       error:(e)=>{
-        console.log(e)
         this.name.set(e)
       }
     })

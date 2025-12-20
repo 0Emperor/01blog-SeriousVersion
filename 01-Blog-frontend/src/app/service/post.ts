@@ -71,7 +71,6 @@ export class PostService {
       reportProgress: true,
       responseType: 'text'
     });
-    console.log(BASE_FILE_SERVER_URL)
     return this.http.request(req);
 
   }
@@ -88,7 +87,7 @@ export class PostService {
     const springPage = page - 1;
     // Build the query string using Spring's parameters: 'page' and 'size'
     let base = (admin) ? "http://localhost:8080/api/admin/posts" : POSTS_FEED_API
-    const url = `${base}${(forUser == null) ? "" : `/posts/` + forUser}?page=${springPage}&size=${limit}`;
+    const url = `${base}${(forUser == null || forUser === "") ? "" : `/posts/` + forUser}?page=${springPage}&size=${limit}`;
     // Expecting the Map<String, Object> response { posts: [...], hasNext: boolean }
     return this.http.get<any>(url);
   }

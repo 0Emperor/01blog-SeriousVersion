@@ -150,7 +150,6 @@ export class PostView implements AfterViewInit {
           this.post.isLiked = previousLikedState;
           this.post.totalLikes = previousLikeCount;
         }
-        console.error('Error toggling like:', err);
       }
     });
   }
@@ -210,7 +209,6 @@ export class PostView implements AfterViewInit {
             this.post.hidden = action === 'hide';
           }
         },
-        error: (err) => console.error(`Error performing ${action} action:`, err)
       });
     }
 

@@ -23,11 +23,7 @@ export class RecentreportsComponent {
   confirmButtonText: string = '';
   private router = inject(Router);
   private adminService = inject(AdminService);
-  // Expose enum to template
-  ngOnInit() {
-    console.log(this.recentreports);
 
-  }
   state = state;
   // onView(report: report) { }
   getReasonText(Reason: reason): string {

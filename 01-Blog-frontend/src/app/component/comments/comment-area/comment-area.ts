@@ -47,7 +47,6 @@ export class CommentArea implements OnInit, OnDestroy {
       )
       .subscribe(({ comment, hasNext }) => {
         this.comments.push(...comment);
-        console.log(hasNext);
 
         this.finished = !hasNext;         // boolean from backend
         if (!this.finished) this.page++;  // only advance when more exists

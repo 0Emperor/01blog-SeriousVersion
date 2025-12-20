@@ -37,8 +37,6 @@ export class NotificationsComponent implements OnInit {
       if (data) {
         this.notifications.set(data);
       }
-    } catch (error) {
-      console.error('Error loading notifications:', error);
     } finally {
       this.isLoading.set(false);
     }
@@ -66,7 +64,6 @@ export class NotificationsComponent implements OnInit {
         this.notificationService.minus()
       }
     } catch (error) {
-      console.error('Error deleting notification:', error);
     }
   }
 
@@ -78,11 +75,9 @@ export class NotificationsComponent implements OnInit {
         n.id === notification.id ? { ...n, seen: true } : n
       );
       this.notificationService.minus()
-      console.log("after=",NotificationService.unreadCount());
       
       this.notifications.set(updated);
     } catch (error) {
-      console.error('Error marking notification as read:', error);
     }
   }
 
@@ -96,7 +91,6 @@ export class NotificationsComponent implements OnInit {
       this.notificationService.plus()
       this.notifications.set(updated);
     } catch (error) {
-      console.error('Error marking notification as unread:', error);
     }
   }
 
@@ -110,7 +104,6 @@ export class NotificationsComponent implements OnInit {
       await this.notificationService.clear().toPromise();
       this.notifications.update(b => b.filter(n => !n.seen));
     } catch (error) {
-      console.error('Error clearing notifications:', error);
     } finally {
       this.isClearing.set(false);
     }
@@ -123,8 +116,6 @@ export class NotificationsComponent implements OnInit {
       const updated = this.notifications().map(n => ({ ...n, seen: true }));
       this.notifications.set(updated);
       this.notificationService.reset()
-    } catch (error) {
-      console.error('Error marking all as read:', error);
     } finally {
       this.isMarkingAllRead.set(false);
     }

@@ -67,7 +67,6 @@ export class PostFeed {
       next: () => {
         this.postDeleted.emit(this.post.postId);
       },
-      error: (err) => console.error('Error deleting post:', err)
     });
   }
 }

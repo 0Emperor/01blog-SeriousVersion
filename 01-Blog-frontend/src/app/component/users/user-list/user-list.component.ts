@@ -29,7 +29,6 @@ export class UserListComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            console.log(params);
 
             this.username = params['username'];
             const path = this.route.snapshot.url[2]?.path;
@@ -67,7 +66,6 @@ export class UserListComponent implements OnInit {
                 this.loading.set(false);
             },
             error: (err) => {
-                console.error(err);
                 this.loading.set(false);
             }
         });
@@ -87,7 +85,6 @@ export class UserListComponent implements OnInit {
                     this.toastService.show("User unfollowed successfully", "Success", "success");
                 }
             },
-            error: (err) => console.error(err)
         });
     }
 }

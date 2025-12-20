@@ -134,37 +134,26 @@ export class PostCompose implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Try multiple times to ensure Quill is fully loaded
-    console.log('ngAfterViewInit called');
     setTimeout(() => this.tryAttachListeners(), 300);
     setTimeout(() => this.tryAttachListeners(), 800);
     setTimeout(() => this.tryAttachListeners(), 1500);
   }
 
   private tryAttachListeners(): void {
-    console.log('Trying to attach listeners...');
-    console.log('QuillEditor:', this.quillEditor);
-    console.log('QuillEditor.quillEditor:', this.quillEditor?.quillEditor);
-    console.log('QuillEditor.quillEditor.root:', this.quillEditor?.quillEditor?.root);
 
     if (this.quillEditor?.quillEditor?.root) {
       this.attachMediaHoverListeners();
-    } else {
-      console.warn('Quill editor not ready yet');
-    }
+    } 
   }
 
   private attachMediaHoverListeners(): void {
     const editorElement = this.quillEditor?.quillEditor?.root;
     if (!editorElement) {
-      console.log('Editor element not found');
       return;
     }
 
-    console.log('✅ Attaching media hover listeners to:', editorElement);
-
     // Use MutationObserver to detect when new media is added
     const observer = new MutationObserver((mutations) => {
-      console.log('Mutation detected, adding delete buttons');
       setTimeout(() => this.addDeleteButtonsToMedia(), 100);
     });
 
@@ -182,31 +171,24 @@ export class PostCompose implements OnInit, AfterViewInit {
   private addDeleteButtonsToMedia(): void {
     const editorElement = this.quillEditor?.quillEditor?.root;
     if (!editorElement) {
-      console.log('❌ No editor element in addDeleteButtonsToMedia');
       return;
     }
 
     const mediaElements = editorElement.querySelectorAll('img, video');
-    console.log(`Found ${mediaElements.length} media elements`);
 
     mediaElements.forEach((media: Element, index: number) => {
       const htmlMedia = media as HTMLElement;
-      console.log(`Processing media ${index}:`, htmlMedia);
 
       // Skip if already has delete button
       if (htmlMedia.dataset['hasDeleteBtn']) {
-        console.log(`  - Already has delete button, skipping`);
         return;
       }
 
       // Skip if media is being inserted (has no src yet)
       const src = htmlMedia.getAttribute('src');
       if (!src || src === '') {
-        console.log(`  - No src attribute, skipping`);
         return;
       }
-
-      console.log(`  - Adding delete button for:`, src.substring(0, 50));
 
       // Mark as having delete button
       htmlMedia.dataset['hasDeleteBtn'] = 'true';
@@ -235,12 +217,7 @@ export class PostCompose implements OnInit, AfterViewInit {
       const editorContainer = this.quillEditor?.quillEditor?.container;
       if (editorContainer) {
         editorContainer.appendChild(deleteBtn);
-        console.log(`  - Button appended to container:`, deleteBtn);
-      } else {
-        console.error('  - No editor container found!');
-        return;
-      }
-
+      } 
       // Position button fixed relative to viewport (not editor)
       const positionButton = () => {
         const rect = htmlMedia.getBoundingClientRect();
@@ -271,7 +248,6 @@ export class PostCompose implements OnInit, AfterViewInit {
       deleteBtn.style.lineHeight = '1';
       deleteBtn.style.padding = '0';
 
-      console.log(`  - Button styled and ready!`);
 
       // Add hover event listeners to show/hide button
       htmlMedia.addEventListener('mouseenter', () => {
@@ -539,8 +515,6 @@ export class PostCompose implements OnInit, AfterViewInit {
   private handleError(error: any): void {
     this.isSubmitting = false;
     this.uploadProgress = 0;
-    console.log("hiiii");
-
   }
 
   resetForm(): void {

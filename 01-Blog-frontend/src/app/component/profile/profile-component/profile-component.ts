@@ -67,7 +67,6 @@ showFeed: boolean = false;
   /** Handle Save button click (own profile) */
   onSave({ username, bio, file }: { username?: string; bio?: string; file?: File }) {
     if (!username && !bio && !file) {
-      console.warn('No changes to save.');
       return;
     }
 
@@ -111,7 +110,6 @@ showFeed: boolean = false;
           }
         }
       },
-      error: (err) => console.error(err)
     });
   }
 
@@ -182,7 +180,6 @@ showFeed: boolean = false;
           this.profile.user.isBaned = (action === 'ban');
         }
       },
-      error: (err) => console.error(`Error ${action}ning user:`, err)
     });
 
     this.pendingAction = null; // Reset

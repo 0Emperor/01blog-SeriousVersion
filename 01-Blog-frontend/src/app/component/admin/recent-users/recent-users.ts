@@ -100,9 +100,7 @@ export class RecentUsersComponent {
         } else {
           user.isBaned = (action === 'ban'); // Update local state
         }
-        console.log(`User ${user.username} ${action}ned successfully.`);
       },
-      error: (err) => console.error(`Error ${action}ning user:`, err)
     });
 
     this.userToActOn = null;

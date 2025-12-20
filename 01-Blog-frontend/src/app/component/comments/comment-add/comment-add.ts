@@ -36,7 +36,6 @@ export class CommentAdd {
 
   openEmojiPicker() {
     this.emojiPickerVisible = !this.emojiPickerVisible;
-    console.log('Emoji picker is now:', this.emojiPickerVisible ? 'open' : 'closed');
   }
 
   addEmoji(emoji: string) {

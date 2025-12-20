@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 User user = userRepository.findByUsername(username)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
                 if (user.getBaned() == true) {
-                        System.out.println("op opaa");
                         throw new AccessDeniedException("you are baned");
                 }
                 return new CustomUserDetails(

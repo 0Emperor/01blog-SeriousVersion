@@ -45,9 +45,6 @@ export class NotificationService {
   minus() {
     let n = NotificationService.unreadCount()
     let res = (n > 0) ? n - 1 : n
-    console.log("n=",n);
-    console.log("res=",res);
-    
     NotificationService.unreadCountState.set(res)
   }
   reset(){
