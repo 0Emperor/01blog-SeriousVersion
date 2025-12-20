@@ -72,7 +72,12 @@ export class Explore {
 
     this.followS.follow(userToFollow.user.id).subscribe({
       next: () => {
-        this.notFollowed.update(users => users.filter((_, i) => i !== index));
+        this.notFollowed.update(users => users.filter((u, i) =>{
+          if (i>index) {
+            u.indexe--
+          } 
+          return i !== index
+          }));
         this.toastService.show("User followed successfully", "Success", "success");
       }
     });
