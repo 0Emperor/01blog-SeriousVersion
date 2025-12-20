@@ -60,7 +60,6 @@ public class PostService {
     public void deletePost(UUID uId, Integer pID, String role) {
         Post toDelete = postRepository.findById(pID).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found"));
-        System.out.println(role);
         if (role != "ADMIN" && !toDelete.getUser().getId().equals(uId)) {
             throw new AccessDeniedException("U can only edit your own posts");
         }
@@ -139,7 +138,6 @@ public class PostService {
         post.setDescription(finalDescription);
         post.setUser(user);
         post.setMedia(newMediaUrls);
-        System.out.println(newMediaUrls);
 
         return postRepository.save(post);
     }
@@ -176,7 +174,6 @@ public class PostService {
 
         if (oldMedia != null) {
             for (String media : oldMedia) {
-                System.out.println(media);
                 if (keepMedia == null || !keepMedia.contains(media)) {
                     fileService.delete(media);
                 }
