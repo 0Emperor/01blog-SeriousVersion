@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { inject, Injectable } from '@angular/core';
+import { catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,27 @@ export class Auth {
     return this.http.post(Auth.loginApi, { username: name, password: password });
   }
   checkAuth() {
-    return this.http.get<boolean>(Auth.accessApi)
+    return this.http.get<boolean>(Auth.accessApi).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Suppress 403/401 errors by returning false (not authenticated/authorized)
+        if (error.status === 403 || error.status === 401) {
+          return of(false);
+        }
+        // Re-throw other errors
+        throw error;
+      })
+    );
   }
   checkAdmin() {
-    return this.http.get<boolean>(Auth.adminApi)
+    return this.http.get<boolean>(Auth.adminApi).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Suppress 403/401 errors by returning false (not admin)
+        if (error.status === 403 || error.status === 401) {
+          return of(false);
+        }
+        // Re-throw other errors
+        throw error;
+      })
+    );
   }
 }
